@@ -41,9 +41,10 @@ a{color:var(--forest)}
 <header class="top"><div class="topin"><div class="mark">V</div><div class="brand"><h1>Staff sign-in</h1><small>THE VEDĀNTA · PARSLIA KITCHEN OPS</small></div></div></header>
 <main class="wrap">
   <div id="setupBanner" class="banner" hidden>
-    <strong>Firebase setup needed</strong>
-    Paste your Firebase web config into <code>js/firebase-config.js</code> (see <a href="AUTH-SETUP.md">AUTH-SETUP.md</a>), then redeploy. Sign-in stays disabled until that is ready.
+    <strong>Staff accounts coming soon</strong>
+    Sign-in is not switched on for this kitchen yet. You can keep using the ops pages as usual — ask your manager when registration opens.
   </div>
+  <p id="setupBack" class="hint" hidden><a href="pro-dashboard.html">← Back to Command Centre</a></p>
   <div class="card">
     <div class="tabs" role="tablist">
       <button type="button" class="active" id="tabLogin" role="tab" aria-selected="true">Login</button>
@@ -94,6 +95,8 @@ a{color:var(--forest)}
   var msg = document.getElementById('msg');
   if (!ready) {
     banner.hidden = false;
+    var back = document.getElementById('setupBack');
+    if (back) back.hidden = false;
     loginBtn.disabled = true;
     regBtn.disabled = true;
   } else {

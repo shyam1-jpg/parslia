@@ -91,11 +91,7 @@
     var next = redirectTo || (location.pathname.split('/').pop() || 'pro-dashboard.html') + (location.search || '') + (location.hash || '');
     return whenAuthReady().then(function (user) {
       if (!cfgReady()) {
-        // Config missing: send staff to auth page which shows setup banner
-        var dest = authPath() + '?next=' + encodeURIComponent(next);
-        if (!/auth\.html$/i.test(location.pathname.split('/').pop() || '')) {
-          location.replace(dest);
-        }
+        // Auth backend not configured yet — leave kitchen pages open; do not redirect.
         return null;
       }
       if (!user) {
