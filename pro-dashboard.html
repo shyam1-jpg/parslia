@@ -137,37 +137,40 @@
     try { localStorage.setItem(roleKey, name); } catch (e) {}
   };
   roles.forEach(b => b.addEventListener('click', () => setRole(b.textContent.trim())));
-  try {
-    const saved = localStorage.getItem(roleKey);
-    if (saved) setRole(saved);
-  } catch (e) {}
+  try { const saved = localStorage.getItem(roleKey); if (saved) setRole(saved); } catch (e) {}
 
   const navLinks = [...document.querySelectorAll('.nav a, .bottom a')];
   const syncNav = () => {
     const hash = location.hash || '#command';
-    navLinks.forEach(a => {
-      const href = a.getAttribute('href') || '';
-      a.classList.toggle('active', href === hash || (hash === '#command' && href === '#command' && a.classList.contains('active') && false) || href === hash);
-    });
-    // clearer: activate exact hash matches
     navLinks.forEach(a => a.classList.toggle('active', (a.getAttribute('href') || '') === hash));
-    if (hash === '#command' || hash === '') {
-      document.querySelectorAll('.nav a[href="#command"], .bottom a[href="#command"]').forEach(a => a.classList.add('active'));
-    }
   };
-  navLinks.forEach(a => a.addEventListener('click', () => setTimeout(syncNav, 0)));
-  window.addEventListener('hashchange', syncNav);
+  const goHash = (hash) => {
+    if (!hash || hash === '#') hash = '#command';
+    const id = hash.slice(1);
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    else window.scrollTo({ top: 0, behavior: 'smooth' });
+    syncNav();
+  };
+  navLinks.forEach(a => a.addEventListener('click', (e) => {
+    const href = a.getAttribute('href') || '';
+    if (!href.startsWith('#')) return;
+    // force scroll even when hash unchanged (Home on #command)
+    if (href === (location.hash || '#command')) {
+      e.preventDefault();
+      goHash(href);
+    } else {
+      setTimeout(() => goHash(href), 0);
+    }
+  }));
+  window.addEventListener('hashchange', () => goHash(location.hash || '#command'));
   syncNav();
-
-  // Example-data note on pulse (no fake compliance claims)
   const score = document.querySelector('.score small');
   if (score && !score.textContent.includes('Example')) {
     score.textContent = 'Operational readiness · Example demo figures';
   }
 })();
 </script>
-
-
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
