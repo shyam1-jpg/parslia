@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta name="theme-color" content="#17382f"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="apple-touch-icon" href="icons/icon-192.png"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+
 <title>Kitchen Operations &amp; Standard Operating Procedures</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="True" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;family=Outfit:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -3747,6 +3752,7 @@ function report(id,blank){const d=collect(id,blank),w=window.open('','_blank');i
 })();
 </script>
 
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){})})}</script>
 </body></html>');w.document.close()}
 function csv(id){const d=collect(id,false);const safe=v=>{let x=String(v??'');if(/^[\s]*[=+@-]/.test(x))x="'"+x;return '"'+x.replace(/"/g,'""')+'"'};const lines=[['Form reference','Form title','Section','Field','Value'],...d.rows.map(r=>[d.ref,d.title,r.group,r.field,r.value])];const blob=new Blob(['\ufeff'+lines.map(r=>r.map(safe).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=d.ref+'-current-record.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 document.querySelectorAll('[data-report]').forEach(b=>b.onclick=()=>report(b.dataset.report,false));document.querySelectorAll('[data-template]').forEach(b=>b.onclick=()=>report(b.dataset.template,true));document.querySelectorAll('[data-csv]').forEach(b=>b.onclick=()=>csv(b.dataset.csv));

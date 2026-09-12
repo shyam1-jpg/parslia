@@ -1,0 +1,31 @@
+{
+  "name": "Parslia Kitchen Ops",
+  "short_name": "Parslia",
+  "description": "Kitchen operations, forms, SOPs and food-safety records for The Vedānta.",
+  "start_url": "./pro-dashboard.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#17382f",
+  "background_color": "#f8f3e9",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
