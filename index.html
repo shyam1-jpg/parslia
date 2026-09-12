@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#1F3A32"/>
+<title>Kitchen Ops · The Vedānta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --forest: #1F3A32;
+  --forest-deep: #162922;
+  --gold: #C4A574;
+  --gold-soft: #E8D9BF;
+  --paper: #F7F1E6;
+  --stone: #EFE8DC;
+  --ink: #1A1712;
+  --ink2: #6A6258;
+  --line: #E2D8C8;
+  --card: #FFFFFF;
+  --ok: #2F6B4F;
+  --warn: #B8893A;
+  --danger: #8A3B32;
+  --muted: #9A9288;
+  --shadow: 0 4px 16px rgba(31,58,50,.06);
+  --shadow-sm: 0 1px 4px rgba(31,58,50,.04);
+  --radius: 14px;
+  --tap: 44px;
+  --wrap: 1120px;
+  --bottom-nav: 72px;
+  --info: #2F5F8A;
+  --shadow-lg: 0 24px 48px rgba(22,41,34,.22);
+  --drawer-w: min(420px, 100vw);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  color: var(--ink);
+  background: linear-gradient(180deg, var(--stone) 0%, #E8E0D2 100%);
+  font: 15px/1.5 Outfit, system-ui, -apple-system, sans-serif;
+  padding-bottom: calc(var(--bottom-nav) + 18px + env(safe-area-inset-bottom));
+}
+h1,h2,h3,h4 { font-family: "Cormorant Garamond", Georgia, serif; font-weight: 600; margin: 0; letter-spacing: .01em; }
+a { color: var(--forest); }
+button, .btn {
+  font: inherit; cursor: pointer; border: 0; border-radius: 12px;
+  min-height: var(--tap); padding: 10px 16px;
+  background: var(--forest); color: var(--paper); font-weight: 500;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  text-decoration: none; transition: transform .12s ease, opacity .12s ease;
+}
+button:active, .btn:active { transform: scale(.98); }
+button.ghost, .btn.ghost {
+  background: transparent; color: var(--forest);
+  border: 1px solid var(--line);
+}
+button.gold, .btn.gold { background: var(--gold); color: var(--ink); }
+button.danger, .btn.danger { background: var(--danger); color: #fff; }
+.sample-tag, .example-banner {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  color: #7A5B2E; background: #F3E6CF; border: 1px solid #E2C89A;
+  padding: 4px 8px; border-radius: 999px;
+}
+.example-banner {
+  width: 100%; justify-content: flex-start; border-radius: 12px; padding: 10px 12px;
+  margin: 0 0 14px; letter-spacing: .04em;
+}
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 16px; }
+
+/* Header */
+.app-header {
+  background: linear-gradient(180deg, var(--forest) 0%, var(--forest-deep) 100%);
+  color: var(--paper);
+  border-bottom: 2px solid var(--gold);
+  position: sticky; top: 0; z-index: 40;
+}
+.app-header .inner {
+  max-width: var(--wrap); margin: 0 auto; padding: 10px 16px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.brand { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 160px; }
+.brand img {
+  height: 40px; width: auto; max-width: 140px; object-fit: contain;
+  background: var(--paper); padding: 4px 7px; border-radius: 7px;
+}
+.brand h1 { font-size: clamp(1.2rem, 2.5vw, 1.55rem); line-height: 1.1; color: var(--paper); }
+.brand .sub { margin: 2px 0 0; color: rgba(247,241,230,.55); font-size: 11px; font-weight: 400; letter-spacing: .03em; }
+.mode-toggle {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(247,241,230,.08); border: 1px solid rgba(196,165,116,.45);
+  padding: 8px 12px; border-radius: 999px; color: var(--paper); min-height: 48px;
+}
+.mode-toggle input { width: 18px; height: 18px; accent-color: var(--gold); }
+.mode-toggle span { font-size: 13px; font-weight: 500; }
+
+/* KPI */
+.kpi-row {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+  margin: 16px auto 8px; max-width: var(--wrap); padding: 0 16px;
+}
+.kpi {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 14px 14px 12px; box-shadow: var(--shadow-sm); min-height: 96px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.kpi .label { font-size: 12px; color: var(--ink2); font-weight: 500; }
+.kpi .value { font-family: "Cormorant Garamond", Georgia, serif; font-size: 2rem; line-height: 1; color: var(--forest); }
+.kpi .hint { font-size: 11px; color: var(--muted); }
+.kpi.real .value { color: var(--forest); }
+.kpi.sample { position: relative; }
+.kpi.sample::after {
+  content: "Example data"; position: absolute; top: 8px; right: 8px;
+  font-size: 9px; letter-spacing: .05em; text-transform: uppercase; font-weight: 700;
+  color: #7A5B2E; background: #F3E6CF; padding: 2px 6px; border-radius: 999px;
+}
+
+/* Nav */
+.top-nav {
+  position: sticky; top: 62px; z-index: 35;
+  background: rgba(247,241,230,.92); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.top-nav .inner {
+  max-width: var(--wrap); margin: 0 auto; padding: 8px 12px;
+  display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
+}
+.top-nav .inner::-webkit-scrollbar { display: none; }
+.top-nav a {
+  flex: 0 0 auto; text-decoration: none; color: var(--ink2);
+  padding: 10px 14px; border-radius: 999px; font-size: 13px; font-weight: 500;
+  min-height: 40px; display: inline-flex; align-items: center;
+}
+.top-nav a.active, .top-nav a:hover { background: var(--forest); color: var(--paper); }
+
+main.wrap { padding-top: 18px; }
+section.panel { scroll-margin-top: 140px; margin-bottom: 36px; }
+.section-head {
+  display: flex; align-items: end; justify-content: space-between; gap: 12px;
+  margin: 8px 0 14px; flex-wrap: wrap;
+}
+.section-head h2 { font-size: clamp(1.6rem, 3vw, 2rem); color: var(--forest); }
+.section-head p { margin: 0; color: var(--ink2); font-size: 14px; max-width: 42ch; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.grid-eq { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 14px 16px; box-shadow: none;
+}
+.card h3 { font-size: 1.25rem; color: var(--forest); margin-bottom: 6px; }
+.card p { margin: 0 0 10px; color: var(--ink2); font-size: 14px; }
+.meta-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+.count-pill {
+  background: var(--stone); color: var(--forest); border: 1px solid var(--line);
+  border-radius: 999px; padding: 4px 10px; font-size: 12px; font-weight: 600;
+}
+.progress {
+  height: 10px; background: var(--stone); border-radius: 999px; overflow: hidden; margin: 8px 0 4px;
+}
+.progress > span { display: block; height: 100%; background: linear-gradient(90deg, var(--forest), var(--gold)); border-radius: inherit; }
+.list-check { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.list-check li {
+  display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px;
+  background: var(--paper); border-radius: 12px; border: 1px solid var(--line); font-size: 14px;
+}
+.list-check .dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 6px; background: var(--gold); flex: 0 0 auto; }
+
+/* SOP categories */
+.cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+.cat-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 14px; box-shadow: none; display: flex; flex-direction: column; gap: 8px;
+  min-height: 130px;
+}
+.cat-card .icon {
+  width: 36px; height: 36px; border-radius: 10px; background: var(--stone);
+  display: grid; place-items: center; color: var(--forest); font-size: 16px;
+}
+.sop-list { display: none; margin-top: 10px; }
+.sop-list.open { display: grid; gap: 6px; }
+.sop-link {
+  display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--ink); background: var(--paper);
+  border: 1px solid var(--line); border-radius: 12px; padding: 12px 12px; min-height: 48px;
+  font-size: 14px; font-weight: 500;
+}
+.sop-link:hover { border-color: var(--gold); background: #FFFBF4; }
+.sop-link small { color: var(--ink2); font-weight: 400; }
+.sop-link.blocked { opacity: .72; }
+.note-card {
+  border-left: 3px solid var(--gold); background: #FFFBF4;
+}
+
+/* Competency */
+.matrix-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
+table.matrix { width: 100%; border-collapse: collapse; min-width: 720px; font-size: 13px; }
+table.matrix th, table.matrix td { padding: 12px 10px; border-bottom: 1px solid var(--line); text-align: center; }
+table.matrix th:first-child, table.matrix td:first-child { text-align: left; position: sticky; left: 0; background: var(--card); }
+table.matrix thead th { background: var(--stone); color: var(--forest); font-weight: 600; font-size: 12px; }
+.pill {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  min-width: 34px; padding: 6px 8px; border-radius: 999px; font-size: 12px; font-weight: 600;
+}
+.pill.auth { background: #E4F1E8; color: var(--ok); }
+.pill.sup { background: #F8ECD8; color: #9A6B22; }
+.pill.no { background: #F6E6E4; color: var(--danger); }
+.pill.exp { background: #ECEAE7; color: #555; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; font-size: 13px; color: var(--ink2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+/* Equipment */
+.eq-card { overflow: hidden; padding: 0; display: flex; flex-direction: column; }
+.eq-card .photo {
+  aspect-ratio: 16/10; background: var(--stone); overflow: hidden; position: relative;
+}
+.eq-card .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.eq-card .photo .ph {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  color: var(--ink2); font-size: 13px; padding: 16px; text-align: center;
+}
+.eq-card .body { padding: 14px 14px 16px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.eq-card .status {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;
+  color: var(--ok); background: #E4F1E8; padding: 4px 8px; border-radius: 999px; width: max-content;
+}
+.eq-card .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+.eq-card .actions .btn, .eq-card .actions button { flex: 1 1 110px; min-height: 44px; font-size: 13px; }
+
+/* Placeholder / coming soon */
+.soon {
+  border: 1px dashed var(--line); background: rgba(255,255,255,.55);
+  text-align: left; padding: 14px 16px; color: var(--ink2); font-size: 14px;
+}
+.soon strong { display: block; color: var(--forest); font-family: "Cormorant Garamond", Georgia, serif; font-size: 1.15rem; margin-bottom: 4px; }
+
+/* Split SOP panel */
+.overlay {
+  position: fixed; inset: 0; background: rgba(26,23,18,.45); z-index: 80;
+  display: none; align-items: stretch; justify-content: center; padding: 16px;
+}
+.overlay.open { display: flex; }
+.sop-panel {
+  width: min(980px, 100%); max-height: calc(100vh - 32px); background: var(--card);
+  border-radius: 18px; overflow: hidden; display: grid; grid-template-columns: 210px 1fr;
+  box-shadow: var(--shadow); border: 1px solid var(--line);
+}
+.sop-panel nav {
+  background: var(--forest); color: var(--paper); padding: 16px 12px; overflow-y: auto;
+  position: sticky; top: 0;
+}
+.sop-panel nav h4 { color: var(--gold); font-size: 1rem; margin: 0 12px 12px; }
+.sop-panel nav a {
+  display: block; color: rgba(247,241,230,.88); text-decoration: none;
+  padding: 10px 12px; border-radius: 10px; font-size: 13px; min-height: 42px;
+}
+.sop-panel nav a:hover, .sop-panel nav a:focus { background: rgba(196,165,116,.18); color: #fff; }
+.sop-panel .content { padding: 18px; overflow-y: auto; }
+.sop-panel .content h3 { font-size: 1.6rem; color: var(--forest); margin-bottom: 4px; }
+.sop-panel .close-row { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.preview-block {
+  background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin: 12px 0;
+}
+.preview-block h4 { font-size: 1.05rem; color: var(--forest); margin-bottom: 6px; }
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+/* Scan modal */
+.scan-sheet {
+  width: min(420px, 100%); margin-top: auto; background: var(--card); border-radius: 20px 20px 12px 12px;
+  padding: 18px; max-height: 80vh; overflow: auto; border: 1px solid var(--line);
+}
+.scan-sheet h3 { font-size: 1.4rem; color: var(--forest); }
+.scan-stub {
+  margin: 12px 0; padding: 18px; border-radius: 14px; text-align: center;
+  background: var(--forest); color: var(--paper);
+}
+.scan-stub .cam {
+  width: 72px; height: 72px; margin: 0 auto 10px; border-radius: 16px;
+  border: 2px dashed var(--gold); display: grid; place-items: center; font-size: 28px;
+}
+
+/* Mobile bottom nav */
+.bottom-nav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  background: rgba(31,58,50,.97); color: var(--paper);
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  display: none; grid-template-columns: repeat(5, 1fr); gap: 4px;
+  border-top: 2px solid var(--gold);
+}
+.bottom-nav a, .bottom-nav button {
+  background: transparent; color: rgba(247,241,230,.75); flex-direction: column;
+  gap: 2px; min-height: 56px; padding: 6px 4px; font-size: 11px; font-weight: 500;
+  border-radius: 12px;
+}
+.bottom-nav .ico { font-size: 18px; line-height: 1; }
+.bottom-nav a.active, .bottom-nav button.active { color: var(--gold); }
+.bottom-nav .scan-btn {
+  background: var(--gold); color: var(--ink); border-radius: 18px;
+  min-height: 64px; margin-top: -18px; box-shadow: 0 8px 20px rgba(0,0,0,.2);
+  font-weight: 700;
+}
+
+/* Kitchen mode */
+body.kitchen-mode { --tap: 52px; }
+body.kitchen-mode button, body.kitchen-mode .btn, body.kitchen-mode .sop-link {
+  min-height: 52px; font-size: 15px;
+}
+body.kitchen-mode .manager-only { display: none !important; }
+body.kitchen-mode .top-nav a { min-height: 48px; font-size: 14px; padding: 12px 16px; }
+body.kitchen-mode .kpi .value { font-size: 2.2rem; }
+body.kitchen-mode {
+  background: #E9E1D4;
+}
+body.kitchen-mode .card, body.kitchen-mode .kpi, body.kitchen-mode .cat-card {
+  border-color: #C9BDAA; box-shadow: none;
+}
+
+.more-sheet {
+  display: none; position: fixed; inset: 0; z-index: 70; background: rgba(26,23,18,.4);
+  align-items: flex-end; justify-content: center; padding: 12px;
+}
+.more-sheet.open { display: flex; }
+.more-sheet .sheet {
+  width: min(420px, 100%); background: var(--card); border-radius: 18px; padding: 16px;
+}
+.more-sheet a {
+  display: block; padding: 14px; border-radius: 12px; text-decoration: none; color: var(--ink);
+  border: 1px solid var(--line); margin-bottom: 8px; font-weight: 500; min-height: 48px;
+}
+
+@media (max-width: 980px) {
+  .kpi-row { grid-template-columns: repeat(3, 1fr); }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .pulse-rows { grid-template-columns: repeat(2, 1fr); }
+  .need-tiles { grid-template-columns: repeat(2, 1fr); }
+
+  .sop-panel { grid-template-columns: 1fr; }
+  .sop-panel nav { display: flex; gap: 4px; overflow-x: auto; position: static; padding: 10px; }
+  .sop-panel nav h4 { display: none; }
+  .sop-panel nav a { white-space: nowrap; }
+}
+@media (max-width: 720px) {
+  .kpi-row { display: none !important; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .top-nav { display: none; }
+  .bottom-nav { display: grid; }
+  .brand img { height: 36px; }
+  .app-header .inner { padding: 8px 12px; }
+  body.kitchen-mode .top-nav { display: none; }
+  .role-switch button { padding: 7px 9px; font-size: 12px; min-height: 36px; }
+  .pulse-rows { grid-template-columns: 1fr 1fr; }
+  .need-tiles { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 721px) {
+  body { padding-bottom: 24px; }
+}
+
+.header-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.role-switch {
+  display: inline-flex; background: rgba(247,241,230,.08);
+  border: 1px solid rgba(196,165,116,.45); border-radius: 999px; padding: 3px; gap: 2px;
+}
+.role-switch button {
+  background: transparent; color: rgba(247,241,230,.78); border: 0;
+  min-height: 40px; padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 500;
+}
+.role-switch button.active {
+  background: var(--gold); color: var(--ink); font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+.ac-header-btn {
+  position: relative; background: rgba(247,241,230,.1);
+  border: 1px solid rgba(196,165,116,.5); color: var(--paper);
+  min-height: 48px; padding: 8px 16px; border-radius: 999px; font-size: 13px;
+}
+.ac-header-btn .badge {
+  position: absolute; top: -4px; right: -4px;
+  min-width: 20px; height: 20px; padding: 0 6px;
+  background: var(--danger); color: #fff; border-radius: 999px;
+  font-size: 11px; font-weight: 700; display: grid; place-items: center;
+  border: 2px solid var(--forest-deep);
+}
+button.sm, .btn.sm { min-height: 36px; padding: 6px 12px; font-size: 12px; border-radius: 10px; }
+.hint { font-size: 12px; color: var(--ink2); }
+
+/* Kitchen Pulse */
+.pulse-card {
+  background: var(--card);
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px 12px;
+  box-shadow: none; position: relative; overflow: hidden; margin-bottom: 16px;
+}
+.pulse-card::before {
+  content: ""; position: absolute; inset: 0 auto 0 0; width: 3px;
+  background: linear-gradient(180deg, var(--gold), var(--forest));
+}
+.pulse-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.pulse-title-block h2 {
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem); color: var(--forest); letter-spacing: .02em;
+}
+.pulse-score-wrap {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--forest); color: var(--paper);
+  padding: 8px 14px; border-radius: 12px;
+}
+.pulse-score {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.85rem; line-height: 1; font-weight: 600;
+}
+.pulse-score-meta { display: flex; flex-direction: column; gap: 2px; }
+.pulse-score-meta .live { font-size: 13px; font-weight: 600; }
+.pulse-score-meta .tag { font-size: 10px; letter-spacing: .06em; text-transform: uppercase; opacity: .8; color: var(--gold-soft); }
+.pulse-kpis {
+  display: flex; flex-wrap: wrap; gap: 6px 14px; margin-bottom: 10px;
+  font-size: 12px; color: var(--ink2); padding-bottom: 8px; border-bottom: 1px solid var(--line);
+}
+.pulse-kpis strong { color: var(--forest); font-weight: 600; }
+.pulse-rows {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px;
+}
+.pulse-row {
+  background: var(--paper); border: 1px solid var(--line);
+  border-radius: 10px; padding: 7px 10px;
+  display: flex; flex-direction: column; gap: 2px; min-height: 48px;
+}
+.pulse-row .name { font-size: 10px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink2); }
+.pulse-row .status { font-size: 12px; font-weight: 500; color: var(--ink); display: flex; align-items: center; gap: 4px; }
+.pulse-row.warn .status { color: var(--warn); }
+.pulse-row.danger .status { color: var(--danger); }
+.pulse-row.ok .status { color: var(--ok); }
+.pulse-actions {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  padding-top: 4px; border-top: 1px solid var(--line);
+}
+.pulse-actions a.attention-link {
+  color: var(--forest); font-weight: 600; font-size: 14px;
+  text-decoration: none; border-bottom: 1px solid var(--gold);
+  padding: 4px 0; min-height: 44px; display: inline-flex; align-items: center;
+}
+.explain-panel {
+  display: none; margin-top: 14px;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px;
+}
+.explain-panel.open { display: block; }
+.explain-panel h4 { font-size: 1.15rem; color: var(--forest); margin-bottom: 8px; }
+.explain-list { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 8px; }
+.explain-list li {
+  display: flex; justify-content: space-between; gap: 10px; align-items: flex-start;
+  padding: 10px 12px; background: #fff; border-radius: 10px; border: 1px solid var(--line); font-size: 14px;
+}
+.explain-list .pts { color: var(--danger); font-weight: 700; white-space: nowrap; }
+.explain-fix {
+  background: #E4F1E8; border: 1px solid #B9D6C4; border-radius: 12px;
+  padding: 12px 14px; font-size: 14px; color: var(--ok); font-weight: 600;
+}
+
+/* Staff Mode */
+.staff-home { display: none; margin-bottom: 24px; }
+body.role-staff .staff-home,
+body.role-chef .staff-home { display: block; }
+body.role-staff .manager-chrome,
+body.role-chef .manager-chrome { display: none !important; }
+body.role-manager .staff-home { display: none; }
+.my-kitchen-hero {
+  background: linear-gradient(160deg, var(--forest) 0%, var(--forest-deep) 100%);
+  color: var(--paper); border-radius: 16px; padding: 18px 16px 16px;
+  border: 1px solid rgba(196,165,116,.3);
+  margin-bottom: 14px; position: relative; overflow: hidden;
+}
+.my-kitchen-hero::after {
+  content: ""; position: absolute; right: -40px; top: -40px;
+  width: 160px; height: 160px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,165,116,.22), transparent 70%);
+  pointer-events: none;
+}
+.my-kitchen-hero .greet {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.7rem, 4vw, 2.2rem); line-height: 1.15; margin-bottom: 6px;
+}
+.my-kitchen-hero .kstatus {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(247,241,230,.1); border: 1px solid rgba(196,165,116,.4);
+  padding: 6px 12px; border-radius: 999px; font-size: 13px; margin-bottom: 18px;
+}
+.need-label {
+  font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 10px;
+}
+.need-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.need-tile {
+  background: rgba(247,241,230,.08); border: 1px solid rgba(196,165,116,.28);
+  color: var(--paper); border-radius: 12px; padding: 14px 10px;
+  min-height: 76px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px; text-align: center; font-weight: 600; font-size: 13px;
+  transition: background .15s ease, border-color .15s ease; text-decoration: none;
+}
+.need-tile:hover { background: rgba(196,165,116,.2); border-color: var(--gold); }
+.need-tile .tico { font-size: 20px; line-height: 1; }
+.need-tile small { display: none; }
+.needs-mini {
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  padding: 14px 16px; box-shadow: var(--shadow-sm);
+}
+.needs-mini h3 { font-size: 1.1rem; color: var(--forest); margin-bottom: 8px; }
+.needs-mini ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.needs-mini li {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 12px; background: var(--paper); border-radius: 12px; border: 1px solid var(--line);
+  font-size: 14px; min-height: 48px;
+}
+.needs-mini a { font-weight: 600; text-decoration: none; color: var(--forest); }
+
+/* Action Centre */
+.ac-edge-btn {
+  display: none; position: fixed; right: 0; top: 50%; transform: translateY(-50%);
+  z-index: 55; writing-mode: vertical-rl; text-orientation: mixed;
+  background: var(--forest); color: var(--paper);
+  border: 1px solid var(--gold); border-right: 0; border-radius: 12px 0 0 12px;
+  padding: 18px 10px; min-height: 120px; font-weight: 600; font-size: 13px;
+  letter-spacing: .06em; box-shadow: var(--shadow); gap: 8px;
+}
+.ac-edge-btn .badge {
+  writing-mode: horizontal-tb; background: var(--danger); color: #fff; border-radius: 999px;
+  min-width: 22px; height: 22px; font-size: 11px; font-weight: 700; display: grid; place-items: center;
+}
+@media (min-width: 721px) {
+  .ac-edge-btn { display: inline-flex; align-items: center; justify-content: center; }
+}
+.ac-backdrop {
+  position: fixed; inset: 0; background: rgba(26,23,18,.4); z-index: 90;
+  opacity: 0; pointer-events: none; transition: opacity .25s ease;
+}
+.ac-backdrop.open { opacity: 1; pointer-events: auto; }
+.ac-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(420px, 100vw);
+  z-index: 95; background: var(--card); box-shadow: 0 24px 48px rgba(22,41,34,.22);
+  transform: translateX(100%); transition: transform .28s cubic-bezier(.22,.9,.28,1);
+  display: flex; flex-direction: column; border-left: 2px solid var(--gold);
+}
+.ac-drawer.open { transform: translateX(0); }
+.ac-drawer-head {
+  background: linear-gradient(180deg, var(--forest), var(--forest-deep));
+  color: var(--paper); padding: 16px 18px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  border-bottom: 2px solid var(--gold);
+}
+.ac-drawer-head h2 { font-size: 1.45rem; color: var(--paper); }
+.ac-drawer-head .ghost { color: var(--paper); border-color: rgba(196,165,116,.45); }
+.ac-drawer-body { flex: 1; overflow-y: auto; padding: 14px 16px 24px; }
+.ac-section { margin-bottom: 18px; }
+.ac-section h3 {
+  font-family: Outfit, system-ui, sans-serif; font-size: 13px; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--ink2);
+  margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.ac-item {
+  background: var(--paper); border: 1px solid var(--line); border-radius: 10px;
+  padding: 8px 10px; margin-bottom: 5px; display: grid; gap: 4px;
+}
+.ac-item.done { opacity: .6; }
+.ac-item .ac-title { font-weight: 600; font-size: 13px; color: var(--ink); line-height: 1.3; }
+.ac-item .ac-meta { font-size: 11px; color: var(--ink2); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.ac-item .ac-actions { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+.ac-item a.pack-link {
+  font-size: 12px; font-weight: 600; color: var(--forest);
+  text-decoration: none; border-bottom: 1px solid var(--gold);
+}
+@media (max-width: 720px) {
+  .ac-drawer {
+    width: 100%; left: 0; right: 0; border-left: 0; border-radius: 18px 18px 0 0;
+    top: auto; max-height: 92vh; transform: translateY(100%);
+  }
+  .ac-drawer.open { transform: translateY(0); }
+}
+body.kitchen-mode .need-tile { min-height: 96px; font-size: 15px; padding: 16px 12px; }
+body.kitchen-mode .need-tile .tico { font-size: 28px; }
+body.kitchen-mode .pulse-row { min-height: 56px; padding: 10px 12px; }
+
+/* Desktop More dropdown */
+.nav-more-wrap { position: relative; }
+.top-nav .nav-more-btn {
+  flex: 0 0 auto; color: var(--ink2); padding: 8px 14px; border-radius: 999px;
+  font-size: 13px; font-weight: 500; min-height: 38px; display: inline-flex; align-items: center;
+  background: transparent; border: 0; cursor: pointer; font-family: inherit;
+}
+.top-nav .nav-more-btn:hover { background: var(--forest); color: var(--paper); }
+.nav-more-menu {
+  display: none; position: absolute; top: calc(100% + 6px); right: 0;
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 6px; min-width: 180px; box-shadow: var(--shadow); z-index: 50;
+}
+.nav-more-menu.open { display: grid; gap: 2px; }
+.nav-more-menu a {
+  display: block; padding: 10px 12px; border-radius: 8px; text-decoration: none;
+  color: var(--ink); font-size: 13px; font-weight: 500; min-height: 40px;
+  background: transparent !important;
+}
+.nav-more-menu a:hover { background: var(--stone) !important; color: var(--forest) !important; }
+.kpi-row { display: none !important; }
+
+</style>
+</head>
+<body class="role-staff">
+<header class="app-header">
+  <div class="inner">
+    <div class="brand">
+      <img src="kitchen-photos/vedanta-logo.png" alt="The Vedānta"/>
+      <div>
+        <h1>Kitchen Ops</h1>
+        <p class="sub">The Vedānta</p>
+      </div>
+    </div>
+    <div class="header-controls">
+      <div class="role-switch" role="group" aria-label="Role">
+        <button type="button" data-role="staff" class="active" id="roleStaff">Staff (KP)</button>
+        <button type="button" data-role="chef" id="roleChef">Chef</button>
+        <button type="button" data-role="manager" id="roleManager">Manager</button>
+      </div>
+      <button type="button" class="ac-header-btn" id="acOpenHeader" aria-controls="acDrawer" aria-expanded="false">
+        Action Centre
+        <span class="badge" id="acBadgeHeader">3</span>
+      </button>
+      <label class="mode-toggle" title="Larger taps, hide manager panels">
+        <input type="checkbox" id="kitchenMode"/>
+        <span>Kitchen Mode</span>
+      </label>
+    </div>
+  </div>
+</header>
+
+<nav class="top-nav manager-chrome" aria-label="Sections">
+  <div class="inner">
+    <a href="#overview" class="active">Overview</a>
+    <a href="#sop-library">SOPs</a>
+    <a href="#training">Training</a>
+    <a href="#equipment">Equipment</a>
+    <div class="nav-more-wrap">
+      <button type="button" class="nav-more-btn" id="navMoreBtn" aria-expanded="false" aria-haspopup="true">More</button>
+      <div class="nav-more-menu" id="navMoreMenu" role="menu">
+        <a href="#competency" role="menuitem">Competency</a>
+        <a href="#food-safety" role="menuitem">Food Safety</a>
+        <a href="#cleaning" role="menuitem">Cleaning</a>
+        <a href="#incidents" role="menuitem">Incidents &amp; Audits</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- Staff / Chef home (P1e) -->
+  <section class="staff-home" id="staff-home" aria-label="My Kitchen">
+    <div class="my-kitchen-hero">
+      <div class="greet" id="staffGreet">Good evening — ready for service?</div>
+      <div class="kstatus"><span aria-hidden="true">🟢</span> Kitchen Status: Ready</div>
+      <div class="need-label">What do you need?</div>
+      <div class="need-tiles">
+        <button type="button" class="need-tile" id="tileStartShift"><span class="tico" aria-hidden="true">▶</span>Start Shift</button>
+        <button type="button" class="need-tile" id="tileMyTasks"><span class="tico" aria-hidden="true">✓</span>My Tasks</button>
+        <a class="need-tile" href="#sop-library" id="tileFindSop"><span class="tico" aria-hidden="true">☰</span>Find SOP</a>
+        <button type="button" class="need-tile" id="tileTemp"><span class="tico" aria-hidden="true">🌡</span>Temperature</button>
+        <a class="need-tile" href="#cleaning"><span class="tico" aria-hidden="true">🧴</span>Cleaning</a>
+        <a class="need-tile" href="#equipment"><span class="tico" aria-hidden="true">⚙</span>Equipment</a>
+        <button type="button" class="need-tile" id="tileFault"><span class="tico" aria-hidden="true">⚠</span>Report Problem</button>
+        <a class="need-tile" href="#competency"><span class="tico" aria-hidden="true">🎓</span>My Training</a>
+      </div>
+    </div>
+    <div class="needs-mini">
+      <h3>Needs attention</h3>
+      <ul>
+        <li>
+          <span>Complete Safety first before station work</span>
+          <a href="kitchen-sop-pack.html#SAFETY-FIRST">SAFETY-FIRST →</a>
+        </li>
+        <li>
+          <span>Thermomix competency sign-off due</span>
+          <a href="kitchen-sop-pack.html#COMP-TM6">COMP-TM6 →</a>
+        </li>
+        <li>
+          <span>Fridge display check (STORE-CHILL)</span>
+          <a href="kitchen-sop-pack.html#STORE-CHILL">Open →</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Overview -->
+  <section class="panel manager-chrome" id="overview">
+
+    <div class="example-banner">Example data — layout only · not live kitchen metrics</div>
+
+    <div class="pulse-card" id="kitchenPulse">
+      <div class="pulse-head">
+        <div class="pulse-title-block">
+          <h2>Kitchen Pulse</h2>
+        </div>
+        <div class="pulse-score-wrap">
+          <div class="pulse-score">92%</div>
+          <div class="pulse-score-meta">
+            <span class="live">🟢 Strong</span>
+            <span class="tag">Example</span>
+          </div>
+        </div>
+      </div>
+      <div class="pulse-kpis" aria-label="Key indicators">
+        <span>Training <strong>78%</strong></span>
+        <span>SOPs due <strong>4</strong></span>
+        <span>Open actions <strong>3</strong></span>
+        <span>Linked SOPs <strong id="sopTotal">55</strong></span>
+      </div>
+      <div class="pulse-rows" role="list">
+        <div class="pulse-row ok" role="listitem"><span class="name">Service</span><span class="status">🟢 On track</span></div>
+        <div class="pulse-row ok" role="listitem"><span class="name">Food Safety</span><span class="status">🟢 Checks done</span></div>
+        <div class="pulse-row warn" role="listitem"><span class="name">Staffing</span><span class="status">🟠 1 gap</span></div>
+        <div class="pulse-row ok" role="listitem"><span class="name">Equipment</span><span class="status">🟢 All clear</span></div>
+        <div class="pulse-row warn" role="listitem"><span class="name">Training</span><span class="status">🟠 2 due</span></div>
+        <div class="pulse-row ok" role="listitem"><span class="name">Cleaning</span><span class="status">🟢 Scheduled</span></div>
+        <div class="pulse-row ok" role="listitem"><span class="name">Allergens</span><span class="status">🟢 Labelled</span></div>
+        <div class="pulse-row warn" role="listitem"><span class="name">Production</span><span class="status">🟠 Prep lag</span></div>
+      </div>
+      <div class="pulse-actions">
+        <button type="button" class="gold sm" id="explainScoreBtn">Explain score</button>
+        <a href="#action-centre-anchor" class="attention-link" id="attentionLink">What needs attention?</a>
+      </div>
+      <div class="explain-panel" id="explainPanel" hidden>
+        <h4>Why points were lost</h4>
+        <ul class="explain-list">
+          <li><span>Staffing — KP cover short on pass for lunch</span><span class="pts">−3%</span></li>
+          <li><span>Training — Thermomix competency overdue (COMP-TM6)</span><span class="pts">−2%</span></li>
+          <li><span>Training — Sharp objects refresh due (COMP-SHARP)</span><span class="pts">−1%</span></li>
+          <li><span>Production — Prep list lag on brunch mise</span><span class="pts">−2%</span></li>
+        </ul>
+        <div class="explain-fix">Fix these → projected <strong>100%</strong></div>
+        <p class="hint" style="margin-top:10px">Illustrative deductions only — not live audit scoring.</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <article class="card">
+        <h3>Today</h3>
+        <ul class="list-check">
+          <li><span class="dot"></span><span>Brief on Safety first before service</span></li>
+          <li><span class="dot"></span><span>Fridge &amp; freezer display checks (STORE-CHILL / FREEZE)</span></li>
+          <li><span class="dot"></span><span>Confirm authorised users for fryer &amp; Robot-Coupe</span></li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>This Week</h3>
+        <ul class="list-check">
+          <li><span class="dot"></span><span>Complete Thermomix competency sign-offs</span></li>
+          <li><span class="dot"></span><span>Review blocked cleaning SOPs (KP-08–11)</span></li>
+          <li><span class="dot"></span><span>Photograph remaining chemical labels</span></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- SOP Library -->
+  <section class="panel" id="sop-library">
+    <div class="section-head">
+      <div>
+        <h2>SOP Library</h2>
+        <p>Tap a category, then open a sheet in the pack.</p>
+      </div>
+      <a class="btn ghost" href="kitchen-sop-pack.html" target="_self">Open full pack</a>
+    </div>
+    <div class="cat-grid" id="catGrid">
+      <!-- filled by JS for expand behaviour; also static fallback below -->
+    </div>
+  </section>
+
+  <!-- Training -->
+  <section class="panel" id="training">
+    <div class="section-head">
+      <div>
+        <h2>Training</h2>
+        <p>Safety first, then equipment sheets and competency forms.</p>
+      </div>
+    </div>
+    <div class="grid-3">
+      <article class="card">
+        <h3>1. Safety first</h3>
+        <p>House H&amp;S before any station work.</p>
+        <button type="button" data-sop="SAFETY-FIRST" data-title="Safety first — kitchen H&amp;S">Open SOP</button>
+      </article>
+      <article class="card">
+        <h3>2. Equipment sheets</h3>
+        <p>Nine machine methods from the pack.</p>
+        <a class="btn ghost" href="#equipment">Go to equipment</a>
+      </article>
+      <article class="card">
+        <h3>3. Sign-off forms</h3>
+        <p>Four competency checklists with signatures.</p>
+        <a class="btn ghost" href="#competency">Go to competency</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Competency -->
+  <section class="panel" id="competency">
+    <div class="section-head">
+      <div>
+        <h2>Competency</h2>
+        <p>Authorisation forms live in the pack. Matrix below is sample layout only.</p>
+      </div>
+    </div>
+    <div class="grid-2" style="margin-bottom:14px">
+      <article class="card">
+        <h3>COMP-RC502</h3>
+        <p>Robot-Coupe R 502 — how to operate</p>
+        <button type="button" class="btn" data-sop="COMP-RC502" data-title="Robot-Coupe R 502 — competency" data-comp="COMP-RC502">Open form</button>
+      </article>
+      <article class="card">
+        <h3>COMP-TM6</h3>
+        <p>Thermomix TM6 — how to operate</p>
+        <button type="button" class="btn" data-sop="COMP-TM6" data-title="Thermomix TM6 — competency" data-comp="COMP-TM6">Open form</button>
+      </article>
+      <article class="card">
+        <h3>COMP-BLAST</h3>
+        <p>Blast chiller — how to operate</p>
+        <button type="button" class="btn" data-sop="COMP-BLAST" data-title="Blast chiller — competency" data-comp="COMP-BLAST">Open form</button>
+      </article>
+      <article class="card">
+        <h3>COMP-SHARP</h3>
+        <p>Sharp objects — knives &amp; mandoline</p>
+        <button type="button" class="btn" data-sop="COMP-SHARP" data-title="Sharp objects — competency" data-comp="COMP-SHARP">Open form</button>
+      </article>
+    </div>
+
+    <div class="legend">
+      <span><span class="pill auth">🟢</span> Authorised</span>
+      <span><span class="pill sup">🟠</span> Supervised</span>
+      <span><span class="pill no">🔴</span> Not authorised</span>
+      <span><span class="pill exp">⚫</span> Expired</span>
+    </div>
+    <div class="matrix-wrap manager-only">
+      <table class="matrix" aria-label="Sample staff competency matrix">
+        <thead>
+          <tr>
+            <th>Staff (sample)</th>
+            <th>Rational</th>
+            <th>Robot Coupe</th>
+            <th>Fryer</th>
+            <th>Bratt</th>
+            <th>Blast</th>
+            <th>Thermomix</th>
+            <th>Buffalo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Adam</td>
+            <td><span class="pill auth" title="Authorised">🟢</span></td>
+            <td><span class="pill auth" title="Authorised">🟢</span></td>
+            <td><span class="pill sup" title="Supervised">🟠</span></td>
+            <td><span class="pill no" title="Not authorised">🔴</span></td>
+            <td><span class="pill auth" title="Authorised">🟢</span></td>
+            <td><span class="pill auth" title="Authorised">🟢</span></td>
+            <td><span class="pill auth" title="Authorised">🟢</span></td>
+          </tr>
+          <tr>
+            <td>Justina</td>
+            <td><span class="pill auth" title="Authorised">🟢</span></td>
+            <td><span class="pill sup" title="Supervised">🟠</span></td>
+            <td><span class="pill no" title="Not authorised">🔴</span></td>
+            <td><span class="pill no" title="Not authorised">🔴</span></td>
+            <td><span class="pill auth" title="Authorised">🟢</span></td>
+            <td><span class="pill auth" title="Authorised">🟢</span></td>
+            <td><span class="pill auth" title="Authorised">🟢</span></td>
+          </tr>
+          <tr>
+            <td>Tola</td>
+            <td><span class="pill sup" title="Supervised">🟠</span></td>
+            <td><span class="pill no" title="Not authorised">🔴</span></td>
+            <td><span class="pill no" title="Not authorised">🔴</span></td>
+            <td><span class="pill no" title="Not authorised">🔴</span></td>
+            <td><span class="pill sup" title="Supervised">🟠</span></td>
+            <td><span class="pill exp" title="Expired">⚫</span></td>
+            <td><span class="pill auth" title="Authorised">🟢</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Equipment -->
+  <section class="panel" id="equipment">
+    <div class="section-head">
+      <div>
+        <h2>Equipment</h2>
+        <p>Nine machines from the house pack.</p>
+      </div>
+    </div>
+    <div class="grid-eq" id="eqGrid"></div>
+  </section>
+
+  <!-- Food Safety -->
+  <section class="panel" id="food-safety">
+    <div class="section-head">
+      <div>
+        <h2>Food Safety</h2>
+        <p>Stores methods and plant-based house note.</p>
+      </div>
+    </div>
+    <div class="grid-3">
+      <article class="card">
+        <h3>Dry store</h3>
+        <p>STORE-DRY</p>
+        <button type="button" data-sop="STORE-DRY" data-title="Dry store">Open SOP</button>
+      </article>
+      <article class="card">
+        <h3>Fridge — inside</h3>
+        <p>STORE-CHILL</p>
+        <button type="button" data-sop="STORE-CHILL" data-title="Fridge — inside">Open SOP</button>
+      </article>
+      <article class="card">
+        <h3>Freezer — inside</h3>
+        <p>STORE-FREEZE</p>
+        <button type="button" data-sop="STORE-FREEZE" data-title="Freezer — inside">Open SOP</button>
+      </article>
+    </div>
+    <article class="card note-card" style="margin-top:12px">
+      <h3>Vedanta Standards</h3>
+      <p>Plant-based / sattvic service. Training media: same manufacturer and model family only. No animal-product cook demos. Follow allergen separation and house labelling on every batch.</p>
+      <a class="btn ghost" href="kitchen-sop-pack.html" target="_self">Read pack policy banner</a>
+    </article>
+  </section>
+
+  <!-- Cleaning -->
+  <section class="panel" id="cleaning">
+    <div class="section-head">
+      <div>
+        <h2>Cleaning &amp; Chemicals</h2>
+        <p>SK chemical sheets and end-of-service procedures.</p>
+      </div>
+    </div>
+    <div class="cat-grid" id="chemGrid"></div>
+    <div class="grid-2" style="margin-top:12px">
+      <article class="card">
+        <h3>KP-12 End-of-service</h3>
+        <p>Clean and handover</p>
+        <button type="button" data-sop="KP-12" data-title="KP-12 End-of-service clean and handover">Open SOP</button>
+      </article>
+      <article class="card">
+        <h3>Blocked cleaning</h3>
+        <p>KP-08 Bratt · KP-09 Rational auto · KP-10 oven trays · KP-11 fryer — help / prerequisites missing</p>
+        <div class="chip-row">
+          <button type="button" class="ghost" data-sop="KP-08" data-title="KP-08 Bratt pan cleaning — blocked">KP-08</button>
+          <button type="button" class="ghost" data-sop="KP-09" data-title="KP-09 Rational automatic — blocked">KP-09</button>
+          <button type="button" class="ghost" data-sop="KP-10" data-title="KP-10 Oven trays — blocked">KP-10</button>
+          <button type="button" class="ghost" data-sop="KP-11" data-title="KP-11 Fryer cleaning — blocked">KP-11</button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Incidents + Audits (combined placeholder) -->
+  <section class="panel" id="incidents">
+    <div id="audits" style="scroll-margin-top:140px"></div>
+    <article class="card soon">
+      <strong>Coming in Parslia</strong>
+      Incidents and audits — logging, schedules and corrective actions will live here. Honest placeholder until the product modules ship.
+    </article>
+  </section>
+</main>
+
+
+<!-- Action Centre drawer (P1d) -->
+<button type="button" class="ac-edge-btn" id="acOpenEdge" aria-controls="acDrawer" aria-expanded="false" title="Open Action Centre">
+  Action Centre <span class="badge" id="acBadgeEdge">3</span>
+</button>
+<div class="ac-backdrop" id="acBackdrop" hidden></div>
+<aside class="ac-drawer" id="acDrawer" role="dialog" aria-modal="true" aria-labelledby="acTitle" aria-hidden="true">
+  <div class="ac-drawer-head">
+    <div>
+      <h2 id="acTitle">Action Centre</h2>
+      <p class="hint" style="color:rgba(247,241,230,.7);margin:2px 0 0;font-size:12px">Sample items · local ack / snooze</p>
+    </div>
+    <button type="button" class="ghost" id="acClose">Close</button>
+  </div>
+  <div class="ac-drawer-body" id="acBody"></div>
+</aside>
+<div id="action-centre-anchor" style="scroll-margin-top:120px;height:1px" aria-hidden="true"></div>
+
+<!-- SOP split panel -->
+<div class="overlay" id="sopOverlay" role="dialog" aria-modal="true" aria-labelledby="sopTitle">
+  <div class="sop-panel">
+    <nav aria-label="SOP sections">
+      <h4>On this sheet</h4>
+      <a href="#pv-purpose">Purpose</a>
+      <a href="#pv-hazards">Hazards</a>
+      <a href="#pv-ppe">PPE</a>
+      <a href="#pv-before">Before Use</a>
+      <a href="#pv-procedure">Procedure</a>
+      <a href="#pv-cleaning">Cleaning</a>
+      <a href="#pv-emergency">Emergency</a>
+      <a href="#pv-video">Video</a>
+      <a href="#pv-comp">Competency</a>
+    </nav>
+    <div class="content">
+      <div class="close-row">
+        <button type="button" class="ghost" id="sopClose">Close</button>
+        <a class="btn gold" id="sopOpenFull" href="#" target="_self">Open full SOP</a>
+      </div>
+      <h3 id="sopTitle">SOP</h3>
+      <p id="sopRef" style="color:var(--ink2);margin:0 0 8px;font-size:13px"></p>
+      <div class="preview-block" id="pv-purpose"><h4>Purpose</h4><p>House method for safe, consistent use. Full detail is in the pack sheet.</p></div>
+      <div class="preview-block" id="pv-hazards"><h4>Hazards</h4><p>See pack for site-specific hazards, stops and critical controls.</p></div>
+      <div class="preview-block" id="pv-ppe"><h4>PPE</h4><p>Wear the PPE named on the sheet and chemical SDS.</p></div>
+      <div class="preview-block" id="pv-before"><h4>Before Use</h4><p>Checks, isolation and competent-user rules are in the pack.</p></div>
+      <div class="preview-block" id="pv-procedure"><h4>Procedure</h4><p>Follow numbered steps on the full SOP — do not invent timings or chemical doses.</p></div>
+      <div class="preview-block" id="pv-cleaning"><h4>Cleaning</h4><p>Use only named products. Blocked cleaning stays blocked until prerequisites are met.</p></div>
+      <div class="preview-block" id="pv-emergency"><h4>Emergency</h4><p>Isolate, raise the alarm, follow site fire and first-aid plans.</p></div>
+      <div class="preview-block" id="pv-video"><h4>Video</h4><p>Manufacturer / house clips are linked from the pack where verified.</p></div>
+      <div class="preview-block" id="pv-comp"><h4>Competency</h4><p id="sopCompLine">Open the matching competency form after supervised practice.</p>
+        <div class="chip-row" id="sopCompLinks"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Scan -->
+<div class="overlay" id="scanOverlay" aria-label="Scan equipment">
+  <div class="scan-sheet">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <h3>Scan</h3>
+      <button type="button" class="ghost" id="scanClose">Close</button>
+    </div>
+    <div class="scan-stub">
+      <div class="cam" aria-hidden="true">▣</div>
+      <div>Point at machine QR — select equipment</div>
+      <div style="opacity:.75;font-size:12px;margin-top:6px">QR camera stub · offline picker below</div>
+    </div>
+    <div id="scanList" style="display:grid;gap:8px"></div>
+  </div>
+</div>
+
+<!-- More (mobile) -->
+<div class="more-sheet" id="moreSheet">
+  <div class="sheet">
+    <h3 style="margin-bottom:10px;color:var(--forest)">More</h3>
+    <a href="#training">Training</a>
+    <a href="#competency">Competency</a>
+    <a href="#food-safety">Food Safety</a>
+    <a href="#cleaning">Cleaning</a>
+    <a href="#incidents">Incidents &amp; Audits</a>
+    <button type="button" id="moreAcOpen" style="width:100%;margin-bottom:8px">Action Centre</button>
+    <a href="kitchen-sop-pack.html">Full SOP pack</a>
+    <button type="button" class="ghost" style="width:100%" id="moreClose">Close</button>
+  </div>
+</div>
+
+<nav class="bottom-nav" aria-label="Mobile">
+  <a href="#staff-home" class="active" id="bnHome"><span class="ico">⌂</span>Home</a>
+  <button type="button" id="bnTasks"><span class="ico">✓</span>Tasks</button>
+  <a href="#sop-library"><span class="ico">☰</span>SOPs</a>
+  <button type="button" class="scan-btn" id="scanOpen"><span class="ico">▢</span>Scan</button>
+  <button type="button" id="moreOpen"><span class="ico">⋯</span>More</button>
+</nav>
+
+<script>
+(function () {
+  const PACK = 'kitchen-sop-pack.html';
+
+  const categories = [
+    {
+      id: 'hs',
+      title: 'Health & Safety',
+      icon: '🛡',
+      sops: [
+        { id: 'SAFETY-FIRST', title: 'Safety first — kitchen H&S' },
+        { id: 'COMP-SHARP', title: 'Sharp objects — knives & mandoline', comp: true }
+      ]
+    },
+    {
+      id: 'eq',
+      title: 'Equipment',
+      icon: '⚙',
+      sops: [
+        { id: 'COOK-SCC', title: 'Rational SelfCookingCenter', comp: null },
+        { id: 'EQ-RC502', title: 'Robot-Coupe R 502 V.V.', comp: 'COMP-RC502' },
+        { id: 'EQ-TM6', title: 'Vorwerk Thermomix TM6', comp: 'COMP-TM6' },
+        { id: 'EQ-LINCAT', title: 'Lincat Silverlink 600 J10/N fryer' },
+        { id: 'EQ-BRATT', title: 'Electrolux bratt / braising pan' },
+        { id: 'EQ-FOSTER-BC', title: 'Foster blast chiller', comp: 'COMP-BLAST' },
+        { id: 'EQ-BUFFALO', title: 'Buffalo induction hobs' },
+        { id: 'EQ-FOSTER-FZ', title: 'Foster G2 freezer' },
+        { id: 'EQ-GRAM', title: 'GRAM pass fridge' }
+      ]
+    },
+    {
+      id: 'stores',
+      title: 'Food Safety / Stores',
+      icon: '❄',
+      sops: [
+        { id: 'STORE-DRY', title: 'Dry store' },
+        { id: 'STORE-CHILL', title: 'Fridge — inside' },
+        { id: 'STORE-FREEZE', title: 'Freezer — inside' }
+      ]
+    },
+    {
+      id: 'chem',
+      title: 'Cleaning / Chemicals',
+      icon: '🧴',
+      sops: [
+        { id: 'CH-SK-5A', title: '5A — Hard-surface cleaner' },
+        { id: 'CH-SK-1A', title: '1A — Machine dishwashing detergent' },
+        { id: 'CH-SK-2B', title: '2B — Rinse aid' },
+        { id: 'CH-SK-2H', title: '2H — Machine destainer' },
+        { id: 'CH-SK-3AB', title: '3AB — Manual dishwashing detergent' },
+        { id: 'CH-SK-3L', title: '3L — Super Lemon sink wash' },
+        { id: 'CH-SK-HD', title: 'Heavy-duty degreaser' },
+        { id: 'CH-SK-SS', title: 'Stainless steel polish' },
+        { id: 'CH-SK-5', title: 'Other SK codes (to photograph)' }
+      ]
+    },
+    {
+      id: 'open',
+      title: 'Opening & Closing / Emergency',
+      icon: '⏱',
+      sops: [
+        { id: 'KP-24', title: 'KP-24 Restaurant opening & service checks' },
+        { id: 'KP-12', title: 'KP-12 End-of-service clean and handover' },
+        { id: 'KP-08', title: 'KP-08 Bratt pan cleaning', blocked: true },
+        { id: 'KP-09', title: 'KP-09 Rational automatic cleaning', blocked: true },
+        { id: 'KP-10', title: 'KP-10 Oven trays / filters', blocked: true },
+        { id: 'KP-11', title: 'KP-11 Fryer emptying & cleaning', blocked: true },
+        { id: 'SAFETY-FIRST', title: 'Emergency / fire — see Safety first' }
+      ]
+    },
+    {
+      id: 'vedanta',
+      title: 'Vedanta Standards',
+      icon: '🌿',
+      note: 'Plant-based / sattvic house. Training media must match manufacturer and model family. No animal-product cook demos. Clear allergen labelling on every batch.',
+      sops: []
+    }
+  ];
+
+  const equipment = [
+    { id: 'COOK-SCC', name: 'Rational SelfCookingCenter', photo: 'kitchen-photos/clean-eq-rational.jpg', comp: null },
+    { id: 'EQ-RC502', name: 'Robot-Coupe R 502 V.V.', photo: null, comp: 'COMP-RC502' },
+    { id: 'EQ-TM6', name: 'Vorwerk Thermomix TM6', photo: 'kitchen-photos/clean-eq-thermomix.jpg', comp: 'COMP-TM6' },
+    { id: 'EQ-LINCAT', name: 'Lincat Silverlink 600 J10/N', photo: 'kitchen-photos/clean-eq-lincat-fryer.jpg', comp: null },
+    { id: 'EQ-BRATT', name: 'Electrolux bratt pan', photo: 'kitchen-photos/clean-eq-bratt.jpg', comp: null },
+    { id: 'EQ-FOSTER-BC', name: 'Foster blast chiller', photo: 'kitchen-photos/hero-4.jpg', comp: 'COMP-BLAST' },
+    { id: 'EQ-BUFFALO', name: 'Buffalo induction hobs', photo: 'kitchen-photos/clean-eq-buffalo-induction.jpg', comp: null },
+    { id: 'EQ-FOSTER-FZ', name: 'Foster G2 freezer', photo: 'kitchen-photos/figure-foster-g2.jpg', comp: null },
+    { id: 'EQ-GRAM', name: 'GRAM pass fridge', photo: 'kitchen-photos/figure-fridge-door.jpg', comp: null }
+  ];
+
+  // Category cards
+  const catGrid = document.getElementById('catGrid');
+  categories.forEach(cat => {
+    const el = document.createElement('article');
+    el.className = 'cat-card';
+    el.dataset.cat = cat.id;
+    const count = cat.sops.length;
+    el.innerHTML = `
+      <div class="icon" aria-hidden="true">${cat.icon}</div>
+      <h3>${cat.title}</h3>
+      <div class="meta-row"><span class="count-pill">${cat.note ? 'Policy' : count + ' SOP' + (count === 1 ? '' : 's')}</span></div>
+      ${cat.note ? `<p class="note-card" style="padding:10px;margin:0">${cat.note}</p>` : ''}
+      ${count ? `<button type="button" class="ghost view-sops">View SOPs</button>
+      <div class="sop-list" id="list-${cat.id}"></div>` : ''}
+    `;
+    catGrid.appendChild(el);
+    if (count) {
+      const list = el.querySelector('.sop-list');
+      cat.sops.forEach(s => {
+        const a = document.createElement('button');
+        a.type = 'button';
+        a.className = 'sop-link' + (s.blocked ? ' blocked' : '');
+        a.innerHTML = `<span>${s.title}</span><small>${s.id}${s.blocked ? ' · blocked' : ''}</small>`;
+        a.addEventListener('click', () => openSop(s.id, s.title, s.comp));
+        list.appendChild(a);
+      });
+      el.querySelector('.view-sops').addEventListener('click', () => {
+        list.classList.toggle('open');
+        el.querySelector('.view-sops').textContent = list.classList.contains('open') ? 'Hide SOPs' : 'View SOPs';
+      });
+    }
+  });
+
+  // Chemicals quick grid
+  const chemGrid = document.getElementById('chemGrid');
+  categories.find(c => c.id === 'chem').sops.forEach(s => {
+    const a = document.createElement('article');
+    a.className = 'cat-card';
+    a.innerHTML = `<h3 style="font-size:1.1rem">${s.title}</h3><div class="meta-row"><span class="count-pill">${s.id}</span></div>`;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = 'Open sheet';
+    btn.addEventListener('click', () => openSop(s.id, s.title));
+    a.appendChild(btn);
+    chemGrid.appendChild(a);
+  });
+
+  // Equipment cards
+  const eqGrid = document.getElementById('eqGrid');
+  equipment.forEach(eq => {
+    const card = document.createElement('article');
+    card.className = 'card eq-card';
+    card.innerHTML = `
+      <div class="photo">${eq.photo ? `<img src="${eq.photo}" alt="${eq.name}" loading="lazy"/>` : `<div class="ph">Photo not in kitchen-photos yet<br><small>${eq.id}</small></div>`}</div>
+      <div class="body">
+        <h3>${eq.name}</h3>
+        <span class="status">● Operational</span>
+        <div class="actions">
+          <button type="button" data-open-sop="${eq.id}">Open SOP</button>
+          ${eq.comp ? `<button type="button" class="ghost" data-open-comp="${eq.comp}">Competency</button>` : `<button type="button" class="ghost" disabled title="No dedicated form">Competency</button>`}
+          <button type="button" class="danger" data-fault="${eq.id}">Report Fault</button>
+        </div>
+      </div>`;
+    eqGrid.appendChild(card);
+  });
+
+  // Scan list
+  const scanList = document.getElementById('scanList');
+  equipment.forEach(eq => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'sop-link';
+    b.style.width = '100%';
+    b.innerHTML = `<span>${eq.name}</span><small>${eq.id}</small>`;
+    b.addEventListener('click', () => {
+      closeScan();
+      openSop(eq.id, eq.name, eq.comp);
+    });
+    scanList.appendChild(b);
+  });
+
+  // SOP panel
+  const overlay = document.getElementById('sopOverlay');
+  const sopTitle = document.getElementById('sopTitle');
+  const sopRef = document.getElementById('sopRef');
+  const sopOpenFull = document.getElementById('sopOpenFull');
+  const sopCompLinks = document.getElementById('sopCompLinks');
+  const sopCompLine = document.getElementById('sopCompLine');
+
+  function openSop(id, title, comp) {
+    sopTitle.textContent = title || id;
+    sopRef.textContent = id + ' · preview — full sheet in pack';
+    sopOpenFull.href = PACK + '#' + id;
+    sopCompLinks.innerHTML = '';
+    const map = {
+      'EQ-RC502': 'COMP-RC502', 'COOK-SCC': null, 'EQ-TM6': 'COMP-TM6',
+      'EQ-FOSTER-BC': 'COMP-BLAST', 'COMP-SHARP': 'COMP-SHARP',
+      'COMP-RC502': 'COMP-RC502', 'COMP-TM6': 'COMP-TM6', 'COMP-BLAST': 'COMP-BLAST'
+    };
+    const c = comp || map[id];
+    if (c) {
+      sopCompLine.textContent = 'Linked competency form available.';
+      const a = document.createElement('a');
+      a.className = 'btn ghost';
+      a.href = PACK + '#' + c;
+      a.textContent = 'Open ' + c;
+      sopCompLinks.appendChild(a);
+    } else {
+      sopCompLine.textContent = 'No dedicated competency form for this sheet — use supervised practice and Safety first.';
+    }
+    overlay.classList.add('open');
+  }
+
+  document.getElementById('sopClose').addEventListener('click', () => overlay.classList.remove('open'));
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
+
+  document.body.addEventListener('click', (e) => {
+    const sopBtn = e.target.closest('[data-sop]');
+    if (sopBtn) {
+      openSop(sopBtn.dataset.sop, sopBtn.dataset.title, sopBtn.dataset.comp || null);
+      return;
+    }
+    const openS = e.target.closest('[data-open-sop]');
+    if (openS) {
+      const eq = equipment.find(x => x.id === openS.dataset.openSop);
+      openSop(openS.dataset.openSop, eq ? eq.name : openS.dataset.openSop, eq && eq.comp);
+      return;
+    }
+    const openC = e.target.closest('[data-open-comp]');
+    if (openC) {
+      openSop(openC.dataset.openComp, openC.dataset.openComp + ' competency', openC.dataset.openComp);
+      return;
+    }
+    const fault = e.target.closest('[data-fault]');
+    if (fault) {
+      const id = fault.dataset.fault;
+      const mail = 'mailto:kitchen@thevedanta.example?subject=' + encodeURIComponent('Equipment fault: ' + id);
+      const go = confirm('Fault workflow coming — logged locally soon.\\n\\nOpen email draft for ' + id + '?');
+      if (go) location.href = mail;
+      else alert('Fault workflow coming — logged locally soon.');
+    }
+  });
+
+  // Kitchen mode
+  const mode = document.getElementById('kitchenMode');
+  const saved = localStorage.getItem('vedanta-kitchen-mode') === '1';
+  mode.checked = saved;
+  document.body.classList.toggle('kitchen-mode', saved);
+  mode.addEventListener('change', () => {
+    document.body.classList.toggle('kitchen-mode', mode.checked);
+    localStorage.setItem('vedanta-kitchen-mode', mode.checked ? '1' : '0');
+  });
+
+  // Nav active state
+  const navLinks = document.querySelectorAll('.top-nav > .inner > a');
+  const sections = [...document.querySelectorAll('section.panel')];
+  function setActive() {
+    let current = sections[0]?.id;
+    const y = window.scrollY + 160;
+    sections.forEach(s => { if (s.offsetTop <= y) current = s.id; });
+    navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+  }
+  window.addEventListener('scroll', setActive, { passive: true });
+
+  // Scan / more
+  const scanOverlay = document.getElementById('scanOverlay');
+  function closeScan() { scanOverlay.classList.remove('open'); }
+  document.getElementById('scanOpen').addEventListener('click', () => scanOverlay.classList.add('open'));
+  document.getElementById('scanClose').addEventListener('click', closeScan);
+  scanOverlay.addEventListener('click', (e) => { if (e.target === scanOverlay) closeScan(); });
+
+  const more = document.getElementById('moreSheet');
+  document.getElementById('moreOpen').addEventListener('click', () => more.classList.add('open'));
+  document.getElementById('moreClose').addEventListener('click', () => more.classList.remove('open'));
+  more.addEventListener('click', (e) => {
+    if (e.target === more) more.classList.remove('open');
+    if (e.target.tagName === 'A') more.classList.remove('open');
+  });
+
+
+  /* ——— Action Centre (P1d) ——— */
+  const AC_ITEMS = [
+    { id: 'ac1', section: 'critical', title: 'Safety first briefing not confirmed', meta: 'Before service · SAFETY-FIRST', href: PACK + '#SAFETY-FIRST', tag: 'Sample' },
+    { id: 'ac2', section: 'due', title: 'Fridge / freezer display check', meta: 'Due today · STORE-CHILL', href: PACK + '#STORE-CHILL', tag: 'Example' },
+    { id: 'ac3', section: 'due', title: 'Thermomix competency overdue', meta: 'Due today · COMP-TM6', href: PACK + '#COMP-TM6', tag: 'Sample' },
+    { id: 'ac4', section: 'upcoming', title: 'Sharp objects refresh', meta: 'This week · COMP-SHARP', href: PACK + '#COMP-SHARP', tag: 'Sample' },
+    { id: 'ac5', section: 'upcoming', title: 'Review blocked fryer clean', meta: 'Upcoming · KP-11 / EQ-LINCAT', href: PACK + '#KP-11', tag: 'Example' },
+    { id: 'ac6', section: 'upcoming', title: 'Blast chiller supervised practice', meta: 'Upcoming · COMP-BLAST', href: PACK + '#COMP-BLAST', tag: 'Sample' },
+    { id: 'ac7', section: 'done', title: 'Opening checks logged (KP-24)', meta: 'Completed today · example', href: PACK + '#KP-24', tag: 'Example' }
+  ];
+  const AC_SECTIONS = [
+    { key: 'critical', label: '🔴 Critical' },
+    { key: 'due', label: '🟠 Due today' },
+    { key: 'upcoming', label: '🔵 Upcoming' },
+    { key: 'done', label: '✅ Completed today' }
+  ];
+  function loadAcState() {
+    try { return JSON.parse(localStorage.getItem('vedanta-ac-state') || '{}'); }
+    catch (e) { return {}; }
+  }
+  function saveAcState(st) { localStorage.setItem('vedanta-ac-state', JSON.stringify(st)); }
+
+  function renderActionCentre() {
+    const body = document.getElementById('acBody');
+    if (!body) return;
+    const st = loadAcState();
+    const now = Date.now();
+    let openCount = 0;
+    body.innerHTML = '';
+    AC_SECTIONS.forEach(sec => {
+      const wrap = document.createElement('div');
+      wrap.className = 'ac-section';
+      wrap.innerHTML = '<h3>' + sec.label + '</h3>';
+      const items = [];
+      AC_ITEMS.forEach(it => {
+        const s = st[it.id];
+        if (sec.key === 'done') {
+          if (it.section === 'done' && !(s && s.status === 'snooze' && s.until > now)) items.push(it);
+          else if (s && s.status === 'ack' && it.section !== 'done') items.push(Object.assign({}, it, { _acked: true }));
+          return;
+        }
+        if (it.section !== sec.key) return;
+        if (s && s.status === 'ack') return;
+        if (s && s.status === 'snooze' && s.until && s.until > now) return;
+        items.push(it);
+      });
+      if (!items.length) {
+        const empty = document.createElement('p');
+        empty.className = 'hint';
+        empty.textContent = 'Nothing here.';
+        wrap.appendChild(empty);
+      } else {
+        items.forEach(it => {
+          if (sec.key !== 'done' && !it._acked) openCount++;
+          const el = document.createElement('div');
+          el.className = 'ac-item' + ((sec.key === 'done' || it._acked) ? ' done' : '');
+          const actions = (sec.key !== 'done' && !it._acked)
+            ? '<div class="ac-actions"><button type="button" class="sm" data-ac-ack="' + it.id + '">Ack</button><button type="button" class="ghost sm" data-ac-snooze="' + it.id + '">Snooze 1h</button></div>'
+            : '<div class="hint">Acknowledged</div>';
+          el.innerHTML = '<div class="ac-title">' + it.title + '</div><div class="ac-meta"><span>' + it.meta + '</span>' +
+            (it.href ? '<a class="pack-link" href="' + it.href + '">Pack →</a>' : '') + '</div>' + actions;
+          wrap.appendChild(el);
+        });
+      }
+      body.appendChild(wrap);
+    });
+    document.querySelectorAll('#acBadgeHeader, #acBadgeEdge').forEach(b => {
+      b.textContent = String(Math.max(openCount, 0));
+      b.style.display = openCount ? '' : 'none';
+    });
+  }
+
+  function openAc() {
+    const drawer = document.getElementById('acDrawer');
+    const backdrop = document.getElementById('acBackdrop');
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    backdrop.hidden = false;
+    requestAnimationFrame(() => backdrop.classList.add('open'));
+    const hdr = document.getElementById('acOpenHeader');
+    const edge = document.getElementById('acOpenEdge');
+    if (hdr) hdr.setAttribute('aria-expanded', 'true');
+    if (edge) edge.setAttribute('aria-expanded', 'true');
+    renderActionCentre();
+  }
+  function closeAc() {
+    const drawer = document.getElementById('acDrawer');
+    const backdrop = document.getElementById('acBackdrop');
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    backdrop.classList.remove('open');
+    setTimeout(() => { backdrop.hidden = true; }, 280);
+    const hdr = document.getElementById('acOpenHeader');
+    const edge = document.getElementById('acOpenEdge');
+    if (hdr) hdr.setAttribute('aria-expanded', 'false');
+    if (edge) edge.setAttribute('aria-expanded', 'false');
+  }
+
+  document.getElementById('acOpenHeader').addEventListener('click', openAc);
+  document.getElementById('acOpenEdge').addEventListener('click', openAc);
+  document.getElementById('acClose').addEventListener('click', closeAc);
+  document.getElementById('acBackdrop').addEventListener('click', closeAc);
+  const moreAc = document.getElementById('moreAcOpen');
+  if (moreAc) moreAc.addEventListener('click', () => {
+    document.getElementById('moreSheet').classList.remove('open');
+    openAc();
+  });
+  const bnTasks = document.getElementById('bnTasks');
+  if (bnTasks) bnTasks.addEventListener('click', openAc);
+
+  document.getElementById('acBody').addEventListener('click', (e) => {
+    const ack = e.target.closest('[data-ac-ack]');
+    const sn = e.target.closest('[data-ac-snooze]');
+    const st = loadAcState();
+    if (ack) { st[ack.dataset.acAck] = { status: 'ack', at: Date.now() }; saveAcState(st); renderActionCentre(); }
+    if (sn) { st[sn.dataset.acSnooze] = { status: 'snooze', until: Date.now() + 3600000 }; saveAcState(st); renderActionCentre(); }
+  });
+
+  /* Explain score (P1c) */
+  const explainBtn = document.getElementById('explainScoreBtn');
+  const explainPanel = document.getElementById('explainPanel');
+  if (explainBtn && explainPanel) {
+    explainBtn.addEventListener('click', () => {
+      const open = explainPanel.classList.toggle('open');
+      explainPanel.hidden = !open;
+      explainBtn.textContent = open ? 'Hide explanation' : 'Explain score';
+    });
+  }
+  const attentionLink = document.getElementById('attentionLink');
+  if (attentionLink) attentionLink.addEventListener('click', (e) => { e.preventDefault(); openAc(); });
+
+  /* Role switcher (P1e) */
+  function setRole(role) {
+    document.body.classList.remove('role-staff', 'role-chef', 'role-manager');
+    document.body.classList.add('role-' + role);
+    document.querySelectorAll('.role-switch button').forEach(b => {
+      b.classList.toggle('active', b.dataset.role === role);
+    });
+    localStorage.setItem('vedanta-role', role);
+    const greet = document.getElementById('staffGreet');
+    if (greet) {
+      const h = new Date().getHours();
+      const part = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+      greet.textContent = role === 'chef' ? (part + ', Chef — ready for service?') : (part + ' — ready for service?');
+    }
+    const home = document.getElementById('bnHome');
+    if (home) home.setAttribute('href', role === 'manager' ? '#overview' : '#staff-home');
+  }
+  const savedRole = localStorage.getItem('vedanta-role') || 'staff';
+  setRole(savedRole);
+  document.querySelectorAll('.role-switch button').forEach(b => {
+    b.addEventListener('click', () => setRole(b.dataset.role));
+  });
+
+  const tileStart = document.getElementById('tileStartShift');
+  if (tileStart) tileStart.addEventListener('click', () => alert('Start Shift checklist — coming soon.\\n\\nFor now open Safety first and KP-24 in the pack.'));
+  const tileTasks = document.getElementById('tileMyTasks');
+  if (tileTasks) tileTasks.addEventListener('click', openAc);
+  const tileTemp = document.getElementById('tileTemp');
+  if (tileTemp) tileTemp.addEventListener('click', () => alert('Record Temperature — stub.\\n\\nConnect probe / log book in Parslia. Use STORE-CHILL / STORE-FREEZE for method.'));
+  const tileFault = document.getElementById('tileFault');
+  if (tileFault) tileFault.addEventListener('click', () => alert('Report Problem — fault workflow stub.\\n\\nUse Equipment → Report Fault on a machine card.'));
+
+  renderActionCentre();
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      overlay.classList.remove('open');
+      closeScan();
+      more.classList.remove('open');
+      if (navMoreMenu) navMoreMenu.classList.remove('open');
+      if (typeof closeAc === 'function') closeAc();
+    }
+  });
+})();
+</script>
+</body>
+</html>
