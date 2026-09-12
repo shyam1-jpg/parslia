@@ -3626,7 +3626,41 @@ window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.return
 })();</script><script>(()=>{
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function collect(id,blank){const form=document.getElementById(id),type=id==='wf-form',title=type?document.getElementById('wf-type').selectedOptions[0].textContent:'Daily Kitchen Work Log',ref=type?document.getElementById('wf-reference').textContent.replace('Form reference: ',''):'D001';const rows=[];for(const el of form.elements){if(!el.name||!['INPUT','SELECT','TEXTAREA'].includes(el.tagName))continue;const label=el.closest('label');if(!label)continue;const clone=label.cloneNode(true);clone.querySelectorAll('input,textarea,select').forEach(n=>n.remove());const group=el.closest('fieldset')?.querySelector('legend')?.textContent||'';rows.push({field:clone.textContent.trim(),group,value:blank?'':el.value});}return {title,ref,rows,blank}}
-function report(id,blank){const d=collect(id,blank),w=window.open('','_blank');if(!w){alert('Allow the report tab to open, then try again.');return}const body=d.rows.map(r=>'<tr><th scope="row">'+(r.group?'<small>'+esc(r.group)+'</small>':'')+esc(r.field)+'</th><td>'+ (r.value?esc(r.value).replace(/\n/g,'<br>'):'<span class="empty">'+(blank?'&nbsp;':'Not recorded')+'</span>')+'</td></tr>').join('');w.document.open();w.document.write('<!doctype html><html lang="en"><head><meta charset="utf-8"><title>'+esc(d.ref+' '+d.title)+'</title><style>@page{size:A4;margin:16mm}*{box-sizing:border-box}body{font:11pt/1.5 Arial,sans-serif;color:#20382f;background:#eee;margin:0}.sheet{max-width:850px;margin:24px auto;background:white;padding:44px}.brand{display:flex;gap:16px;align-items:center;border-bottom:3px solid #b89a65;padding-bottom:18px}.mark{width:180px;height:auto;object-fit:contain;background:#f7f1e6;padding:6px 10px}.org{font:26px "Cormorant Garamond",Georgia,serif;letter-spacing:2px}.sub{font-size:10px;letter-spacing:2px;color:#666}h1{font:26px Georgia;margin:24px 0 8px}.meta{font-size:10pt;color:#555;margin-bottom:20px}.state{display:inline-block;padding:4px 9px;background:#f3ebdd;font-weight:bold}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #d7dcd8;padding:10px;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{width:36%;background:#f2f5f2;font-size:10pt}td{color:#222;min-height:30px}tr{break-inside:avoid}small{display:block;font-weight:normal;color:#666}.empty{color:#777;display:block;min-height:22px}.sign{display:flex;gap:25px;margin-top:32px}.sign div{flex:1;border-top:1px solid #777;padding-top:8px}footer{font-size:9pt;color:#666;border-top:1px solid #ddd;margin-top:28px;padding-top:10px}.toolbar{text-align:center;padding:15px}button{font:inherit;padding:10px 18px;background:#1f3a32;color:white;border:0;border-radius:4px}@media print{body{background:white}.sheet{margin:0;padding:0;max-width:none}.toolbar{display:none}thead{display:table-header-group}}</style></head><body><div class="toolbar"><button onclick="window.print()">Print / Save as PDF</button></div><main class="sheet"><header class="brand"><img class="mark" src="kitchen-photos/vedanta-logo.png" alt="The Vedanta"><div><div class="org">THE VEDANTA</div><div class="sub">KITCHEN OPERATIONS · WORK RECORD</div></div></header><h1>'+esc(d.title)+'</h1><div class="meta">Reference '+esc(d.ref)+' · Template version 1.0 · Prepared '+esc(new Date().toLocaleString('en-GB'))+'</div><p class="state">'+(blank?'BLANK WORKING TEMPLATE':'CURRENT FORM COPY — verify entries and review status')+'</p><table><thead><tr><th>Check / information</th><th>Recorded details</th></tr></thead><tbody>'+body+'</tbody></table><div class="sign"><div>Completed by / signature<br><br>Date and time:</div><div>Checked by / signature<br><br>Date and time:</div></div><footer>Vedanta Way · '+esc(d.ref)+' · '+(blank?'Complete each applicable field; explain omissions and record corrective actions.':'This copy reflects the fields currently on screen, including unsaved edits. Missing information is shown as Not recorded. Typed names do not verify identity.')+'<br>Use the current approved procedure for operating limits. Retain the saved record and its review history.</footer></main>
+function report(id,blank){
+  const d=collect(id,blank),w=window.open('','_blank');
+  if(!w){alert('Allow the report tab to open, then try again.');return}
+  const body=d.rows.map(r=>'<tr><th scope="row">'+(r.group?'<small>'+esc(r.group)+'</small>':'')+esc(r.field)+'</th><td>'+(r.value?esc(r.value).replace(/\n/g,'<br>'):'<span class="empty">'+(blank?'&nbsp;':'Not recorded')+'</span>')+'</td></tr>').join('');
+  const doc=w.document;
+  doc.open();
+  doc.write('<!doctype html><html lang="en"><head><meta charset="utf-8"><title>');
+  doc.write(esc(d.ref+' '+d.title));
+  doc.write('</title><style>');
+  doc.write('@page{size:A4;margin:16mm}*{box-sizing:border-box}body{font:11pt/1.5 Arial,sans-serif;color:#20382f;background:#eee;margin:0}.sheet{max-width:850px;margin:24px auto;background:white;padding:44px}.brand{display:flex;gap:16px;align-items:center;border-bottom:3px solid #b89a65;padding-bottom:18px}.org{font:26px Georgia,serif;letter-spacing:2px}.sub{font-size:10px;letter-spacing:2px;color:#666}h1{font:26px Georgia;margin:24px 0 8px}.meta{font-size:10pt;color:#555;margin-bottom:20px}.state{display:inline-block;padding:4px 9px;background:#f3ebdd;font-weight:bold}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #d7dcd8;padding:10px;text-align:left;vertical-align:top;overflow-wrap:anywhere}th{width:36%;background:#f2f5f2;font-size:10pt}.empty{color:#777}.sign{display:flex;gap:25px;margin-top:32px}.box{flex:1;border-top:1px solid #999;padding-top:8px;min-height:70px}.foot{margin-top:28px;font-size:9pt;color:#666;border-top:1px solid #ddd;padding-top:10px}@media print{body{background:white}.sheet{margin:0;padding:0}}');
+  doc.write('</style></head><body><div class="sheet"><div class="brand"><div><div class="org">The Vedanta</div><div class="sub">PARSLIA KITCHEN OPERATIONS</div></div></div><h1>');
+  doc.write(esc(d.title));
+  doc.write('</h1><div class="meta"><strong>');
+  doc.write(esc(d.ref));
+  doc.write('</strong> · <span class="state">');
+  doc.write(blank?'Blank template':'Completed record');
+  doc.write('</span></div><table><tbody>');
+  doc.write(body);
+  doc.write('</tbody></table><div class="sign"><div class="box">Staff signature / name</div><div class="box">Manager / trainer</div><div class="box">Date</div></div><div class="foot">Generated from Parslia Kitchen Ops · retain with food-safety records.</div></div></body></html>');
+  doc.close();
+}
+function csv(id){
+  const d=collect(id,false);
+  const safe=v=>{let x=String(v??'');if(/^[\s]*[=+@-]/.test(x))x="'"+x;return '"'+x.replace(/"/g,'""')+'"'};
+  const lines=[['Form reference','Form title','Section','Field','Value'],...d.rows.map(r=>[d.ref,d.title,r.group,r.field,r.value])];
+  const blob=new Blob(['\ufeff'+lines.map(r=>r.map(safe).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=d.ref+'-current-record.csv';a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+document.querySelectorAll('[data-report]').forEach(b=>b.onclick=()=>report(b.dataset.report,false));
+document.querySelectorAll('[data-template]').forEach(b=>b.onclick=()=>report(b.dataset.template,true));
+document.querySelectorAll('[data-csv]').forEach(b=>b.onclick=()=>csv(b.dataset.csv));
+})();
+</script>
 <script>
 (() => {
   function fitCanvas(canvas) {
@@ -3726,7 +3760,7 @@ function report(id,blank){const d=collect(id,blank),w=window.open('','_blank');i
       const date = form.querySelector('input[name="'+id+'-date"]');
       const outcome = form.querySelector('input[name="'+id+'-out"]:checked');
       if (!staff || !staff.value.trim()) { alert('Add staff name before signing.'); return; }
-      if (!date || !date.value) { alert('Add today\\'s date before signing.'); return; }
+      if (!date || !date.value) { alert("Add today's date before signing."); return; }
       if (!outcome) { alert('Pick an outcome (cleared / supervised / more training).'); return; }
       // require some ink on both pads
       const needInk = (canvas) => {
@@ -3751,12 +3785,7 @@ function report(id,blank){const d=collect(id,blank),w=window.open('','_blank');i
   });
 })();
 </script>
-
 <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){})})}</script>
-</body></html>');w.document.close()}
-function csv(id){const d=collect(id,false);const safe=v=>{let x=String(v??'');if(/^[\s]*[=+@-]/.test(x))x="'"+x;return '"'+x.replace(/"/g,'""')+'"'};const lines=[['Form reference','Form title','Section','Field','Value'],...d.rows.map(r=>[d.ref,d.title,r.group,r.field,r.value])];const blob=new Blob(['\ufeff'+lines.map(r=>r.map(safe).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=d.ref+'-current-record.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-document.querySelectorAll('[data-report]').forEach(b=>b.onclick=()=>report(b.dataset.report,false));document.querySelectorAll('[data-template]').forEach(b=>b.onclick=()=>report(b.dataset.template,true));document.querySelectorAll('[data-csv]').forEach(b=>b.onclick=()=>csv(b.dataset.csv));
-})();</script>
-<script defer="" src="kitchen-pwa.js"></script>
+
 </body>
 </html>
