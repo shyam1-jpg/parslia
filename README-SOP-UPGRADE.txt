@@ -1,0 +1,1 @@
+Parslia SOP upgrade: kitchen-sop-pack.html is the professional shell; kitchen-sop-pack-legacy.html preserves the complete working forms/SOP engine. Do not delete the legacy engine while forms are still client-side.
