@@ -3,14 +3,35 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="refresh" content="0; url=pro-dashboard.html">
 <title>Parslia Kitchen Ops · The Vedānta</title>
 <link rel="canonical" href="pro-dashboard.html">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#17382f">
-<script>window.location.replace('pro-dashboard.html');</script>
 </head>
 <body>
-<p>Opening <a href="pro-dashboard.html">Parslia Kitchen Ops</a>…</p>
+<p>Opening kitchen ops… <a href="auth.html?next=pro-dashboard.html">Sign in</a> if you are not redirected.</p>
+<script src="js/firebase-config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="js/auth.js"></script>
+<script>
+(function () {
+  var next = 'pro-dashboard.html';
+  if (!window.ParsliaAuth || !ParsliaAuth.isConfigReady()) {
+    location.replace('auth.html?next=' + encodeURIComponent(next));
+    return;
+  }
+  ParsliaAuth.init();
+  ParsliaAuth.whenAuthReady().then(function (user) {
+    if (user) location.replace(next);
+    else location.replace('auth.html?next=' + encodeURIComponent(next));
+  });
+  // Safety timeout
+  setTimeout(function () {
+    if (!ParsliaAuth.getUser()) location.replace('auth.html?next=' + encodeURIComponent(next));
+  }, 4000);
+})();
+</script>
 </body>
 </html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17382f">
+<title>My activity · The Vedānta · Parslia</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--forest:#17382f;--forest2:#102a23;--gold:#c6a66f;--gold2:#eadcc3;--paper:#f8f3e9;--stone:#eee7da;--card:#fff;--ink:#1d1a16;--muted:#6d655c;--line:#ded4c4;--shadow:0 10px 30px rgba(20,45,38,.08);--radius:18px;--tap:46px}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#eee7da,#f8f3e9 28%);color:var(--ink);font:15px/1.45 Outfit,system-ui,sans-serif;padding-bottom:40px}
+h1,h2{font-family:"Cormorant Garamond",Georgia,serif;margin:0;color:var(--forest)}
+.top{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,var(--forest2),var(--forest));color:var(--paper);border-bottom:2px solid var(--gold)}
+.topin{width:min(900px,calc(100% - 28px));margin:auto;min-height:72px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.mark{width:44px;height:44px;border-radius:13px;background:var(--paper);color:var(--forest);display:grid;place-items:center;font-family:"Cormorant Garamond";font-size:24px;font-weight:700}
+.brand{flex:1;min-width:160px}.brand small{display:block;opacity:.8;letter-spacing:.12em;font-size:10px;margin-top:2px}
+.wrap{width:min(900px,calc(100% - 28px));margin:24px auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:16px}
+.meta{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.meta div{background:var(--stone);border-radius:12px;padding:12px}.meta b{display:block;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.list{list-style:none;margin:0;padding:0}.list li{border-top:1px solid var(--line);padding:12px 0;display:grid;gap:4px}
+.list li:first-child{border-top:0}
+.type{font-weight:700;color:var(--forest);font-size:13px;text-transform:uppercase;letter-spacing:.04em}
+.muted{color:var(--muted);font-size:13px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+a.btn,button.btn{min-height:var(--tap);border:0;border-radius:13px;padding:10px 15px;background:var(--forest);color:#fff;text-decoration:none;display:inline-flex;align-items:center;font-weight:600;cursor:pointer}
+a.ghost,button.ghost{background:transparent;color:var(--forest);border:1px solid var(--line)}
+.empty{color:var(--muted);padding:8px 0}
+</style>
+</head>
+<body>
+<header class="top"><div class="topin"><div class="mark">V</div><div class="brand"><h1>My activity</h1><small>STAFF PROFILE · THE VEDĀNTA</small></div></div></header>
+<main class="wrap">
+  <section class="card">
+    <h2 style="margin-bottom:12px">Profile</h2>
+    <div class="meta" id="profile">
+      <div><b>Name</b><span id="pName">…</span></div>
+      <div><b>Email</b><span id="pEmail">…</span></div>
+      <div><b>Role</b><span id="pRole">…</span></div>
+    </div>
+    <div class="actions">
+      <a class="btn" href="pro-dashboard.html" data-track="back-dashboard">Back to dashboard</a>
+      <a class="btn ghost" href="kitchen-sop-pack.html" data-track="to-sops">SOP pack</a>
+      <button class="btn ghost" type="button" id="logoutBtn" data-track="logout">Logout</button>
+    </div>
+  </section>
+  <section class="card">
+    <h2 style="margin-bottom:8px">Recent events</h2>
+    <p class="muted" style="margin:0 0 12px">Page views, video progress, clicks and form saves for your account.</p>
+    <ul class="list" id="events"><li class="empty">Loading…</li></ul>
+  </section>
+</main>
+
+<script src="js/firebase-config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/activity.js"></script>
+<script src="js/parslia-gate.js"></script>
+<script>
+(function () {
+  function fmtTime(ev) {
+    try {
+      if (ev.createdAt && ev.createdAt.toDate) return ev.createdAt.toDate().toLocaleString();
+      if (ev.clientAt) return new Date(ev.clientAt).toLocaleString();
+    } catch (e) {}
+    return ev.clientAt || '—';
+  }
+  document.getElementById('logoutBtn').onclick = function () { ParsliaAuth.logout(); };
+  ParsliaAuth.requireAuth().then(function (user) {
+    if (!user) return;
+    ParsliaAuth.mountUserChip();
+    ParsliaActivity.trackPage();
+    ParsliaActivity.getProfile().then(function (p) {
+      p = p || {};
+      document.getElementById('pName').textContent = p.displayName || user.displayName || '—';
+      document.getElementById('pEmail').textContent = p.email || user.email || '—';
+      document.getElementById('pRole').textContent = p.role || 'Staff';
+    });
+    ParsliaActivity.recentEvents(80).then(function (rows) {
+      var ul = document.getElementById('events');
+      if (!rows.length) {
+        ul.innerHTML = '<li class="empty">No events yet — open the dashboard, watch a training clip, or save a form.</li>';
+        return;
+      }
+      ul.innerHTML = rows.map(function (ev) {
+        return '<li><div class="type">' + (ev.type || 'event') + '</div>' +
+          '<div>' + (ev.label || '') + '</div>' +
+          '<div class="muted">' + (ev.path || '') + (ev.progress != null ? ' · ' + ev.progress + '%' : '') + ' · ' + fmtTime(ev) + '</div></li>';
+      }).join('');
+    }).catch(function () {
+      document.getElementById('events').innerHTML = '<li class="empty">Could not load events. Check Firestore rules and config.</li>';
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -3650,7 +3650,31 @@ function report(id,blank){
   doc.write(blank?'Blank template':'Completed record');
   doc.write('</span></div><table><tbody>');
   doc.write(body);
-  doc.write('</tbody></table><div class="sign"><div class="box">Staff signature / name</div><div class="box">Manager / trainer</div><div class="box">Date</div></div><div class="foot">Generated from Parslia Kitchen Ops · retain with food-safety records.</div></div></body></html>');
+  doc.write('</tbody></table><div class="sign"><div class="box">Staff signature / name</div><div class="box">Manager / trainer</div><div class="box">Date</div></div><div class="foot">Generated from Parslia Kitchen Ops · retain with food-safety records.</div></div>
+<script>
+(function(){
+  // Competency / working-form saves already hit localStorage; activity.js patches setItem.
+  // Also dispatch explicit events when signed forms lock.
+  document.addEventListener('click', function(e){
+    var lock = e.target && e.target.closest && e.target.closest('[data-lock-form], [data-save-form], .save-form, button[data-save]');
+    if (!lock) return;
+    var id = lock.getAttribute('data-lock-form') || lock.getAttribute('data-save-form') || lock.getAttribute('data-save') || 'sop-form';
+    try {
+      document.dispatchEvent(new CustomEvent('parslia:form-save', { detail: { formId: id, label: 'sop-form:' + id } }));
+      if (window.ParsliaActivity) ParsliaActivity.logEvent('form_save', { formId: id, label: 'sop-form:' + id });
+    } catch (err) {}
+  }, true);
+})();
+</script>
+
+<script src="js/firebase-config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/activity.js"></script>
+<script src="js/parslia-gate.js"></script>
+</body></html>');
   doc.close();
 }
 function csv(id){
