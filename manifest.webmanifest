@@ -1,13 +1,13 @@
 {
-  "name": "Parslia Kitchen Ops",
+  "name": "Parslia Kitchen OS",
   "short_name": "Parslia",
-  "description": "Kitchen operations, forms, SOPs and food-safety records for The Vedānta.",
-  "start_url": "./pro-dashboard.html",
+  "description": "Kitchen operations for The Vedanta Way Retreat Centre.",
+  "start_url": "./auth.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "theme_color": "#17382f",
-  "background_color": "#f8f3e9",
+  "theme_color": "#4F3066",
+  "background_color": "#FFFDF9",
   "icons": [
     {
       "src": "./icons/icon-192.png",
