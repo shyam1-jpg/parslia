@@ -1,14 +1,8 @@
 /**
- * Parslia / The Vedānta — Firebase web config (PLACEHOLDER)
+ * Parslia / The Vedanta — Firebase web config (the-vedanta)
  * ---------------------------------------------------------
- * Owner setup (see AUTH-SETUP.md):
- * 1. Create a Firebase project
- * 2. Enable Authentication → Email/Password
- * 3. Create a Firestore database
- * 4. Register a Web app and paste the config values BELOW
- * 5. Redeploy / push this file (do not commit real secrets to public forks
- *    if you prefer env-based injection later — for GitHub Pages the web
- *    apiKey is expected to be public and protected by Firebase Security Rules)
+ * Configured from Firebase Console → THE VEDANTA → Project settings → Web app.
+ * Web apiKey is public for GitHub Pages; protect data with Firebase Security Rules.
  *
  * Required fields: apiKey, authDomain, projectId, appId
  * Optional but usual: storageBucket, messagingSenderId
@@ -18,12 +12,12 @@
 
   /** @type {{apiKey:string,authDomain:string,projectId:string,storageBucket:string,messagingSenderId:string,appId:string}} */
   global.PARSLIA_FIREBASE = {
-    apiKey: '',
-    authDomain: '',
-    projectId: '',
-    storageBucket: '',
-    messagingSenderId: '',
-    appId: ''
+    apiKey: 'AIzaSyAufPj-x1FK5czAAnxOmVrm9lwMJ9oSTd0',
+    authDomain: 'the-vedanta.firebaseapp.com',
+    projectId: 'the-vedanta',
+    storageBucket: 'the-vedanta.firebasestorage.app',
+    messagingSenderId: '726105094774',
+    appId: '1:726105094774:web:f6c2bf522f5906834f3d57'
   };
 
   function isReady(cfg) {
