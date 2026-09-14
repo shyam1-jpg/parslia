@@ -377,6 +377,69 @@ label { display: block; margin: 0 0 6px; color: var(--brand-muted); font-size: 1
   .brand::after, .visual::before, .quote, .main, .brand, .visual { animation: none !important; }
 }
 
+
+.shell { position: relative; }
+.brand {
+  border-right: 1px solid rgba(198,166,111,.18);
+}
+.main {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(198,166,111,.10), transparent 36%),
+    linear-gradient(180deg, #FFFDF9 0%, #F8F5FB 100%);
+}
+.welcome h2 {
+  background: linear-gradient(120deg, #4F3066 20%, #7A61AD 55%, #4F3066 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.field input:focus, .field select:focus {
+  outline: none;
+  border-color: var(--brand-gold);
+  box-shadow: 0 0 0 4px rgba(198,166,111,.18);
+}
+.primary {
+  background: linear-gradient(135deg, #5a3a75, #4F3066 40%, #352044);
+  position: relative;
+  overflow: hidden;
+}
+.primary::after {
+  content: ";
+  position: absolute; inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.18) 48%, transparent 62%);
+  transform: translateX(-120%);
+  transition: transform .55s ease;
+}
+.primary:hover::after { transform: translateX(120%); }
+.visual-top .line2 {
+  font-size: clamp(28px, 3vw, 36px);
+  background: linear-gradient(90deg, #fff, #EADCC3);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.quote {
+  box-shadow: 0 18px 50px rgba(0,0,0,.28);
+}
+.value .orb {
+  animation: orbPulse 4.5s ease-in-out infinite;
+}
+.value:nth-child(2) .orb { animation-delay: .4s; }
+.value:nth-child(3) .orb { animation-delay: .8s; }
+.value:nth-child(4) .orb { animation-delay: 1.2s; }
+@keyframes orbPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(198,166,111,0); }
+  50% { box-shadow: 0 0 0 8px rgba(198,166,111,.08); }
+}
+.brand-foot .script {
+  text-shadow: 0 6px 30px rgba(0,0,0,.35);
+}
+@media (prefers-reduced-motion: reduce) {
+  .value .orb, .primary::after { animation: none !important; transition: none !important; }
+}
+
 </style>
 </head>
 <body data-parslia-public="1" data-parslia-autogate="0">
