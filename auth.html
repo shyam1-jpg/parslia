@@ -258,9 +258,7 @@ label { display: block; margin: 0 0 6px; color: var(--brand-muted); font-size: 1
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background:
-    linear-gradient(180deg, rgba(53,32,68,.22), rgba(53,32,68,.55)),
-    url("kitchen-photos/auth-hero.jpg") center/cover no-repeat;
+  background: #2a1a36;
 }
 .visual-top {
   text-align: right;
@@ -304,6 +302,81 @@ label { display: block; margin: 0 0 6px; color: var(--brand-muted); font-size: 1
   .brand-foot .script { font-size: 20px; }
   .primary, .google, .field input, .field select { min-height: 52px; }
 }
+
+.brand::after {
+  content: ";
+  position: absolute; inset: -20%;
+  background: radial-gradient(circle at 30% 20%, rgba(198,166,111,.2), transparent 42%),
+              radial-gradient(circle at 80% 70%, rgba(122,97,173,.25), transparent 45%);
+  animation: glowShift 12s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes glowShift {
+  from { transform: translate3d(0,0,0) scale(1); opacity: .85; }
+  to { transform: translate3d(-2%, 2%, 0) scale(1.05); opacity: 1; }
+}
+.value .orb {
+  transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+  box-shadow: 0 0 0 0 rgba(198,166,111,0);
+}
+.value .orb:hover {
+  transform: translateY(-3px) scale(1.05);
+  background: rgba(198,166,111,.22);
+  box-shadow: 0 10px 24px rgba(0,0,0,.18);
+}
+.product h1 {
+  letter-spacing: .01em;
+  text-shadow: 0 8px 40px rgba(0,0,0,.25);
+}
+.visual {
+  overflow: hidden;
+  isolation: isolate;
+}
+.visual::before {
+  content: ";
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(53,32,68,.15), rgba(53,32,68,.62)),
+    url(kitchen-photos/auth-hero.jpg) center/cover no-repeat;
+  transform: scale(1.08);
+  animation: heroDrift 22s ease-in-out infinite alternate;
+  z-index: -1;
+}
+@keyframes heroDrift {
+  from { transform: scale(1.08) translate3d(0,0,0); }
+  to { transform: scale(1.14) translate3d(-1.5%, 1%, 0); }
+}
+.visual > * { position: relative; z-index: 1; }
+.quote {
+  backdrop-filter: blur(10px);
+  background: rgba(255,253,249,.9);
+  border: 1px solid rgba(234,220,195,.7);
+  transform: translateY(0);
+  animation: quoteIn .9s ease both;
+}
+@keyframes quoteIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.primary {
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 34px rgba(79,48,102,.3);
+}
+.main, .brand, .visual { animation: panelIn .7s ease both; }
+.brand { animation-delay: .02s; }
+.main { animation-delay: .08s; }
+.visual { animation-delay: .14s; }
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand::after, .visual::before, .quote, .main, .brand, .visual { animation: none !important; }
+}
+
 </style>
 </head>
 <body data-parslia-public="1" data-parslia-autogate="0">
