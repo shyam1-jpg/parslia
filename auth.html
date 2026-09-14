@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#4F3066">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Parslia">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <title>Sign in — Parslia Kitchen OS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,6 +27,8 @@
   --brand-line: #E4DCE8;
   --brand-shadow: 0 12px 40px rgba(79, 48, 102, 0.10);
   --brand-radius: 18px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 * { box-sizing: border-box; }
 html, body { height: 100%; }
@@ -30,339 +37,271 @@ body {
   color: var(--brand-text);
   font-family: Outfit, system-ui, sans-serif;
   background: var(--brand-cream);
+  -webkit-font-smoothing: antialiased;
 }
-h1, h2, h3 { font-family: "Cormorant Garamond", Georgia, serif; }
+h1, h2, h3 { font-family: "Cormorant Garamond", Georgia, serif; margin: 0; }
 .shell {
   min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
-  grid-template-columns: minmax(280px, 1.05fr) minmax(320px, 0.95fr) minmax(280px, 1.1fr);
+  grid-template-columns: 1.05fr 0.95fr 1.1fr;
 }
-.brand, .visual { position: relative; overflow: hidden; }
 .brand {
-  background: linear-gradient(165deg, var(--brand-purple-dark) 0%, var(--brand-purple) 55%, #5a3a75 100%);
+  position: relative;
+  overflow: hidden;
   color: #fff;
-  padding: 42px 36px 32px;
+  padding: calc(40px + var(--safe-top)) 40px 36px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background:
+    linear-gradient(165deg, var(--brand-purple-dark), var(--brand-purple) 52%, #5b3c74);
 }
 .brand::before {
   content: "";
   position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse at 20% 10%, rgba(198,166,111,.14), transparent 45%),
-    radial-gradient(ellipse at 80% 90%, rgba(0,0,0,.18), transparent 50%);
+  opacity: .18;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cpath fill='%23C6A66F' d='M90 12c18 28 22 52 8 78-22 12-46 8-62-8 10 36 40 64 62 64s52-28 62-64c-16 16-40 20-62 8-14-26-10-50 8-78z'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
   pointer-events: none;
 }
 .brand > * { position: relative; z-index: 1; }
 .logo-block { text-align: center; }
 .logo-block img {
-  width: 148px;
+  width: 132px;
   height: auto;
   display: block;
-  margin: 0 auto 18px;
-  filter: grayscale(1) brightness(1.15) contrast(1.05);
+  margin: 0 auto 16px;
+  filter: grayscale(1) brightness(1.2) contrast(1.05);
 }
-.centre-name {
-  margin: 0;
-  font: 600 28px/1.15 "Cormorant Garamond", Georgia, serif;
-  color: #fff;
-}
+.centre-name { font: 600 30px/1.1 "Cormorant Garamond", Georgia, serif; }
 .centre-tag {
-  margin: 6px 0 0;
-  color: var(--brand-gold);
-  font-size: 11px;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-.product {
-  margin: 36px 0 8px;
-  text-align: center;
-}
-.product h1 {
-  margin: 0;
-  color: #fff;
-  font: 600 44px/1 "Cormorant Garamond", Georgia, serif;
-}
-.product .os {
   margin-top: 6px;
   color: var(--brand-gold);
-  font-size: 13px;
+  font-size: 11px;
   letter-spacing: .2em;
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 700;
+}
+.product { margin-top: 42px; text-align: center; }
+.product h1 { font: 600 52px/1 "Cormorant Garamond", Georgia, serif; color: #fff; }
+.product .os {
+  margin-top: 8px;
+  color: var(--brand-gold);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 700;
 }
 .tagline {
-  margin: 10px 0 0;
-  text-align: center;
+  margin: 12px 0 0;
   color: rgba(255,255,255,.78);
-  font-size: 13px;
-  letter-spacing: .04em;
+  font-size: 14px;
 }
 .values {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px 12px;
-  margin: 36px 0 28px;
+  gap: 18px 14px;
+  margin: 42px auto 28px;
+  max-width: 280px;
 }
-.value {
-  text-align: center;
-}
+.value { text-align: center; }
 .value .orb {
-  width: 54px; height: 54px;
-  margin: 0 auto 8px;
+  width: 56px; height: 56px; margin: 0 auto 8px;
   border-radius: 50%;
-  border: 1.5px solid rgba(198,166,111,.65);
+  border: 1.5px solid rgba(198,166,111,.7);
   background: rgba(198,166,111,.12);
-  display: grid;
-  place-items: center;
+  display: grid; place-items: center;
   color: var(--brand-gold-soft);
 }
 .value .orb svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.value span {
-  display: block;
-  color: rgba(255,255,255,.88);
-  font-size: 12px;
-  letter-spacing: .04em;
-}
+.value span { font-size: 12px; letter-spacing: .03em; color: rgba(255,255,255,.9); }
 .brand-foot { text-align: center; }
 .brand-foot .script {
-  margin: 0;
   color: var(--brand-gold);
-  font: italic 500 22px/1.2 "Cormorant Garamond", Georgia, serif;
+  font: italic 500 24px/1.2 "Cormorant Garamond", Georgia, serif;
 }
 .brand-foot .pillars {
-  margin: 8px 0 0;
-  color: rgba(255,255,255,.7);
+  margin-top: 8px;
   font-size: 10px;
-  letter-spacing: .16em;
+  letter-spacing: .18em;
   text-transform: uppercase;
+  color: rgba(255,255,255,.68);
 }
 .main {
+  position: relative;
   background: var(--brand-paper);
   display: flex;
   flex-direction: column;
-  padding: 28px 34px 28px;
-  position: relative;
+  padding: calc(24px + var(--safe-top)) 36px calc(28px + var(--safe-bottom));
 }
 .main::after {
   content: "";
-  position: absolute;
-  right: 18px; bottom: 18px;
-  width: 120px; height: 120px;
-  background: radial-gradient(circle, rgba(198,166,111,.16), transparent 70%);
+  position: absolute; right: 0; bottom: 0;
+  width: 180px; height: 180px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cpath fill='%23EADCC3' opacity='.55' d='M120 160c-30-20-48-48-40-86 28-8 54 6 70 30-28 10-42 32-30 56z'/%3E%3C/svg%3E") no-repeat bottom right;
   pointer-events: none;
+  opacity: .9;
 }
-.lang {
-  align-self: flex-end;
-  color: var(--brand-muted);
-  font-size: 13px;
-  margin-bottom: 18px;
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
-.welcome { margin: 12px 0 28px; }
-.welcome h2 {
-  margin: 0;
+.lang { color: var(--brand-muted); font-size: 13px; }
+.install-btn {
+  border: 1px solid var(--brand-line);
+  background: #fff;
   color: var(--brand-purple);
-  font: 600 40px/1.05 "Cormorant Garamond", Georgia, serif;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font: 700 12px Outfit, system-ui, sans-serif;
+  cursor: pointer;
 }
+.install-btn[hidden] { display: none !important; }
+.welcome { margin: 18px 0 22px; }
+.welcome h2 { color: var(--brand-purple); font: 600 44px/1.05 "Cormorant Garamond", Georgia, serif; }
 .welcome .os {
-  margin-top: 4px;
+  margin-top: 6px;
   color: var(--brand-gold);
-  font-size: 13px;
   letter-spacing: .18em;
   text-transform: uppercase;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
 }
-.welcome p {
-  margin: 10px 0 0;
-  color: var(--brand-muted);
-  font-size: 14px;
-}
-.tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 18px;
-}
+.welcome p { margin: 10px 0 0; color: var(--brand-muted); font-size: 14px; }
+.tabs { display: flex; gap: 8px; margin-bottom: 18px; }
 .tab {
   border: 1px solid var(--brand-line);
   background: #fff;
   color: var(--brand-muted);
   border-radius: 999px;
-  padding: 8px 14px;
-  font: 600 13px Outfit, system-ui, sans-serif;
+  padding: 9px 14px;
+  font: 700 13px Outfit, system-ui, sans-serif;
   cursor: pointer;
 }
-.tab.active {
-  background: var(--brand-purple);
-  border-color: var(--brand-purple);
-  color: #fff;
-}
-label {
-  display: block;
-  margin: 0 0 6px;
-  color: var(--brand-muted);
-  font-size: 12px;
-  font-weight: 600;
-}
+.tab.active { background: var(--brand-purple); border-color: var(--brand-purple); color: #fff; }
+label { display: block; margin: 0 0 6px; color: var(--brand-muted); font-size: 12px; font-weight: 700; }
 .field { margin-bottom: 14px; position: relative; }
 .field input, .field select {
   width: 100%;
-  min-height: 48px;
+  min-height: 50px;
   border: 1px solid var(--brand-line);
-  border-radius: 12px;
-  padding: 12px 14px 12px 42px;
+  border-radius: 14px;
+  padding: 12px 14px 12px 44px;
   font: 500 15px Outfit, system-ui, sans-serif;
   color: var(--brand-text);
   background: #fff;
 }
 .field select { padding-left: 14px; }
 .field .ico {
-  position: absolute;
-  left: 14px; top: 38px;
-  width: 18px; height: 18px;
-  color: var(--brand-muted);
-  pointer-events: none;
+  position: absolute; left: 15px; top: 39px; width: 18px; height: 18px;
+  color: var(--brand-muted); pointer-events: none;
 }
 .field .ico svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .field .toggle {
-  position: absolute;
-  right: 10px; top: 34px;
-  border: 0; background: transparent;
-  color: var(--brand-muted);
-  cursor: pointer;
-  padding: 6px;
+  position: absolute; right: 10px; top: 36px;
+  border: 0; background: transparent; color: var(--brand-muted);
+  cursor: pointer; padding: 6px; font: 700 12px Outfit, system-ui, sans-serif;
 }
 .row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 4px 0 18px;
-  font-size: 13px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin: 2px 0 18px; font-size: 13px;
 }
 .row label { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--brand-text); font-weight: 500; cursor: pointer; }
-.row a { color: var(--brand-purple); text-decoration: none; font-weight: 600; }
-.row a:hover { text-decoration: underline; }
+.row a { color: var(--brand-purple); text-decoration: none; font-weight: 700; }
 .primary, .google {
-  width: 100%;
-  min-height: 48px;
-  border-radius: 12px;
-  font: 700 15px Outfit, system-ui, sans-serif;
-  cursor: pointer;
+  width: 100%; min-height: 50px; border-radius: 14px;
+  font: 700 15px Outfit, system-ui, sans-serif; cursor: pointer;
 }
 .primary {
-  border: 0;
-  background: var(--brand-purple);
-  color: #fff;
-  box-shadow: 0 10px 24px rgba(79,48,102,.22);
+  border: 0; background: var(--brand-purple); color: #fff;
+  box-shadow: 0 12px 28px rgba(79,48,102,.24);
 }
 .primary:hover { background: var(--brand-purple-dark); }
 .primary:disabled { opacity: .55; cursor: not-allowed; }
 .divider {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 12px;
-  align-items: center;
-  margin: 16px 0;
-  color: var(--brand-muted);
-  font-size: 12px;
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center;
+  margin: 16px 0; color: var(--brand-muted); font-size: 12px;
 }
-.divider::before, .divider::after {
-  content: "";
-  height: 1px;
-  background: var(--brand-line);
-}
+.divider::before, .divider::after { content: ""; height: 1px; background: var(--brand-line); }
 .google {
-  border: 1px solid var(--brand-line);
-  background: #fff;
-  color: var(--brand-text);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+  border: 1px solid var(--brand-line); background: #fff; color: var(--brand-text);
+  display: flex; align-items: center; justify-content: center; gap: 10px;
 }
 .google:hover { border-color: var(--brand-gold); }
 .panel { display: none; }
 .panel.active { display: block; }
-.msg {
-  min-height: 20px;
-  margin: 12px 0 0;
-  font-size: 13px;
-  font-weight: 600;
-}
+.msg { min-height: 20px; margin: 12px 0 0; font-size: 13px; font-weight: 700; }
 .msg.err { color: #8E3F36; }
 .msg.ok { color: var(--brand-purple); }
 .setup {
-  margin: 0 0 14px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: #F7F0E4;
-  border: 1px solid var(--brand-gold-soft);
-  color: var(--brand-purple-dark);
-  font-size: 13px;
+  margin: 0 0 14px; padding: 12px 14px; border-radius: 12px;
+  background: #F7F0E4; border: 1px solid var(--brand-gold-soft);
+  color: var(--brand-purple-dark); font-size: 13px;
 }
-.foot {
-  margin-top: auto;
-  padding-top: 22px;
-  text-align: center;
-  color: var(--brand-muted);
-  font-size: 13px;
-}
-.foot a { color: var(--brand-purple); font-weight: 600; text-decoration: none; }
-.legal {
-  margin-top: 14px;
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-  font-size: 12px;
-}
+.foot { margin-top: auto; padding-top: 22px; text-align: center; color: var(--brand-muted); font-size: 13px; position: relative; z-index: 1; }
+.foot a { color: var(--brand-purple); font-weight: 700; text-decoration: none; }
+.legal { margin-top: 14px; display: flex; justify-content: center; gap: 14px; font-size: 12px; }
 .legal a { color: var(--brand-muted); text-decoration: none; }
+.ios-tip {
+  margin-top: 10px; font-size: 12px; color: var(--brand-muted); line-height: 1.4;
+}
+.ios-tip[hidden] { display: none !important; }
 .visual {
-  background: #2a1a36 center/cover no-repeat;
-  background-image: linear-gradient(180deg, rgba(53,32,68,.25), rgba(53,32,68,.55)), url("kitchen-photos/hero-1.jpg");
+  position: relative;
   color: #fff;
-  padding: 36px;
+  padding: calc(36px + var(--safe-top)) 36px 36px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background:
+    linear-gradient(180deg, rgba(53,32,68,.22), rgba(53,32,68,.55)),
+    url("kitchen-photos/auth-hero.jpg") center/cover no-repeat;
 }
 .visual-top {
   text-align: right;
   font-family: "Cormorant Garamond", Georgia, serif;
   font-weight: 500;
-  line-height: 1.35;
-  text-shadow: 0 2px 16px rgba(0,0,0,.35);
+  line-height: 1.3;
+  text-shadow: 0 2px 18px rgba(0,0,0,.4);
 }
-.visual-top .line1 { font-size: 20px; opacity: .95; }
-.visual-top .line2 { font-size: 28px; margin-top: 4px; }
-.visual-top .line3 { font-size: 16px; color: var(--brand-gold-soft); margin-top: 6px; letter-spacing: .06em; }
+.visual-top .line1 { font-size: 20px; }
+.visual-top .line2 { font-size: 30px; margin-top: 4px; }
+.visual-top .line3 { font-size: 15px; color: var(--brand-gold-soft); margin-top: 8px; letter-spacing: .08em; }
 .quote {
-  background: rgba(255,253,249,.92);
+  background: rgba(255,253,249,.94);
   color: var(--brand-text);
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 18px 20px;
   box-shadow: var(--brand-shadow);
   max-width: 360px;
 }
-.quote p {
-  margin: 0;
-  font: italic 500 18px/1.45 "Cormorant Garamond", Georgia, serif;
-}
+.quote p { margin: 0; font: italic 500 19px/1.45 "Cormorant Garamond", Georgia, serif; }
 .quote cite {
-  display: block;
-  margin-top: 10px;
-  color: var(--brand-gold);
-  font: 600 12px Outfit, system-ui, sans-serif;
-  font-style: normal;
-  letter-spacing: .04em;
+  display: block; margin-top: 10px; color: var(--brand-gold);
+  font: 700 12px Outfit, system-ui, sans-serif; font-style: normal; letter-spacing: .04em;
 }
 @media (max-width: 980px) {
   .shell { grid-template-columns: 1fr; }
-  .visual { min-height: 280px; order: 3; }
-  .brand { order: 1; min-height: auto; padding: 28px 24px; }
-  .main { order: 2; padding: 24px 20px 32px; }
-  .values { max-width: 320px; margin-left: auto; margin-right: auto; }
+  .brand { order: 1; padding: calc(24px + var(--safe-top)) 22px 22px; min-height: auto; }
+  .product { margin-top: 22px; }
+  .product h1 { font-size: 40px; }
+  .values { margin: 22px auto 12px; gap: 12px; }
+  .value .orb { width: 48px; height: 48px; }
+  .main { order: 2; padding: 20px 18px calc(24px + var(--safe-bottom)); }
+  .welcome h2 { font-size: 34px; }
+  .visual {
+    order: 3;
+    min-height: 320px;
+    padding: 24px 20px calc(24px + var(--safe-bottom));
+  }
+}
+@media (max-width: 640px) {
+  .brand-foot .script { font-size: 20px; }
+  .primary, .google, .field input, .field select { min-height: 52px; }
 }
 </style>
 </head>
@@ -372,15 +311,15 @@ label {
     <div>
       <div class="logo-block">
         <img src="kitchen-photos/vedanta-logo.png" alt="The Vedānta Way Retreat Centre">
-        <p class="centre-name">The Vedānta Way</p>
-        <p class="centre-tag">Retreat Centre</p>
+        <div class="centre-name">The Vedānta Way</div>
+        <div class="centre-tag">Retreat Centre</div>
       </div>
       <div class="product">
         <h1>Parslia</h1>
         <div class="os">Kitchen OS</div>
         <p class="tagline">Plan • Produce • Serve • Thrive</p>
       </div>
-      <div class="values" aria-label="Values">
+      <div class="values">
         <div class="value"><div class="orb" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3c2 4 2 7 0 10-3 1.5-6 1-8-1 1 5 5 9 8 9s7-4 8-9c-2 2-5 2.5-8 1 0-3 0-6 0-10z"/></svg></div><span>Clean</span></div>
         <div class="value"><div class="orb" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.5-7 10-7 10z"/></svg></div><span>Calm</span></div>
         <div class="value"><div class="orb" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="2.2"/><circle cx="15" cy="9" r="2.2"/><circle cx="12" cy="14.5" r="2.2"/><path d="M5 19c1-2.5 3-3.5 4.5-3.5S12 16 13 17.5M11 19c1-2 3-3 4.5-3S19 17 20 19"/></svg></div><span>Focused</span></div>
@@ -388,20 +327,22 @@ label {
       </div>
     </div>
     <div class="brand-foot">
-      <p class="script">Food for a Higher Purpose</p>
-      <p class="pillars">Food • People • Planet • Purpose</p>
+      <div class="script">Food for a Higher Purpose</div>
+      <div class="pillars">Food • People • Planet • Purpose</div>
     </div>
   </aside>
 
   <main class="main">
-    <div class="lang">English</div>
+    <div class="topbar">
+      <button type="button" class="install-btn" id="installBtn" hidden>Install app</button>
+      <div class="lang">English</div>
+    </div>
     <div id="setupBanner" class="setup" hidden>Firebase is not ready yet. Check <code>js/firebase-config.js</code>.</div>
     <div class="welcome">
       <h2>Welcome to Parslia</h2>
       <div class="os">Kitchen OS</div>
       <p>Sign in to your account</p>
     </div>
-
     <div class="tabs">
       <button type="button" class="tab active" id="tabLogin">Sign in</button>
       <button type="button" class="tab" id="tabRegister">Create account</button>
@@ -446,25 +387,17 @@ label {
       </div>
       <div class="field">
         <label for="regRole">Role</label>
-        <select id="regRole">
-          <option>Staff</option>
-          <option>Chef</option>
-          <option>Manager</option>
-        </select>
+        <select id="regRole"><option>Staff</option><option>Chef</option><option>Manager</option></select>
       </div>
       <button class="primary" id="regBtn" type="submit">Create account</button>
     </form>
 
     <div id="msg" class="msg" role="status"></div>
     <p id="setupBack" class="msg" hidden><a href="index.html">Back to home</a></p>
-
     <div class="foot">
       <span id="footSwap">Don&apos;t have an account? <a href="#" id="gotoRegister">Create account</a></span>
-      <div class="legal">
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
-        <a href="#">Help</a>
-      </div>
+      <p class="ios-tip" id="iosTip" hidden>On iPhone: tap Share, then <strong>Add to Home Screen</strong> to install Parslia.</p>
+      <div class="legal"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Help</a></div>
     </div>
   </main>
 
@@ -489,6 +422,29 @@ label {
 <script src="js/activity.js"></script>
 <script>
 (function () {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(function () {});
+  }
+  var deferredPrompt = null;
+  var installBtn = document.getElementById('installBtn');
+  var iosTip = document.getElementById('iosTip');
+  var isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if (isIos && !isStandalone) iosTip.hidden = false;
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    installBtn.hidden = false;
+  });
+  installBtn.addEventListener('click', function () {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.finally(function () {
+      deferredPrompt = null;
+      installBtn.hidden = true;
+    });
+  });
+
   var ready = window.ParsliaAuth && ParsliaAuth.isConfigReady();
   var banner = document.getElementById('setupBanner');
   var loginBtn = document.getElementById('loginBtn');
@@ -528,14 +484,12 @@ label {
   document.getElementById('tabLogin').onclick = function () { showTab('login'); };
   document.getElementById('tabRegister').onclick = function () { showTab('register'); };
   document.getElementById('gotoRegister').onclick = function (e) { e.preventDefault(); showTab('register'); };
-
   document.getElementById('toggleLoginPass').onclick = function () {
     var input = document.getElementById('loginPassword');
     var show = input.type === 'password';
     input.type = show ? 'text' : 'password';
     this.textContent = show ? 'Hide' : 'Show';
   };
-
   document.getElementById('forgotLink').onclick = function (e) {
     e.preventDefault();
     if (!ready) return;
@@ -545,11 +499,9 @@ label {
       .then(function () { setMsg('Password reset email sent', true); })
       .catch(function (err) { setMsg((err && err.message) || 'Could not send reset email', false); });
   };
-
   document.getElementById('googleBtn').onclick = function () {
     setMsg('Google sign-in is not enabled yet. Use email and password for now.', false);
   };
-
   document.getElementById('loginPanel').onsubmit = function (e) {
     e.preventDefault();
     if (!ready) return;
@@ -558,7 +510,6 @@ label {
       .then(function () { location.href = nextUrl(); })
       .catch(function (err) { setMsg((err && err.message) || 'Sign-in failed', false); });
   };
-
   document.getElementById('registerPanel').onsubmit = function (e) {
     e.preventDefault();
     if (!ready) return;
@@ -568,7 +519,6 @@ label {
     }).then(function () { location.href = nextUrl(); })
       .catch(function (err) { setMsg((err && err.message) || 'Registration failed', false); });
   };
-
   if (ready) {
     ParsliaAuth.whenAuthReady().then(function (u) {
       if (u) location.replace(nextUrl());
