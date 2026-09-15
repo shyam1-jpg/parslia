@@ -61,8 +61,8 @@ h1, h2, h3 { font-family: "Cormorant Garamond", Georgia, serif; margin: 0; }
 .brand::before {
   content: "";
   position: absolute; inset: 0;
-  opacity: .18;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cpath fill='%23C6A66F' d='M90 12c18 28 22 52 8 78-22 12-46 8-62-8 10 36 40 64 62 64s52-28 62-64c-16 16-40 20-62 8-14-26-10-50 8-78z'/%3E%3C/svg%3E");
+  opacity: .28;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Cpath fill='%237A61AD' d='M90 12c18 28 22 52 8 78-22 12-46 8-62-8 10 36 40 64 62 64s52-28 62-64c-16 16-40 20-62 8-14-26-10-50 8-78z'/%3E%3C/svg%3E");
   background-size: 160px 160px;
   pointer-events: none;
 }
@@ -304,7 +304,7 @@ label { display: block; margin: 0 0 6px; color: var(--brand-muted); font-size: 1
 }
 
 .brand::after {
-  content: ";
+  content: "";
   position: absolute; inset: -20%;
   background: radial-gradient(circle at 30% 20%, rgba(198,166,111,.2), transparent 42%),
               radial-gradient(circle at 80% 70%, rgba(122,97,173,.25), transparent 45%);
@@ -333,11 +333,11 @@ label { display: block; margin: 0 0 6px; color: var(--brand-muted); font-size: 1
   isolation: isolate;
 }
 .visual::before {
-  content: ";
+  content: "";
   position: absolute; inset: 0;
   background:
-    linear-gradient(180deg, rgba(53,32,68,.15), rgba(53,32,68,.62)),
-    url(kitchen-photos/auth-hero.jpg) center/cover no-repeat;
+    linear-gradient(180deg, rgba(53,32,68,.22), rgba(53,32,68,.55) 55%, rgba(26,12,36,.78)),
+    url(kitchen-photos/auth-hero.jpg?v=purplekale) center/cover no-repeat;
   transform: scale(1.08);
   animation: heroDrift 22s ease-in-out infinite alternate;
   z-index: -1;
@@ -405,7 +405,7 @@ label { display: block; margin: 0 0 6px; color: var(--brand-muted); font-size: 1
   overflow: hidden;
 }
 .primary::after {
-  content: ";
+  content: "";
   position: absolute; inset: 0;
   background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.18) 48%, transparent 62%);
   transform: translateX(-120%);
