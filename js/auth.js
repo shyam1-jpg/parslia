@@ -232,12 +232,61 @@
     });
   }
 
+
+  var ERROR_MAP = {
+    'auth/invalid-email': 'That email address does not look valid.',
+    'auth/user-disabled': 'This staff account has been disabled. Ask your manager.',
+    'auth/user-not-found': 'No account found for that email. Try creating one.',
+    'auth/wrong-password': 'Incorrect password. Try again or reset it.',
+    'auth/invalid-credential': 'Email or password is incorrect.',
+    'auth/email-already-in-use': 'An account with that email already exists. Sign in instead.',
+    'auth/weak-password': 'Choose a stronger password (at least 6 characters).',
+    'auth/too-many-requests': 'Too many attempts. Please wait a moment and try again.',
+    'auth/network-request-failed': 'Network error. Check your connection and try again.',
+    'auth/operation-not-allowed': 'This sign-in method is not enabled yet.',
+    'auth/unauthorized-domain': 'This site is not authorised for sign-in. Ask your admin to add the domain in Firebase.',
+    'auth/popup-closed-by-user': 'Sign-in window was closed before finishing.',
+    'auth/cancelled-popup-request': 'Sign-in was cancelled.',
+    'auth/missing-email': 'Enter your email address first.',
+    'auth/requires-recent-login': 'For security, please sign in again and retry.',
+    'auth/password-mismatch': 'Passwords do not match.'
+  };
+
+  function friendlyAuthError(err) {
+    if (!err) return 'Something went wrong. Please try again.';
+    var code = err.code || '';
+    if (ERROR_MAP[code]) return ERROR_MAP[code];
+    var msg = err.message || String(err);
+    // Strip Firebase noise prefixes
+    msg = msg.replace(/^Firebase:\s*/i, '').replace(/\s*\(auth\/[^)]+\)\.?$/, '').trim();
+    return msg || 'Something went wrong. Please try again.';
+  }
+
+  function resetPassword(email) {
+    init();
+    if (!auth) return Promise.reject(new Error('Auth not ready — Firebase is not configured.'));
+    var trimmed = (email || '').trim();
+    if (!trimmed) return Promise.reject(Object.assign(new Error('Enter your email first.'), { code: 'auth/missing-email' }));
+    return auth.sendPasswordResetEmail(trimmed);
+  }
+
+  function registerWithConfirm(email, password, confirmPassword, profile) {
+    if ((password || '') !== (confirmPassword || '')) {
+      return Promise.reject(Object.assign(new Error('Passwords do not match.'), { code: 'auth/password-mismatch' }));
+    }
+    ERROR_MAP['auth/password-mismatch'] = 'Passwords do not match.';
+    return register(email, password, profile);
+  }
+
   global.ParsliaAuth = {
     init: init,
     requireAuth: requireAuth,
     logout: logout,
     login: login,
     register: register,
+    registerWithConfirm: registerWithConfirm,
+    resetPassword: resetPassword,
+    friendlyAuthError: friendlyAuthError,
     ensureUserProfile: ensureUserProfile,
     getUser: getUser,
     getDb: getDb,
