@@ -619,6 +619,9 @@ article[id^="KP-"] .media-train { margin-top: 12px; }
 }
 .comp-form.is-locked .lock-note { display: block; }
 
+
+/* Parslia unified training integration */
+.parslia-training-launch{position:fixed;right:18px;bottom:18px;z-index:9998;display:flex;align-items:center;gap:9px;padding:12px 16px;border-radius:999px;background:linear-gradient(135deg,var(--forest-deep),var(--forest));color:var(--ivory)!important;border:1px solid var(--gold);box-shadow:0 10px 30px rgba(53,32,68,.28);text-decoration:none;font-weight:700;font-size:13px}.parslia-training-launch span{color:var(--gold);font-size:17px}.shift-training-panel{margin:18px 0;padding:18px;border:1px solid var(--gold);border-radius:14px;background:linear-gradient(135deg,#fff,#F8F5FB);box-shadow:var(--shadow-sm)}.shift-training-panel h3{color:var(--forest);font-size:24px}.shift-training-panel p{color:var(--ink2);margin:5px 0 12px}.shift-training-panel .training-flow{display:flex;gap:6px;flex-wrap:wrap}.shift-training-panel .training-flow b{font-size:11px;padding:6px 9px;border-radius:999px;background:var(--stone);color:var(--forest);border:1px solid var(--line)}.shift-training-panel a{display:inline-flex;margin-top:13px;padding:10px 14px;border-radius:10px;background:var(--forest);color:#fff;text-decoration:none;font-weight:700}@media(max-width:600px){.parslia-training-launch{right:10px;bottom:10px;padding:10px 13px}.parslia-training-launch .long{display:none}}
 </style>
 <style>.shift-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}#shift-form label{display:block;margin:10px 0}#shift-form input,#shift-form textarea,#shift-form select{box-sizing:border-box;width:100%;max-width:100%}#shift-form fieldset{border:1px solid #D9CFC0;border-radius:8px;margin:16px 0;padding:12px}#shift-form legend{font-weight:600}#shift-form textarea{font:inherit;padding:10px}summary{cursor:pointer}@media(max-width:600px){.shift-grid{grid-template-columns:1fr}}</style><style>#working-forms label{display:block;margin:12px 0}#working-forms input,#working-forms select,#working-forms textarea{width:100%;box-sizing:border-box;font:inherit;padding:9px}#wf-fields{border-top:1px solid #D9CFC0;margin-top:18px;padding-top:8px}</style><link href="kitchen-manifest.json" rel="manifest"/>
 <meta content="#4F3066" name="theme-color"/>
@@ -3675,6 +3678,17 @@ function report(id,blank){
 <script src="js/activity.js"></script>
 <script src="js/parslia-gate.js"></script>
 <script src="js/forms-focus.js"></script>
+
+<a class="parslia-training-launch" href="training-player.html" aria-label="Open step-by-step training"><span>▶</span><span class="long">Step-by-Step Training</span></a>
+<script>
+(function(){
+ const shift=document.getElementById('shift-plan');
+ if(!shift||document.getElementById('shift-training-panel')) return;
+ const panel=document.createElement('div'); panel.id='shift-training-panel'; panel.className='shift-training-panel';
+ panel.innerHTML='<h3>Training & Competency</h3><p>Use the same Parslia step-by-step learning flow for safe work, equipment and practical competency.</p><div class="training-flow"><b>Watch</b><b>Step-by-step</b><b>Safety points</b><b>Quiz</b><b>Practical check</b><b>Manager verification</b><b>Digital sign-off</b></div><a href="training-player.html">Open Training Player →</a>';
+ const first=shift.querySelector('h2,h3,p'); if(first&&first.parentNode) first.parentNode.insertBefore(panel,first.nextSibling); else shift.insertBefore(panel,shift.firstChild);
+})();
+</script>
 </body></html>');
   doc.close();
 }
