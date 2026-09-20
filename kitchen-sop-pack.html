@@ -3679,13 +3679,13 @@ function report(id,blank){
 <script src="js/parslia-gate.js"></script>
 <script src="js/forms-focus.js"></script>
 
-<a class="parslia-training-launch" href="training-player.html" aria-label="Open step-by-step training"><span>▶</span><span class="long">Step-by-Step Training</span></a>
+<a class="parslia-training-launch" href="knife-skills-training.html" aria-label="Open step-by-step training"><span>▶</span><span class="long">Step-by-Step Training</span></a>
 <script>
 (function(){
  const shift=document.getElementById('shift-plan');
  if(!shift||document.getElementById('shift-training-panel')) return;
  const panel=document.createElement('div'); panel.id='shift-training-panel'; panel.className='shift-training-panel';
- panel.innerHTML='<h3>Training & Competency</h3><p>Use the same Parslia step-by-step learning flow for safe work, equipment and practical competency.</p><div class="training-flow"><b>Watch</b><b>Step-by-step</b><b>Safety points</b><b>Quiz</b><b>Practical check</b><b>Manager verification</b><b>Digital sign-off</b></div><a href="training-player.html">Open Training Player →</a>';
+ panel.innerHTML='<h3>Training & Competency</h3><p>Use the same Parslia step-by-step learning flow for safe work, equipment and practical competency.</p><div class="training-flow"><b>Watch</b><b>Step-by-step</b><b>Safety points</b><b>Quiz</b><b>Practical check</b><b>Manager verification</b><b>Digital sign-off</b></div><a href="knife-skills-training.html">Open Training Player →</a>';
  const first=shift.querySelector('h2,h3,p'); if(first&&first.parentNode) first.parentNode.insertBefore(panel,first.nextSibling); else shift.insertBefore(panel,shift.firstChild);
 })();
 </script>
