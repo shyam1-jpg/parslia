@@ -3653,43 +3653,7 @@ function report(id,blank){
   doc.write(blank?'Blank template':'Completed record');
   doc.write('</span></div><table><tbody>');
   doc.write(body);
-  doc.write('</tbody></table><div class="sign"><div class="box">Staff signature / name</div><div class="box">Manager / trainer</div><div class="box">Date</div></div><div class="foot">Generated from Parslia Kitchen Ops · retain with food-safety records.</div></div>
-<script>
-(function(){
-  // Competency / working-form saves already hit localStorage; activity.js patches setItem.
-  // Also dispatch explicit events when signed forms lock.
-  document.addEventListener('click', function(e){
-    var lock = e.target && e.target.closest && e.target.closest('[data-lock-form], [data-save-form], .save-form, button[data-save]');
-    if (!lock) return;
-    var id = lock.getAttribute('data-lock-form') || lock.getAttribute('data-save-form') || lock.getAttribute('data-save') || 'sop-form';
-    try {
-      document.dispatchEvent(new CustomEvent('parslia:form-save', { detail: { formId: id, label: 'sop-form:' + id } }));
-      if (window.ParsliaActivity) ParsliaActivity.logEvent('form_save', { formId: id, label: 'sop-form:' + id });
-    } catch (err) {}
-  }, true);
-})();
-</script>
-
-<script src="js/firebase-config.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/activity.js"></script>
-<script src="js/parslia-gate.js"></script>
-<script src="js/forms-focus.js"></script>
-
-<a class="parslia-training-launch" href="knife-skills-training.html" aria-label="Open step-by-step training"><span>▶</span><span class="long">Step-by-Step Training</span></a>
-<script>
-(function(){
- const shift=document.getElementById('shift-plan');
- if(!shift||document.getElementById('shift-training-panel')) return;
- const panel=document.createElement('div'); panel.id='shift-training-panel'; panel.className='shift-training-panel';
- panel.innerHTML='<h3>Training & Competency</h3><p>Use the same Parslia step-by-step learning flow for safe work, equipment and practical competency.</p><div class="training-flow"><b>Watch</b><b>Step-by-step</b><b>Safety points</b><b>Quiz</b><b>Practical check</b><b>Manager verification</b><b>Digital sign-off</b></div><a href="knife-skills-training.html">Open Training Player →</a>';
- const first=shift.querySelector('h2,h3,p'); if(first&&first.parentNode) first.parentNode.insertBefore(panel,first.nextSibling); else shift.insertBefore(panel,shift.firstChild);
-})();
-</script>
-</body></html>');
+  doc.write('</tbody></table><div class="sign"><div class="box">Staff signature / name</div><div class="box">Manager / trainer</div><div class="box">Date</div></div><div class="foot">Generated from Parslia Kitchen Ops · retain with food-safety records.</div></div></body></html>');
   doc.close();
 }
 function csv(id){
@@ -3706,6 +3670,14 @@ document.querySelectorAll('[data-template]').forEach(b=>b.onclick=()=>report(b.d
 document.querySelectorAll('[data-csv]').forEach(b=>b.onclick=()=>csv(b.dataset.csv));
 })();
 </script>
+<script src="js/firebase-config.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/activity.js"></script>
+<script src="js/parslia-gate.js"></script>
+<script src="js/forms-focus.js"></script>
 <script>
 (() => {
   function fitCanvas(canvas) {
