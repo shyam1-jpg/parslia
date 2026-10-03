@@ -270,6 +270,24 @@ label { display: block; margin: 0 0 6px; color: var(--brand-muted); font-size: 1
   display: flex; align-items: center; justify-content: center; gap: 10px;
 }
 .google:hover { border-color: var(--brand-gold); }
+.trial-row {
+  margin: 16px 0 0;
+  text-align: center;
+}
+.trial-link {
+  display: inline;
+  color: var(--brand-muted);
+  font: 600 13px/1.4 Outfit, system-ui, sans-serif;
+  text-decoration: underline;
+  text-decoration-color: var(--brand-gold);
+  text-underline-offset: 3px;
+}
+.trial-link:hover { color: var(--brand-purple); }
+.trial-link:focus-visible {
+  outline: 2px solid var(--brand-gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
 .panels { position: relative; }
 .panel {
   display: none;
@@ -506,6 +524,9 @@ label { display: block; margin: 0 0 6px; color: var(--brand-muted); font-size: 1
             <button type="button" class="linkish" id="cancelReset">Back to sign in</button>
           </div>
         </div>
+        <p class="trial-row">
+          <a class="trial-link" href="https://vedanta-admin.onrender.com/sign-in/" target="_blank" rel="noopener">Try The Vedanta Way admin (trial)</a>
+        </p>
       </form>
 
       <form id="registerPanel" class="panel" role="tabpanel" aria-labelledby="tabRegister" autocomplete="on">
