@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parslia House — Kitchen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="house.css">
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <div>
+      <a class="back" href="today.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>Today</a>
+      <h1 class="page-title">Kitchen</h1>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Service" id="services"></div>
+  </header>
+  <section class="stats" aria-label="Service overview">
+    <div class="statbox deep"><span class="k">Guests to feed</span><b id="covers">0</b><span class="k">restaurant holds 130</span></div>
+    <div class="statbox"><span class="k">Special diets</span><b class="late" id="specials">0</b><span class="k">need their own plate</span></div>
+    <div class="statbox"><span class="k">Team needed</span><b id="team">0</b><span class="k" id="teamMix"></span></div>
+    <div class="statbox"><span class="k">Prep finished</span><b id="prepPct" style="color:#1E5A4F">0%</b><div class="bar"><i id="prepBar"></i></div></div>
+  </section>
+  <div class="split">
+    <section class="card" aria-label="Who is eating">
+      <h2>Who's eating</h2>
+      <div class="scroll">
+        <table>
+          <thead><tr>
+            <th scope="col">Group</th>
+            <th class="num" scope="col">Total</th>
+            <th class="num" scope="col">Vegan</th>
+            <th class="num" scope="col">Gluten-free</th>
+            <th class="num" scope="col">Allergy</th>
+          </tr></thead>
+          <tbody id="groups"></tbody>
+        </table>
+      </div>
+      <div class="warn" id="allergy" hidden>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M12 4l9 16H3zM12 10v4M12 17v.5"></path></svg>
+        <span><strong>Nut allergy — room 205 (OmLife).</strong> Use a separate board, put a red tag on the plate and serve it first.</span>
+      </div>
+    </section>
+    <section class="card" aria-label="Prep list">
+      <div class="row-between"><h2>Prep list</h2><span style="font-size:14px;color:#56635C" id="forGuests">Amounts for 0 guests</span></div>
+      <div id="prep" style="display:flex;flex-direction:column;gap:8px"></div>
+    </section>
+  </div>
+  <section class="card" aria-label="Service timeline">
+    <h2>Service timeline</h2>
+    <div class="times" id="timeline"></div>
+  </section>
+</div>
+<script>
+(function () {
+  var svcDefs = {
+    breakfast: { label: "Breakfast", time: "07:30–09:00", hoff: 52, om: 0, house: 4 },
+    lunch: { label: "Lunch", time: "12:15–13:30", hoff: 52, om: 0, house: 6 },
+    dinner: { label: "Dinner", time: "19:00–20:30", hoff: 0, om: 34, house: 44 }
+  };
+  var menus = {
+    breakfast: [["Porridge, oat & soy milk", "Hot station", 0.18, "kg"], ["Fruit platter", "Cold station", 0.15, "kg"], ["Bread & toast", "Bakery", 1.5, "slices"], ["Chai", "Drinks", 0.25, "L"]],
+    lunch: [["Dal tadka", "Hot station", 0.2, "kg"], ["Jeera rice", "Hot station", 0.12, "kg"], ["Seasonal salad", "Cold station", 0.1, "kg"], ["Chapati", "Bakery", 2, "pcs"], ["Raita (vegan option)", "Cold station", 0.08, "kg"]],
+    dinner: [["Vegetable thali curry", "Hot station", 0.22, "kg"], ["Basmati rice", "Hot station", 0.12, "kg"], ["Roast squash salad", "Cold station", 0.1, "kg"], ["Chapati", "Bakery", 2, "pcs"], ["Gluten-free flatbread", "Bakery", 0, "pcs"], ["Kheer (vegan: coconut)", "Pastry", 0.12, "kg"]]
+  };
+  var times = {
+    breakfast: [["06:30", "Kitchen opens"], ["07:15", "Hot food ready"], ["07:30", "Service starts"], ["09:00", "Service ends, clear up"], ["09:30", "Lunch prep"]],
+    lunch: [["10:00", "Prep starts"], ["11:45", "Special diet plates ready"], ["12:15", "Service starts"], ["13:30", "Service ends, clear up"], ["14:00", "Dinner prep"]],
+    dinner: [["15:30", "Prep starts"], ["18:30", "Allergy plates go out first"], ["19:00", "Service starts"], ["20:30", "Service ends, clear up"], ["21:00", "Night clean"]]
+  };
+  var state = { svc: "dinner", done: {} };
+  function paint() {
+    var d = svcDefs[state.svc];
+    document.getElementById("services").innerHTML = Object.keys(svcDefs).map(function (id) {
+      var on = state.svc === id;
+      var item = svcDefs[id];
+      return '<button type="button" role="tab" data-svc="' + id + '" aria-selected="' + (on ? "true" : "false") + '">' + item.label + "<small>" + item.time + "</small></button>";
+    }).join("");
+    var raw = [
+      { name: "Hoffman Institute", dot: "#1E5A4F", total: d.hoff, vegan: Math.round(d.hoff * 0.12), gf: Math.round(d.hoff * 0.06), allergy: 0 },
+      { name: "OmLife", dot: "#B4540A", total: d.om, vegan: d.om ? 4 : 0, gf: d.om ? 2 : 0, allergy: d.om ? 1 : 0 },
+      { name: "Day visitors & staff", dot: "#9AA59F", total: d.house, vegan: Math.round(d.house * 0.1), gf: Math.round(d.house * 0.05), allergy: 0 }
+    ];
+    var groups = raw.filter(function (g) { return g.total > 0; });
+    document.getElementById("groups").innerHTML = groups.map(function (g) {
+      return "<tr><th scope=\"row\"><span style=\"display:flex;align-items:center;gap:10px\"><span style=\"width:10px;height:10px;border-radius:50%;background:" + g.dot + "\"></span>" + g.name + "</span></th><td class=\"num\"><b>" + g.total + "</b></td><td class=\"num\">" + g.vegan + "</td><td class=\"num\">" + g.gf + '</td><td class="num" style="color:' + (g.allergy ? "#9A4508" : "#15221C") + ";font-weight:" + (g.allergy ? "700" : "400") + '">' + g.allergy + "</td></tr>";
+    }).join("");
+    document.getElementById("allergy").hidden = !d.om;
+    var covers = raw.reduce(function (a, g) { return a + g.total; }, 0);
+    var specials = raw.reduce(function (a, g) { return a + g.vegan + g.gf + g.allergy; }, 0);
+    var gfCount = raw.reduce(function (a, g) { return a + g.gf; }, 0);
+    var units = Math.max(1, Math.ceil(covers / 35));
+    document.getElementById("covers").textContent = covers;
+    document.getElementById("specials").textContent = specials;
+    document.getElementById("team").textContent = units * 3;
+    document.getElementById("teamMix").textContent = units + " chef · " + units + " assistant · " + units + " porter";
+    document.getElementById("forGuests").textContent = "Amounts for " + covers + " guests";
+    var prep = menus[state.svc].map(function (row, i) {
+      var key = state.svc + i;
+      var done = !!state.done[key];
+      var q = row[2] === 0 ? gfCount * 2 : row[2] * covers;
+      var qty = (row[3] === "kg" || row[3] === "L") ? q.toFixed(1) + " " + row[3] : Math.ceil(q) + " " + row[3];
+      return { key: key, item: row[0], station: row[1], qty: qty, done: done };
+    });
+    document.getElementById("prep").innerHTML = prep.map(function (p) {
+      return '<label class="prep" style="background:' + (p.done ? "#F3F5F2" : "#fff") + '"><input type="checkbox" data-prep="' + p.key + '"' + (p.done ? " checked" : "") + '><span style="flex:1;opacity:' + (p.done ? "0.55" : "1") + '"><b style="text-decoration:' + (p.done ? "line-through" : "none") + '">' + p.item + "</b><small>" + p.station + '</small></span><span class="qty">' + p.qty + "</span></label>";
+    }).join("");
+    var doneN = prep.filter(function (p) { return p.done; }).length;
+    var pct = Math.round(doneN / prep.length * 100);
+    document.getElementById("prepPct").textContent = pct + "%";
+    document.getElementById("prepBar").style.width = pct + "%";
+    document.getElementById("timeline").innerHTML = times[state.svc].map(function (t, i) {
+      var bg = i === 1 ? "#FCEBDC" : i === 2 ? "#102A23" : "#F3F5F2";
+      var fg = i === 2 ? "#fff" : i === 1 ? "#6E3105" : "#15221C";
+      return '<div class="slot" style="background:' + bg + ";color:" + fg + '"><b>' + t[0] + "</b><span>" + t[1] + "</span></div>";
+    }).join("");
+  }
+  document.getElementById("services").onclick = function (e) {
+    var b = e.target.closest("[data-svc]");
+    if (!b) return;
+    state.svc = b.getAttribute("data-svc");
+    paint();
+  };
+  document.getElementById("prep").onchange = function (e) {
+    var key = e.target.getAttribute("data-prep");
+    if (!key) return;
+    state.done[key] = e.target.checked;
+    paint();
+  };
+  paint();
+})();
+</script>
+</body>
+</html>

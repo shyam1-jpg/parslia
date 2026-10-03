@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parslia House — Staff app</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="house.css">
+</head>
+<body class="phone-page">
+<div class="phone">
+  <header class="phone-top">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-size:14px;color:#A9B8B1">Housekeeping · Sat 3 Oct</div>
+        <h1>Hi, Priya</h1>
+      </div>
+      <button class="bell" type="button" aria-label="Notifications" id="bell"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"></path><path d="M10 20a2 2 0 0 0 4 0"></path></svg></button>
+    </div>
+    <button class="clockbtn" type="button" id="clock"><span id="clockLabel">On shift · tap to clock out</span><span id="clockTime" style="font-family:var(--display);font-size:15px">since 07:58</span></button>
+    <div>
+      <div style="display:flex;justify-content:space-between;font-size:14px"><span>Today's rooms</span><span id="count" style="font-family:var(--display)">1/6</span></div>
+      <div class="bar" style="height:8px;background:#2D4339;margin-top:8px"><i id="bar" style="height:8px;background:#F0A15C;width:17%"></i></div>
+    </div>
+    <p id="notice" hidden style="margin:0;font-size:14px;color:#F0A15C">Room 203 is the tight turn. Guest leaves at 13:00.</p>
+  </header>
+  <div class="phone-body">
+    <div style="display:flex;justify-content:space-between;align-items:baseline">
+      <h2 style="margin:0;font-size:17px;font-family:var(--sans);letter-spacing:0">My rooms</h2>
+      <span style="font-size:13px;color:#56635C">Most urgent first</span>
+    </div>
+    <div id="rooms" style="display:flex;flex-direction:column;gap:12px"></div>
+    <button class="scan" type="button" id="scan"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h3v3h-3zM20 14v.5M14 20.5h.5M20 20h.5"></path></svg>Report a problem — scan the QR sticker</button>
+    <p id="scanMsg" hidden style="margin:0;font-size:14px;color:#1E5A4F;font-weight:600">Point the camera at the room sticker. Room 112 is already with maintenance.</p>
+  </div>
+  <nav class="tabbar" aria-label="App">
+    <a href="staff-app.html" aria-current="page"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"></path><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"></path></svg>Tasks</a>
+    <a href="rooms.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8l9-5 9 5v13"></path><path d="M9 21v-6h6v6"></path></svg>Rooms</a>
+    <a href="time-clock.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>Team</a>
+    <a href="time-clock.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>Rota</a>
+  </nav>
+</div>
+<script>
+(function () {
+  var list = [
+    { num: "203", task: "Full clean", meta: "Guest leaves 13:00 · next guest 15:00", urgent: true, by: "14:45" },
+    { num: "205", task: "Full clean", meta: "Guest leaves 13:00 · add vegan welcome pack", urgent: true, by: "14:45" },
+    { num: "108", task: "Daily tidy", meta: "Staying on · likes extra pillows", urgent: false, by: "" },
+    { num: "110", task: "Daily tidy", meta: "Staying on · do not disturb before 10:00", urgent: false, by: "" },
+    { num: "206", task: "Full clean", meta: "Guest leaves 13:00", urgent: true, by: "15:00" },
+    { num: "113", task: "Final check", meta: "Cleaned yesterday · make sure it’s ready", urgent: false, by: "" }
+  ];
+  var state = { clocked: true, done: { "108": true } };
+  function paint() {
+    var rooms = list.map(function (r) {
+      var done = !!state.done[r.num];
+      var urgent = r.urgent && !done;
+      return '<label class="roomrow" style="border-color:' + (urgent ? "#E3B48C" : "#E0E4DE") + ';opacity:' + (done ? "0.5" : "1") + '"><input type="checkbox" data-room="' + r.num + '"' + (done ? " checked" : "") + '><span class="num">' + r.num + '</span><span style="flex:1;min-width:0"><b>' + r.task + "</b><small>" + r.meta + "</small></span>" + (urgent ? '<span class="by">By ' + r.by + "</span>" : "") + "</label>";
+    }).join("");
+    document.getElementById("rooms").innerHTML = rooms;
+    var doneCount = list.filter(function (r) { return state.done[r.num]; }).length;
+    document.getElementById("count").textContent = doneCount + "/" + list.length;
+    document.getElementById("bar").style.width = Math.round(doneCount / list.length * 100) + "%";
+    document.getElementById("clock").style.background = state.clocked ? "#1E5A4F" : "#B4540A";
+    document.getElementById("clockLabel").textContent = state.clocked ? "On shift · tap to clock out" : "Clock in";
+    document.getElementById("clockTime").textContent = state.clocked ? "since 07:58" : "Shift 08:00–16:00";
+  }
+  document.getElementById("rooms").onchange = function (e) {
+    var num = e.target.getAttribute("data-room");
+    if (!num) return;
+    state.done[num] = e.target.checked;
+    paint();
+  };
+  document.getElementById("clock").onclick = function () { state.clocked = !state.clocked; paint(); };
+  document.getElementById("bell").onclick = function () { document.getElementById("notice").hidden = false; };
+  document.getElementById("scan").onclick = function () { document.getElementById("scanMsg").hidden = false; };
+  paint();
+})();
+</script>
+</body>
+</html>
