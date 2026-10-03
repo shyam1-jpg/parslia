@@ -1,19 +1,339 @@
 <!DOCTYPE html>
-<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#4F3066"><title>Food Operations · Parslia</title>
-<style>:root{--p:#4F3066;--p2:#352044;--g:#c6a66f;--bg:#fffdf9;--s:#f0eaf5;--line:#e0d6e8;--ink:#1d1a16;--muted:#6d655c}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,var(--s),var(--bg) 34%);font:15px/1.45 system-ui,sans-serif;color:var(--ink)}header{background:linear-gradient(135deg,var(--p2),var(--p));color:#fff;border-bottom:2px solid var(--g);padding:18px}.wrap{max-width:1180px;margin:auto;padding:0 16px}h1,h2,h3{font-family:Georgia,serif;color:var(--p)}header h1{color:#fff;margin:0}header p{margin:3px 0 0;opacity:.75}.hero{padding:28px 0 12px}.hero h2{font-size:38px;margin:0}.hero p{color:var(--muted);max-width:760px}.flow{display:flex;gap:7px;overflow:auto;padding:10px 0 22px}.flow span{white-space:nowrap;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 12px;font-weight:650;color:var(--p)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 4px 18px #4f306610}.card h3{margin:0 0 6px;font-size:22px}.card p{color:var(--muted);min-height:44px}.tag{display:inline-block;background:var(--s);color:var(--p);padding:5px 9px;border-radius:999px;font-size:11px;font-weight:700;margin:2px}.primary{background:var(--p);color:#fff!important;text-decoration:none;border-radius:12px;padding:11px 14px;display:inline-block;margin-top:12px;font-weight:700}.primary.disabled{opacity:.55;cursor:not-allowed}.builder{margin:20px 0 40px}.bar{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}.field{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}.field label{display:block;font-size:11px;color:var(--muted);font-weight:700}.field input,.field select{width:100%;border:0;font:inherit;font-weight:650;color:var(--p);outline:0;margin-top:4px;background:transparent}.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.slot{border:1px dashed var(--g);background:#fff;border-radius:16px;padding:15px;min-height:110px}.slot b{color:var(--p)}.slot small{display:block;color:var(--muted);margin:5px 0 10px}.add{border:0;background:var(--s);color:var(--p);border-radius:10px;padding:8px 10px;font-weight:700}.notice{margin:15px 0;background:#fff8e9;border:1px solid #ead4a7;border-radius:14px;padding:12px;color:#6f541f}@media(max-width:800px){.grid,.slots{grid-template-columns:1fr 1fr}.bar{grid-template-columns:1fr}}@media(max-width:520px){.grid,.slots{grid-template-columns:1fr}.hero h2{font-size:30px}}</style></head>
-<body><header><div class="wrap"><h1>Parslia · Food Operations</h1><p>Menu intelligence, costing, purchasing, production and waste — connected.</p></div></header>
-<main class="wrap"><section class="hero"><h2>One menu. One connected workflow.</h2><p>Phase 1 introduces the operational structure safely without changing existing recipes or compliance records. Live data connections will be added behind controlled permissions.</p></section>
-<div class="flow"><span>Menu</span><span>→ Cost</span><span>→ Stock</span><span>→ Purchase</span><span>→ Production</span><span>→ Service</span><span>→ Waste</span><span>→ Insights</span></div>
-<section class="grid">
-<article class="card"><h3>Menu Planner</h3><p>Plan by date, meal, guests and dietary requirements.</p><span class="tag">Satvic</span><span class="tag">Jain</span><span class="tag">Ekadashi</span><span class="tag">Allergens</span><br><a class="primary" href="#planner">Open planner</a></article>
-<article class="card"><h3>Cost & Budget</h3><p>Recipe and menu cost per guest with live quantity scaling.</p><span class="tag">Food cost</span><span class="tag">Budget</span><span class="tag">Yield</span><br><span class="primary disabled">Data connection next</span></article>
-<article class="card"><h3>Purchasing</h3><p>Turn menu requirements into shortages and supplier orders.</p><span class="tag">Brakes</span><span class="tag">Suma</span><span class="tag">Suppliers</span><br><span class="primary disabled">Phase 2</span></article>
-<article class="card"><h3>Production</h3><p>Generate prep quantities, stations, staff tasks and sign-off.</p><span class="tag">GN trays</span><span class="tag">Prep</span><span class="tag">Assign</span><br><span class="primary disabled">Phase 3</span></article>
-<article class="card"><h3>Waste</h3><p>Track produced, served, reusable surplus and discarded food.</p><span class="tag">Buffet</span><span class="tag">Overproduction</span><span class="tag">Spoilage</span><br><span class="primary disabled">Phase 4</span></article>
-<article class="card"><h3>Insights</h3><p>Use actual consumption and waste to improve future production.</p><span class="tag">KPI</span><span class="tag">AI suggestions</span><span class="tag">Manager approval</span><br><span class="primary disabled">Phase 4+</span></article>
-</section>
-<section class="builder" id="planner"><h2>Menu Planner · Phase 1</h2><div class="notice"><strong>Safety:</strong> this first screen is a non-destructive planner shell. It does not yet write orders, change recipe records or publish allergen information.</div>
-<div class="bar"><div class="field"><label>MENU / SERVICE</label><input value="New service menu" aria-label="Menu name"></div><div class="field"><label>MEAL</label><select><option>Lunch</option><option>Dinner</option><option>Breakfast</option></select></div><div class="field"><label>GUESTS</label><input type="number" min="1" value="80" aria-label="Guest count"></div></div>
-<div class="slots"><div class="slot"><b>Soup / Starter</b><small>Add a linked recipe</small><button class="add">+ Add recipe</button></div><div class="slot"><b>Main</b><small>Add a linked recipe</small><button class="add">+ Add recipe</button></div><div class="slot"><b>Carbohydrate / Side</b><small>Add a linked recipe</small><button class="add">+ Add recipe</button></div><div class="slot"><b>Salad 1</b><small>Add a linked recipe</small><button class="add">+ Add recipe</button></div><div class="slot"><b>Salad 2</b><small>Add a linked recipe</small><button class="add">+ Add recipe</button></div><div class="slot"><b>Dessert</b><small>Add a linked recipe</small><button class="add">+ Add recipe</button></div></div>
-<p><a class="primary" href="pro-dashboard.html">← Back to Manager Dashboard</a></p></section></main>
-<script>document.querySelectorAll('.add').forEach(b=>b.addEventListener('click',()=>alert('Recipe linking will connect to Parslia recipe data in the next build. No existing data has been changed.')));</script></body></html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4F3066">
+<title>Food Operations · Parslia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--p:#4F3066;--p2:#352044;--g:#c6a66f;--bg:#fffdf9;--s:#f0eaf5;--line:#e0d6e8;--ink:#1d1a16;--muted:#6d655c;--ok:#2f6b4f;--warn:#946514;--bad:#8e3f36}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,var(--s),var(--bg) 34%);font:15px/1.45 Outfit,system-ui,sans-serif;color:var(--ink)}
+header{background:linear-gradient(135deg,var(--p2),var(--p));color:#fff;border-bottom:2px solid var(--g);padding:18px}
+.wrap{max-width:1180px;margin:auto;padding:0 16px}
+h1,h2,h3{font-family:"Cormorant Garamond",Georgia,serif;color:var(--p)}
+header h1{color:#fff;margin:0;font-size:32px}
+header p{margin:3px 0 0;opacity:.8}
+a{color:var(--p)}
+.hero{padding:28px 0 8px}
+.hero h2{font-size:38px;margin:0}
+.hero p{color:var(--muted);max-width:760px}
+.flow{display:flex;gap:7px;overflow:auto;padding:10px 0 18px}
+.flow a{white-space:nowrap;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 12px;font-weight:650;color:var(--p);text-decoration:none}
+.flow a:hover,.flow a:focus-visible{background:var(--p);color:#fff}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px}
+.kpi span{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.kpi strong{display:block;margin-top:6px;font-family:"Cormorant Garamond",Georgia,serif;font-size:32px;color:var(--p);line-height:1}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 4px 18px #4f306610}
+.card h3{margin:0 0 6px;font-size:22px}
+.card p{color:var(--muted);min-height:44px;margin:0}
+.tag{display:inline-block;background:var(--s);color:var(--p);padding:5px 9px;border-radius:999px;font-size:11px;font-weight:700;margin:2px}
+.tag.warn{background:#f8edd8;color:var(--warn)}
+.tag.ok{background:#e7f3ec;color:var(--ok)}
+.tag.bad{background:#f8e8e6;color:var(--bad)}
+.primary,button.primary{background:var(--p);color:#fff;text-decoration:none;border:0;border-radius:12px;padding:11px 14px;display:inline-flex;align-items:center;justify-content:center;margin-top:12px;font-weight:700;min-height:44px;cursor:pointer;font:inherit}
+.ghost{background:transparent;color:var(--p);border:1px solid var(--line)}
+.section{padding:8px 0 28px;scroll-margin-top:12px}
+.bar{display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:10px}
+.field{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}
+.field label{display:block;font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.04em}
+.field input,.field select{width:100%;border:0;font:inherit;font-weight:650;color:var(--p);outline:0;margin-top:4px;background:transparent;min-height:32px}
+.notice{margin:15px 0;background:#fff8e9;border:1px solid #ead4a7;border-radius:14px;padding:12px;color:#6f541f}
+.list{display:grid;gap:8px;margin-top:12px}
+.row{display:grid;grid-template-columns:1.4fr .8fr .8fr auto;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}
+.row small{color:var(--muted)}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.slot{border:1px dashed var(--g);background:#fff;border-radius:16px;padding:15px;min-height:120px}
+.slot b{color:var(--p)}
+.slot small{display:block;color:var(--muted);margin:5px 0 8px}
+.add-row{display:flex;gap:8px;flex-wrap:wrap;align-items:end;margin-top:12px}
+.add-row select{min-height:44px;border:1px solid var(--line);border-radius:12px;padding:8px 10px;font:inherit;color:var(--p);background:#fff;min-width:220px}
+.check{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.check label{display:flex;gap:6px;align-items:center;font-size:13px;min-height:36px}
+.warn-list{margin:8px 0 0;padding-left:18px;color:var(--warn)}
+.empty{color:var(--muted)}
+@media(max-width:900px){.summary,.grid,.slots{grid-template-columns:1fr 1fr}.bar{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.summary,.grid,.slots,.bar,.row{grid-template-columns:1fr}.hero h2{font-size:30px}.wrap{padding:0 12px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Parslia · Food Operations</h1>
+    <p>Menu, guest count, cost, purchasing, production and waste — one sample catalogue on this device.</p>
+  </div>
+</header>
+<main class="wrap">
+  <section class="hero">
+    <h2>One menu. One connected workflow.</h2>
+    <p>Guest count scales every linked recipe, ingredient, shortage, suggested order, production quantity and menu cost together. This sample catalogue does not change SOP records or send supplier orders.</p>
+  </section>
+  <nav class="flow" aria-label="Workflow">
+    <a href="#planner">Menu</a>
+    <a href="#cost">Cost</a>
+    <a href="#purchasing">Stock</a>
+    <a href="#purchasing">Purchase</a>
+    <a href="#production">Production</a>
+    <a href="#production">Service</a>
+    <a href="#waste">Waste</a>
+    <a href="#insights">Insights</a>
+  </nav>
+  <div class="summary" id="summary"></div>
+  <section class="grid" aria-label="Food operations areas">
+    <article class="card"><h3>Menu Planner</h3><p>Plan by meal, guests and dietary counts. Recipes stay linked to the same ingredients.</p><span class="tag">Satvic</span><span class="tag">Jain</span><span class="tag">Ekadashi</span><span class="tag">Allergens</span><br><a class="primary" href="#planner">Open planner</a></article>
+    <article class="card"><h3>Cost &amp; Budget</h3><p>Recipe and menu cost per guest, recalculated when the cover count changes.</p><span class="tag">Food cost</span><span class="tag">Budget</span><span class="tag">Yield</span><br><a class="primary" href="#cost">Open costing</a></article>
+    <article class="card"><h3>Purchasing</h3><p>Scaled requirements against stock on hand, with a suggested order by pack size.</p><span class="tag">Brakes</span><span class="tag">Suma</span><span class="tag">Shortages</span><br><a class="primary" href="#purchasing">Open purchasing</a></article>
+    <article class="card"><h3>Production</h3><p>Prep quantities and station tasks from the approved menu.</p><span class="tag">Hot</span><span class="tag">Cold</span><span class="tag">Dessert</span><br><a class="primary" href="#production">Open production</a></article>
+    <article class="card"><h3>Waste</h3><p>Compare planned covers with served covers and estimate surplus cost.</p><span class="tag">Buffet</span><span class="tag">Surplus</span><br><a class="primary" href="#waste">Open waste</a></article>
+    <article class="card"><h3>Insights</h3><p>Allergen roll-up, dietary flags, budget and shortage exceptions.</p><span class="tag">Allergens</span><span class="tag">Review</span><br><a class="primary" href="#insights">Open insights</a></article>
+  </section>
+
+  <section class="section" id="planner">
+    <h2>Menu Planner</h2>
+    <div class="notice"><strong>Sample catalogue.</strong> Figures are calculated in this browser from the linked recipes below. Nothing is published to labels or sent to a supplier.</div>
+    <div class="bar">
+      <div class="field"><label for="menuName">MENU / SERVICE</label><input id="menuName" value="Lunch · sample approved menu"></div>
+      <div class="field"><label for="meal">MEAL</label><select id="meal"><option>Lunch</option><option>Dinner</option><option>Breakfast</option></select></div>
+      <div class="field"><label for="guests">GUESTS</label><input id="guests" type="number" min="0" step="1" value="80"></div>
+      <div class="field"><label for="jain">JAIN PORTIONS</label><input id="jain" type="number" min="0" step="1" value="0"></div>
+      <div class="field"><label for="ekadashi">EKADASHI PORTIONS</label><input id="ekadashi" type="number" min="0" step="1" value="0"></div>
+    </div>
+    <div class="add-row">
+      <div class="field" style="flex:1"><label for="status">STATUS</label>
+        <select id="status"><option>Draft</option><option>Checked</option><option selected>Approved</option><option>Published</option></select>
+      </div>
+      <div class="field" style="flex:1"><label for="budget">BUDGET £ / GUEST</label><input id="budget" type="number" min="0" step="0.01" value="3.20"></div>
+      <label class="field" style="flex:2"><span style="font-size:11px;color:var(--muted);font-weight:700">ADD RECIPE</span>
+        <select id="addRecipe"></select>
+      </label>
+      <button type="button" class="primary" id="addBtn" style="margin-top:0">Add to menu</button>
+      <button type="button" class="primary ghost" id="resetBtn" style="margin-top:0">Reset sample</button>
+    </div>
+    <p id="addMsg" class="empty" role="status"></p>
+    <div class="slots" id="slots"></div>
+  </section>
+
+  <section class="section" id="cost">
+    <h2>Cost &amp; Budget</h2>
+    <div id="costList" class="list"></div>
+  </section>
+
+  <section class="section" id="purchasing">
+    <h2>Purchasing</h2>
+    <p class="empty">Suggested orders stay on this device. They are not placed with Brakes or Suma.</p>
+    <div id="buyList" class="list"></div>
+  </section>
+
+  <section class="section" id="production">
+    <h2>Production</h2>
+    <div id="prodList" class="list"></div>
+  </section>
+
+  <section class="section" id="waste">
+    <h2>Waste</h2>
+    <div class="field" style="max-width:280px"><label for="served">SERVED COVERS</label><input id="served" type="number" min="0" step="1" value="80"></div>
+    <div id="wasteOut"></div>
+  </section>
+
+  <section class="section" id="insights">
+    <h2>Insights</h2>
+    <div id="insightsOut"></div>
+    <p><a class="primary" href="pro-dashboard.html">← Back to Manager Dashboard</a></p>
+  </section>
+</main>
+<script src="js/food-ops.js"></script>
+<script>
+(function () {
+  var KEY = 'parslia_food_ops_menu_v1';
+  var ops = window.ParsliaFoodOps;
+  var checks = {};
+  var state = load();
+
+  function load() {
+    var base = { guests: 80, jain: 0, ekadashi: 0, served: 80, budget: 3.2, status: 'Approved', approvedGuests: 80, meal: 'Lunch', name: 'Lunch · sample approved menu', ids: ops.defaultMenu(), checks: {} };
+    try {
+      var saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+      if (saved && Array.isArray(saved.ids)) {
+        base.guests = saved.guests;
+        base.jain = saved.jain || 0;
+        base.ekadashi = saved.ekadashi || 0;
+        base.served = saved.served;
+        base.budget = saved.budget;
+        base.status = saved.status || 'Approved';
+        base.approvedGuests = saved.approvedGuests;
+        base.meal = saved.meal || 'Lunch';
+        base.name = saved.name || base.name;
+        base.ids = saved.ids;
+        base.checks = saved.checks || {};
+      }
+    } catch (e) {}
+    return base;
+  }
+
+  function save() {
+    state.checks = checks;
+    localStorage.setItem(KEY, JSON.stringify(state));
+  }
+
+  function currentPlan() {
+    return ops.plan(state.ids, state);
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+    });
+  }
+
+  function render() {
+    var result = currentPlan();
+    document.getElementById('summary').innerHTML =
+      kpi('Menu cost', '£' + ops.money(result.totals.cost)) +
+      kpi('Per guest', '£' + ops.money(result.totals.perGuest)) +
+      kpi('Shortages', String(result.shortages.length)) +
+      kpi('Production', result.guests + ' covers');
+
+    var select = document.getElementById('addRecipe');
+    var options = ops.CATALOGUE.filter(function (recipe) { return state.ids.indexOf(recipe.id) === -1; });
+    select.innerHTML = options.map(function (recipe) {
+      var note = ops.recipeBlocked(recipe) ? ' — blocked' : '';
+      return '<option value="' + esc(recipe.id) + '">' + esc(recipe.name + note) + '</option>';
+    }).join('') || '<option value="">Catalogue is on the menu</option>';
+
+    document.getElementById('slots').innerHTML = result.recipes.map(function (recipe) {
+      var flag = recipe.blocked ? '<span class="tag bad">Blocked</span>' : '<span class="tag ok">' + esc(recipe.slot) + '</span>';
+      return '<article class="slot"><b>' + esc(recipe.name) + '</b><small>' + esc(recipe.station) + ' · ' + recipe.produced + ' portions · £' + ops.money(recipe.cost) + '</small>' + flag +
+        '<div><button type="button" class="primary ghost" data-remove="' + esc(recipe.id) + '" style="margin-top:8px">Remove</button></div></article>';
+    }).join('') || '<p class="empty">Add a recipe to start the menu.</p>';
+
+    document.getElementById('costList').innerHTML = result.recipes.map(function (recipe) {
+      return '<article class="row"><div><strong>' + esc(recipe.name) + '</strong><small> £' + ops.money(recipe.costPerGuest) + ' per guest</small></div><div>' + recipe.produced + ' portions</div><div>£' + ops.money(recipe.cost) + '</div><div></div></article>';
+    }).join('') + '<article class="row"><div><strong>Whole menu</strong><small>' + (result.budget == null ? '' : ' Budget £' + ops.money(result.budget) + ' / guest') + '</small></div><div>£' + ops.money(result.totals.perGuest) + ' / guest</div><div><strong>£' + ops.money(result.totals.cost) + '</strong></div><div></div></article>';
+
+    document.getElementById('buyList').innerHTML = result.ingredients.map(function (ing) {
+      var chip = ing.shortage > 0 ? '<span class="tag warn">Short ' + ing.shortage + ' ' + esc(ing.unit) + '</span>' : '<span class="tag ok">In stock</span>';
+      return '<article class="row"><div><strong>' + esc(ing.name) + '</strong><small>' + esc(ing.supplier) + ' · ' + esc(ing.dishes.join(', ')) + '</small></div><div>Need ' + ing.required + ' ' + esc(ing.unit) + '<br>Stock ' + ing.stock + '</div><div>' + (ing.orderQty ? 'Order ' + ing.orderQty + ' ' + esc(ing.unit) + ' · £' + ops.money(ing.orderCost) : 'No order') + '</div><div>' + chip + '</div></article>';
+    }).join('') || '<p class="empty">No ingredients yet.</p>';
+
+    var prod = '';
+    Object.keys(result.stations).forEach(function (station) {
+      prod += '<h3>' + esc(station) + '</h3>';
+      result.stations[station].forEach(function (recipe) {
+        var saved = checks[recipe.id] || {};
+        prod += '<article class="card"><strong>' + esc(recipe.name) + '</strong><p>' + recipe.produced + ' portions from the guest count.</p><div class="check">' +
+          ['Prep', 'Cook', 'Chill', 'Label', 'Temperature', 'Complete'].map(function (step) {
+            var id = recipe.id + '-' + step;
+            return '<label><input type="checkbox" data-check="' + esc(recipe.id) + '" data-step="' + esc(step) + '"' + (saved[step] ? ' checked' : '') + '> ' + step + '</label>';
+          }).join('') + '</div></article>';
+      });
+    });
+    document.getElementById('prodList').innerHTML = prod || '<p class="empty">Add recipes to build a production plan.</p>';
+
+    document.getElementById('wasteOut').innerHTML = '<div class="summary" style="margin-top:12px">' +
+      kpi('Planned', result.guests + ' covers') +
+      kpi('Served', result.served + ' covers') +
+      kpi('Surplus', result.surplus + ' covers') +
+      kpi('Surplus cost', '£' + ops.money(result.wasteCost)) + '</div>';
+
+    var review = state.status === 'Approved' && state.approvedGuests != null && Number(state.approvedGuests) !== result.guests;
+    var bits = [];
+    bits.push('<p>Allergens on this menu: <strong>' + (result.allergens.length ? esc(result.allergens.join(', ')) : 'none recorded') + '</strong></p>');
+    if (review) bits.push('<p class="notice">Guest count changed after approval (' + esc(state.approvedGuests) + ' → ' + result.guests + '). Quantities, orders and production updated together. Re-check before service.</p>');
+    if (result.warnings.length) bits.push('<ul class="warn-list">' + result.warnings.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') + '</ul>');
+    else bits.push('<p class="tag ok">No dietary, budget or satvic exceptions on this menu.</p>');
+    if (!result.shortages.length) bits.push('<p>Stock covers the scaled ingredients.</p>');
+    document.getElementById('insightsOut').innerHTML = bits.join('');
+  }
+
+  function kpi(label, value) {
+    return '<div class="kpi"><span>' + esc(label) + '</span><strong>' + esc(value) + '</strong></div>';
+  }
+
+  function readInputs(event) {
+    state.name = document.getElementById('menuName').value;
+    state.meal = document.getElementById('meal').value;
+    state.guests = Number(document.getElementById('guests').value);
+    state.jain = Number(document.getElementById('jain').value);
+    state.ekadashi = Number(document.getElementById('ekadashi').value);
+    state.budget = document.getElementById('budget').value;
+    if (event && event.target && event.target.id === 'guests') {
+      document.getElementById('served').value = document.getElementById('guests').value;
+    }
+    state.served = document.getElementById('served').value;
+    var nextStatus = document.getElementById('status').value;
+    if (nextStatus === 'Approved' && state.status !== 'Approved') state.approvedGuests = state.guests;
+    state.status = nextStatus;
+    save();
+    render();
+  }
+
+  ['menuName', 'meal', 'guests', 'jain', 'ekadashi', 'budget', 'status', 'served'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', readInputs);
+    document.getElementById(id).addEventListener('change', readInputs);
+  });
+
+  document.getElementById('guests').value = state.guests;
+  document.getElementById('jain').value = state.jain;
+  document.getElementById('ekadashi').value = state.ekadashi;
+  document.getElementById('budget').value = state.budget;
+  document.getElementById('served').value = state.served == null ? state.guests : state.served;
+  document.getElementById('status').value = state.status;
+  document.getElementById('meal').value = state.meal;
+  document.getElementById('menuName').value = state.name;
+  checks = state.checks || {};
+
+  document.getElementById('addBtn').addEventListener('click', function () {
+    var id = document.getElementById('addRecipe').value;
+    var msg = document.getElementById('addMsg');
+    var recipe = ops.recipeById(id);
+    if (!recipe) { msg.textContent = 'Choose a recipe.'; return; }
+    if (ops.recipeBlocked(recipe)) { msg.textContent = ops.blockReason(recipe); return; }
+    state.ids.push(id);
+    msg.textContent = recipe.name + ' added. Cost, purchasing and production now include it.';
+    save();
+    render();
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', function () {
+    localStorage.removeItem(KEY);
+    state = { guests: 80, jain: 0, ekadashi: 0, served: 80, budget: 3.2, status: 'Approved', approvedGuests: 80, meal: 'Lunch', name: 'Lunch · sample approved menu', ids: ops.defaultMenu(), checks: {} };
+    checks = {};
+    document.getElementById('guests').value = 80;
+    document.getElementById('served').value = 80;
+    document.getElementById('jain').value = 0;
+    document.getElementById('ekadashi').value = 0;
+    document.getElementById('budget').value = 3.2;
+    document.getElementById('status').value = 'Approved';
+    document.getElementById('addMsg').textContent = 'Sample menu restored for 80 guests.';
+    save();
+    render();
+  });
+
+  document.body.addEventListener('click', function (event) {
+    var btn = event.target.closest('[data-remove]');
+    if (!btn) return;
+    state.ids = state.ids.filter(function (id) { return id !== btn.getAttribute('data-remove'); });
+    save();
+    render();
+  });
+
+  document.body.addEventListener('change', function (event) {
+    var box = event.target;
+    if (!box.getAttribute || !box.getAttribute('data-check')) return;
+    var id = box.getAttribute('data-check');
+    var step = box.getAttribute('data-step');
+    checks[id] = checks[id] || {};
+    checks[id][step] = box.checked;
+    save();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
