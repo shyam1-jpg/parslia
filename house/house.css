@@ -603,3 +603,21 @@ a.scan { text-decoration: none; color: inherit; }
   .phone-page { padding: 0; }
   .duty { grid-template-columns: 1fr; }
 }
+.nav-list a svg { flex: none; }
+.chapter-jump { display: flex; flex-wrap: wrap; gap: 8px; }
+.chapter { scroll-margin-top: 16px; }
+.diagram { display: flex; flex-wrap: wrap; gap: 8px; }
+.diagram span {
+  background: var(--bg); border-radius: 14px; padding: 10px 12px; min-width: 120px;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.diagram b { font-size: 14px; }
+.diagram small { color: var(--muted); font-size: 13px; }
+.manual-body { margin: 0; font-size: 16px; line-height: 1.55; white-space: pre-line; }
+.step { background: var(--bg); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; }
+.step b { font-size: 16px; }
+.step .look, .step .act { font-size: 14px; line-height: 1.45; }
+.step .look { color: var(--muted); }
+@media print {
+  .nav, .back, .search, .chapter-jump { display: none !important; }
+}

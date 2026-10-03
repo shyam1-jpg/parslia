@@ -53,6 +53,7 @@
   <div class="split">
     <section class="card" id="bookings" aria-label="New bookings">
       <h2>New bookings</h2>
+      <p class="subhead" style="margin:0">Payments due: Hoffman Institute balance, due on departure today. <a href="manual.html#front-departure-billing">Departure procedure</a></p>
       <div id="bookingList" style="display:flex;flex-direction:column;gap:10px"></div>
     </section>
     <section class="card" aria-label="Who's on duty">
@@ -159,7 +160,7 @@
       return '<button type="button" data-assign="' + esc(name) + '" aria-pressed="' + (on ? "true" : "false") + '">' + esc(name) + "</button>";
     }).join("");
     var status = job.col === "fixed" ? "Fixed" : job.col === "fixing" ? "Being fixed" : "New";
-    document.getElementById("job").innerHTML = '<span class="when ' + (job.col === "new" ? "warm" : "") + '">' + status + "</span><div><h2>" + esc(job.title) + "</h2><p>" + esc(job.meta) + '</p></div><div><span style="font-size:14px;color:#B7C7BF">Give this job to</span><div class="give" style="margin-top:8px">' + give + '</div></div><div class="job-actions"><button type="button" class="fixbtn" id="markFixed"' + (job.col === "fixed" ? " disabled" : "") + ">" + (job.col === "fixed" ? "Fixed" : "Mark fixed") + '</button><button type="button" class="block" id="blockRoom" aria-pressed="' + (job.blocked ? "true" : "false") + '">' + (job.blocked ? "Room blocked from bookings ✓" : "Room blocked from bookings") + "</button></div>";
+    document.getElementById("job").innerHTML = '<span class="when ' + (job.col === "new" ? "warm" : "") + '">' + status + "</span><div><h2>" + esc(job.title) + "</h2><p>" + esc(job.meta) + '</p></div><div><span style="font-size:14px;color:#B7C7BF">Give this job to</span><div class="give" style="margin-top:8px">' + give + '</div></div><div class="job-actions">' + (job.col === "new" ? '<button type="button" class="block" id="startWork">Start work</button>' : "") + '<button type="button" class="fixbtn" id="markFixed"' + (job.col === "fixed" ? " disabled" : "") + ">" + (job.col === "fixed" ? "Fixed" : "Mark fixed") + '</button><button type="button" class="block" id="blockRoom" aria-pressed="' + (job.blocked ? "true" : "false") + '">' + (job.blocked ? "Room blocked from bookings ✓" : "Room blocked from bookings") + "</button></div>";
 
     var unread = messages.filter(function (m) { return m.fresh; }).length;
     document.getElementById("unread").textContent = unread + " unread";
@@ -197,6 +198,13 @@
       job.assignee = assign.getAttribute("data-assign");
       job.col = "fixing";
       job.note = "With " + job.assignee.split(" ")[0];
+      syncHub(job);
+      paint();
+      return;
+    }
+    if (e.target.id === "startWork" && job.col === "new") {
+      job.col = "fixing";
+      job.note = job.assignee ? "With " + job.assignee.split(" ")[0] : "Work started";
       syncHub(job);
       paint();
       return;

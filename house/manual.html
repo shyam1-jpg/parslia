@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parslia House — Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="house.css">
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <div>
+      <a class="back" href="today.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>Today</a>
+      <span class="kicker staff"><i></i>The house · Manual</span>
+      <h1 class="page-title">How we do it</h1>
+      <span class="subhead">Each step says what to look for, then what to do.</span>
+    </div>
+    <label class="search">
+      <span class="sr">Search the manual</span>
+      <input id="q" type="search" placeholder="Search a procedure">
+    </label>
+  </header>
+  <nav class="chapter-jump" id="jump" aria-label="Chapters"></nav>
+  <div id="chapters" class="stack"></div>
+</div>
+<script src="../js/house-manual.js"></script>
+<script>
+(function () {
+  var chapters = window.HouseManual.chapters;
+  var q = "";
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function paint() {
+    var needle = q.trim().toLowerCase();
+    var shown = chapters.filter(function (ch) {
+      if (!needle) return true;
+      var blob = (ch.title + " " + ch.summary + " " + ch.body + " " + ch.department + " " + ch.kind).toLowerCase();
+      return blob.indexOf(needle) !== -1;
+    });
+    document.getElementById("jump").innerHTML = shown.map(function (ch) {
+      return '<a class="chip" href="#' + ch.slug + '" style="text-decoration:none">' + esc(ch.title) + "</a>";
+    }).join("");
+    document.getElementById("chapters").innerHTML = shown.map(function (ch) {
+      var diagram = ch.diagram.map(function (d) {
+        return "<span><b>" + esc(d[0]) + "</b><small>" + esc(d[1]) + "</small></span>";
+      }).join("");
+      var steps = ch.steps.map(function (st) {
+        return '<div class="step"><b>' + esc(st[0]) + '</b><span class="look">Look: ' + esc(st[1]) + '</span><span class="act">Act: ' + esc(st[2]) + "</span></div>";
+      }).join("");
+      return '<article class="card chapter" id="' + ch.slug + '"><div class="row-between"><span class="when">' + esc(ch.department) + " · " + esc(ch.kind) + "</span></div><h2>" + esc(ch.title) + "</h2><p style=\"margin:0\">" + esc(ch.summary) + '</p><div class="diagram">' + diagram + '</div><p class="manual-body">' + esc(ch.body) + '</p><div class="stack">' + steps + "</div></article>";
+    }).join("") || '<p class="subhead">Nothing in the manual matches that search.</p>';
+  }
+  document.getElementById("q").oninput = function (e) { q = e.target.value; paint(); };
+  paint();
+  if (location.hash) {
+    var el = document.querySelector(location.hash);
+    if (el) el.scrollIntoView();
+  }
+})();
+</script>
+</body>
+</html>

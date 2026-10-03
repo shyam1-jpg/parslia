@@ -107,20 +107,21 @@
 <script>
 (function () {
   var nav = [
-    { label: "Today", href: "today.html", dot: "#B4540A", current: true },
-    { label: "Rooms", href: "rooms.html", dot: "#1E5A4F", badge: "6" },
-    { label: "Booking website", href: "../index.html", dot: "#1E5A4F" },
-    { label: "Guest app", href: "#", dot: "#1E5A4F" },
-    { label: "Kitchen", href: "kitchen.html", dot: "#1E5A4F", badge: "3" },
-    { label: "Team & time clock", href: "time-clock.html", dot: "#1E5A4F" },
-    { label: "Bookings & money", href: "manager.html#bookings", dot: "#1E5A4F" },
-    { label: "Staff hub", href: "staff-hub.html", dot: "#1E5A4F" },
-    { label: "Phone app", href: "staff-app.html", dot: "#1E5A4F" },
-    { label: "Manager view", href: "manager.html", dot: "#B4540A" },
-    { label: "Settings", href: "#", dot: "#9AA59F" }
+    { label: "Today", href: "today.html", icon: "M3 11l9-7 9 7v9a1 1 0 0 1 -1 1h-5v-6H9v6H4a1 1 0 0 1 -1 -1z", current: true },
+    { label: "Rooms", href: "rooms.html", icon: "M3 18V8M3 13h18v5M21 18v-3a3 3 0 0 0 -3 -3h-7v1", badge: "6" },
+    { label: "Booking website", href: "../index.html", icon: "M4 5h16v16H4zM4 10h16M9 3v4M15 3v4" },
+    { label: "Guest app", href: "#", icon: "M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21c1.2-4 4.3-6 8-6s6.8 2 8 6" },
+    { label: "Kitchen", href: "kitchen.html", icon: "M6 13a6 6 0 1 1 12 0v2H6zM4 19h16M12 4V2", badge: "3" },
+    { label: "Team & time clock", href: "time-clock.html", icon: "M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0 -18zM12 7v5l3 2" },
+    { label: "Bookings & money", href: "manager.html#bookings", icon: "M4 20V10M10 20V4M16 20v-7M22 20H2" },
+    { label: "Staff hub", href: "staff-hub.html", icon: "M9 11a3.5 3.5 0 1 0 0 -7a3.5 3.5 0 0 0 0 7zM2.5 20c0.8 -3.6 3.4 -5.5 6.5 -5.5" },
+    { label: "Phone app", href: "staff-app.html", icon: "M5 2h14v20H5zM11 18h2" },
+    { label: "Manager view", href: "manager.html", icon: "M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6zM9 12l2 2 4-4" },
+    { label: "Manual", href: "manual.html", icon: "M4 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0 -2 -2H4zM20 4h-5a3 3 0 0 0 -3 3v13a2 2 0 0 1 2 -2h6z" },
+    { label: "Settings", href: "#", icon: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" }
   ];
   document.getElementById("nav").innerHTML = nav.map(function (n) {
-    return '<a href="' + n.href + '"' + (n.current ? ' aria-current="page"' : "") + '><span class="dot" style="background:' + n.dot + '"></span><span class="label">' + n.label + "</span>" + (n.badge ? '<span class="badge">' + n.badge + "</span>" : "") + "</a>";
+    return '<a href="' + n.href + '"' + (n.current ? ' aria-current="page"' : "") + '><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + n.icon + '"></path></svg><span class="label">' + n.label + "</span>" + (n.badge ? '<span class="badge">' + n.badge + "</span>" : "") + "</a>";
   }).join("");
 
   var actions = [

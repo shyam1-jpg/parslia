@@ -76,11 +76,13 @@
     </div>
     <div class="split">
       <label class="field">Where?<input id="where" type="text" value="Room 112 shower"></label>
+      <label class="field">What's happening? (optional)<input id="detail" type="text" placeholder="e.g. water won't heat up"></label>
       <div>
         <span style="font-size:15px;font-weight:700">How urgent?</span>
         <div class="urgencies" id="urgency" style="margin-top:8px"></div>
       </div>
     </div>
+    <p class="subhead" style="margin:0"><a href="manual.html#app-report-a-problem">How reporting works</a></p>
     <div class="row-between">
       <button class="scan" type="button" id="photo" style="width:auto;padding:0 18px">Add a photo</button>
       <button class="saffron" type="button" id="sendReport" style="min-height:56px;padding:0 28px;font-size:17px">Send to Dan</button>
@@ -137,10 +139,10 @@
     { label: "Dinner guests", value: "79", icon: "M6 13a6 6 0 1 1 12 0v2H6zM4 19h16", tint: "#F3F5F2" }
   ];
   var stColor = { "Sent to Dan": ["#FCEBDC", "#6E3105"], "Being fixed": ["#E3E8E2", "#2B3832"], "Fixed": ["#E3EFEA", "#123B33"] };
-  var state = { ch: "hk", kind: "water", urg: "today", reporting: true, photo: false, reports: [{ title: "Wobbly bed frame", where: "Room 208", status: "Fixed" }] };
+  var state = { ch: "hk", kind: "water", urg: "today", reporting: true, photo: false, reports: [{ title: "Wobbly bed frame", where: "Room 208", status: "Fixed", assignee: "Callum" }] };
 
   loadReports().forEach(function (r) {
-    state.reports.unshift({ title: r.title, where: r.where, status: r.status || "Sent to Dan" });
+    state.reports.unshift({ title: r.title, where: r.where, status: r.status || "Sent to Dan", assignee: r.assignee || "" });
   });
 
   function paint() {
@@ -160,7 +162,8 @@
 
     document.getElementById("reports").innerHTML = state.reports.map(function (r) {
       var c = stColor[r.status] || stColor["Sent to Dan"];
-      return '<div class="report-row"><span style="flex:1"><b>' + esc(r.title) + "</b><small>" + esc(r.where) + ' · sent to Dan (General Manager)</small></span><span class="st" style="background:' + c[0] + ";color:" + c[1] + '">' + esc(r.status) + "</span></div>";
+      var owner = r.assignee ? "With " + r.assignee : "Waiting for someone to take it";
+      return '<div class="report-row"><span style="flex:1"><b>' + esc(r.title) + "</b><small>" + esc(r.where) + " · " + esc(owner) + '</small></span><span class="st" style="background:' + c[0] + ";color:" + c[1] + '">' + esc(r.status) + "</span></div>";
     }).join("");
 
     document.getElementById("channels").innerHTML = channels.map(function (c) {
@@ -248,9 +251,10 @@
     var kind = kinds.filter(function (k) { return k[0] === state.kind; })[0];
     var urg = urgencies.filter(function (u) { return u[0] === state.urg; })[0];
     var where = document.getElementById("where").value.trim() || "Not given";
+    var detail = document.getElementById("detail").value.trim();
     var item = {
       id: "hub-" + Date.now(),
-      title: kind[1],
+      title: detail ? kind[1] + ": " + detail : kind[1],
       where: where,
       urgency: urg[1],
       status: "Sent to Dan",
@@ -260,7 +264,8 @@
     var stored = loadReports();
     stored.unshift(item);
     saveReports(stored);
-    state.reports.unshift({ title: item.title, where: item.where, status: "Sent to Dan" });
+    state.reports.unshift({ title: item.title, where: item.where, status: "Sent to Dan", assignee: "" });
+    document.getElementById("detail").value = "";
     state.reporting = false;
     state.photo = false;
     paint();
