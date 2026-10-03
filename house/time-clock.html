@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parslia House — Team &amp; time clock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="house.css">
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <div>
+      <a class="back" href="today.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>Today</a>
+      <div class="title-row">
+        <h1 class="page-title">Team &amp; time clock</h1>
+        <span class="lock" id="adminBadge"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Admin only</span>
+      </div>
+    </div>
+    <div>
+      <div class="preview-label">Preview as</div>
+      <div class="seg" role="group" aria-label="Preview as">
+        <button type="button" id="asAdmin" aria-pressed="true">Admin</button>
+        <button type="button" id="asStaff" aria-pressed="false">Staff member</button>
+      </div>
+    </div>
+  </header>
+
+  <div id="staffView" hidden>
+    <div class="split">
+      <section class="shift" aria-label="My shift">
+        <div><span style="font-size:15px;color:#B7C7BF">Housekeeping · Shift 08:00–16:00</span><h2>Hi, Priya</h2></div>
+        <div><span style="font-size:15px;color:#B7C7BF" id="meStatus">On shift since 07:58</span><div class="clocknum" id="meTime">2.5 h</div></div>
+        <div class="pair">
+          <button type="button" id="meClock" style="border:0;background:#fff;color:#15221C">Clock out</button>
+          <button type="button" id="meBreak" style="border:1px solid #3A5A4F;background:transparent;color:#F2F5F3">Start break</button>
+        </div>
+        <span style="font-size:14px;color:#B7C7BF;display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>You can only clock in on site, using the house Wi-Fi</span>
+        <a href="staff-app.html" style="color:#F0A15C;font-weight:600">Open Priya’s phone app</a>
+      </section>
+      <section class="card" aria-label="My week">
+        <h2>My week</h2>
+        <div id="myWeek"></div>
+        <div class="locknote"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>Only admins can see the whole team or change times.</div>
+      </section>
+    </div>
+  </div>
+
+  <div id="adminView">
+    <section class="stats" aria-label="Right now">
+      <div class="statbox deep"><span class="k">On duty now</span><b id="onDuty">0<small> / 25</small></b><div class="bar"><i id="dutyBar"></i></div></div>
+      <div class="statbox"><span class="k">On break</span><b id="onBreak">0</b></div>
+      <div class="statbox"><span class="k">Late / not in yet</span><b class="late" id="late">0</b></div>
+      <div class="statbox"><span class="k">Hours worked today</span><b id="hoursToday">0 h</b></div>
+    </section>
+    <section class="depts" aria-label="Departments on duty" id="deptCards"></section>
+    <div class="work">
+      <section class="card grow" aria-label="Team">
+        <div class="row-between">
+          <h2 id="listTitle">Whole team</h2>
+          <div class="chips" role="group" aria-label="Show" id="statusFilters"></div>
+        </div>
+        <div class="scroll"><div class="sheet" id="people"></div></div>
+      </section>
+      <aside class="side">
+        <section class="card edit" id="editBox" hidden aria-label="Edit times">
+          <div class="row-between"><h2 id="edName" style="font-size:19px">Edit</h2><button type="button" class="iconbtn" id="closeEdit" aria-label="Close">×</button></div>
+          <div class="fields">
+            <label class="field">Clock in<input id="edIn" type="time"></label>
+            <label class="field">Clock out<input id="edOut" type="time"></label>
+          </div>
+          <label class="field">Reason (kept on record)<input id="edReason" type="text" placeholder="e.g. forgot to clock in"></label>
+          <button class="btn deep" type="button" id="saveEdit">Save change</button>
+        </section>
+        <section class="ask" aria-label="Needs attention" style="gap:12px">
+          <h2 style="margin:0;font-size:19px;color:#6E3105">Needs attention</h2>
+          <div class="note"><b>Leah M. is 30 minutes late</b><span>Housekeeping · shift started 10:00 · we’ve sent a text</span></div>
+          <div class="note"><b>Noah G. hasn’t clocked in</b><span>Garden · shift started 09:00</span></div>
+          <div class="note"><b>Isaac F. forgot to clock out yesterday</b><span>Reception · correct the time before approving</span></div>
+        </section>
+        <section class="card" aria-label="Activity" style="gap:6px">
+          <h2 style="margin:0 0 8px;font-size:19px">Clock activity</h2>
+          <div id="log"></div>
+        </section>
+        <section class="shift" aria-label="Timesheets" style="border-radius:24px;padding:22px;gap:12px">
+          <div class="row-between"><h2 style="margin:0;font-size:19px">This week's timesheets</h2><span style="font-size:14px;color:#B7C7BF">Mon 28 Sep – Sun 4 Oct</span></div>
+          <span style="font-family:var(--display);font-size:40px;font-weight:700">642 h</span>
+          <button type="button" id="approve" class="btn" style="background:#F0A15C;color:#2A1404">Approve &amp; send to payroll</button>
+        </section>
+      </aside>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var seed = [
+    ["Priya N.", "hk", "08:00–16:00", "on", "07:58"],
+    ["Tomasz K.", "hk", "08:00–16:00", "on", "08:02"],
+    ["Grace O.", "hk", "08:00–16:00", "break", "07:55"],
+    ["Leah M.", "hk", "10:00–18:00", "late", ""],
+    ["Shyam P.", "kitchen", "06:30–15:00", "on", "06:24"],
+    ["Ravi S.", "kitchen", "06:30–15:00", "on", "06:31"],
+    ["Ben A.", "kitchen", "06:30–15:00", "on", "06:40"],
+    ["Maya R.", "kitchen", "14:00–22:00", "off", ""],
+    ["Owen T.", "rest", "07:00–15:00", "on", "06:57"],
+    ["Sofia L.", "rest", "07:00–15:00", "break", "07:01"],
+    ["Jack D.", "rest", "17:00–22:00", "off", ""],
+    ["Hannah W.", "foh", "07:00–15:00", "on", "06:52"],
+    ["Isaac F.", "foh", "15:00–23:00", "off", ""],
+    ["Callum B.", "maint", "08:00–16:00", "on", "07:49"],
+    ["Ellie J.", "grounds", "08:00–16:00", "on", "08:00"],
+    ["Noah G.", "grounds", "09:00–17:00", "late", ""]
+  ];
+  var people = seed.map(function (row, i) {
+    return { id: "p" + i, name: row[0], dept: row[1], shift: row[2], st: row[3], since: row[4] };
+  });
+  var state = {
+    role: "admin", dept: "all", show: "all", people: people, editId: null, approved: false,
+    me: "on", meSince: "07:58",
+    log: [["08:02", "Tomasz K. clocked in", "#1E5A4F"], ["08:00", "Ellie J. clocked in", "#1E5A4F"], ["07:58", "Priya N. clocked in", "#1E5A4F"], ["07:55", "Grace O. started break", "#B4540A"], ["07:49", "Callum B. clocked in", "#1E5A4F"], ["06:24", "Shyam P. clocked in", "#1E5A4F"]]
+  };
+  var deptDefs = [["all", "Everyone"], ["foh", "Reception"], ["rest", "Restaurant"], ["kitchen", "Kitchen"], ["hk", "Housekeeping"], ["maint", "Maintenance"], ["grounds", "Garden"]];
+  var labelOf = {};
+  deptDefs.forEach(function (d) { labelOf[d[0]] = d[1]; });
+  var ST = {
+    on: { label: "On duty", bg: "#E3EFEA", fg: "#123B33", pip: "#1E5A4F" },
+    break: { label: "On break", bg: "#FCEBDC", fg: "#6E3105", pip: "#E3B48C" },
+    late: { label: "Late", bg: "#9A4508", fg: "#FFFFFF", pip: "#9A4508" },
+    off: { label: "Not due yet", bg: "#ECEDEA", fg: "#2B3832", pip: "#D3D9D2" },
+    out: { label: "Clocked out", bg: "#ECEDEA", fg: "#2B3832", pip: "#D3D9D2" }
+  };
+  var order = { late: 0, on: 1, break: 2, off: 3, out: 4 };
+  var filters = [["all", "All"], ["working", "Working"], ["late", "Late"], ["off", "Not in"]];
+  var week = [
+    ["Mon", "07:59 – 16:04", "7.6 h"], ["Tue", "08:01 – 16:00", "7.5 h"], ["Wed", "Day off", "—"], ["Thu", "07:57 – 16:10", "7.7 h"], ["Fri", "08:00 – 15:58", "7.5 h"]
+  ];
+  function hoursSince(t) {
+    if (!t) return 0;
+    var parts = t.split(":").map(Number);
+    return Math.max(0, ((10 * 60 + 30) - (parts[0] * 60 + parts[1])) / 60);
+  }
+  function working(p) { return p.st === "on" || p.st === "break"; }
+  function paint() {
+    var admin = state.role === "admin";
+    document.getElementById("adminView").hidden = !admin;
+    document.getElementById("staffView").hidden = admin;
+    document.getElementById("adminBadge").hidden = !admin;
+    document.getElementById("asAdmin").setAttribute("aria-pressed", admin ? "true" : "false");
+    document.getElementById("asStaff").setAttribute("aria-pressed", admin ? "false" : "true");
+    var P = state.people;
+    var onDuty = P.filter(working).length;
+    document.getElementById("onDuty").innerHTML = onDuty + "<small> / 25</small>";
+    document.getElementById("dutyBar").style.width = Math.round(onDuty / 25 * 100) + "%";
+    document.getElementById("onBreak").textContent = P.filter(function (p) { return p.st === "break"; }).length;
+    document.getElementById("late").textContent = P.filter(function (p) { return p.st === "late"; }).length;
+    var hours = P.reduce(function (a, p) { return a + (working(p) ? hoursSince(p.since) : 0); }, 0);
+    document.getElementById("hoursToday").textContent = hours.toFixed(0) + " h";
+    document.getElementById("deptCards").innerHTML = deptDefs.filter(function (d) { return d[0] !== "all"; }).map(function (d) {
+      var list = P.filter(function (p) { return p.dept === d[0]; });
+      var on = state.dept === d[0];
+      return '<button type="button" class="dept" data-dept="' + d[0] + '" aria-pressed="' + (on ? "true" : "false") + '"><b>' + d[1] + '</b><span><strong>' + list.filter(working).length + '</strong> <em>of ' + list.length + ' in</em></span><span class="pips">' + list.map(function (p) { return '<i style="background:' + ST[p.st].pip + '"></i>'; }).join("") + "</span></button>";
+    }).join("");
+    document.getElementById("statusFilters").innerHTML = filters.map(function (f) {
+      var on = state.show === f[0];
+      return '<button type="button" class="chip" data-show="' + f[0] + '" aria-pressed="' + (on ? "true" : "false") + '">' + f[1] + "</button>";
+    }).join("");
+    document.getElementById("listTitle").textContent = state.dept === "all" ? "Whole team" : labelOf[state.dept];
+    var rows = P.filter(function (p) { return state.dept === "all" || p.dept === state.dept; }).filter(function (p) {
+      if (state.show === "all") return true;
+      if (state.show === "working") return working(p);
+      if (state.show === "late") return p.st === "late";
+      return p.st === "off" || p.st === "out";
+    }).sort(function (a, b) { return order[a.st] - order[b.st]; });
+    document.getElementById("people").innerHTML = rows.map(function (p) {
+      var d = ST[p.st];
+      var w = working(p);
+      var initials = p.name.split(" ").map(function (x) { return x[0]; }).join("");
+      return '<div class="person"><span class="who"><span class="avatar" style="background:' + (w ? "#1E5A4F" : "#E3E8E2") + ";color:" + (w ? "#fff" : "#2B3832") + '">' + initials + '</span><span><b>' + p.name + "</b><small>" + labelOf[p.dept] + " · " + p.shift + '</small></span></span><span class="tag" style="background:' + d.bg + ";color:" + d.fg + '">' + d.label + '</span><span>' + (p.since ? "since " + p.since : "—") + '</span><span class="hours">' + (p.since ? hoursSince(p.since).toFixed(1) + " h" : "—") + '</span><span class="acts"><button type="button" class="btn ' + (w ? "line" : "deep") + '" data-toggle="' + p.id + '" style="min-height:40px;padding:0 12px;font-size:14px">' + (w ? "Clock out" : "Clock in") + '</button><button type="button" class="iconbtn" data-edit="' + p.id + '" aria-label="Edit times for ' + p.name + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg></button></span></div>';
+    }).join("");
+    var ed = P.find(function (p) { return p.id === state.editId; });
+    document.getElementById("editBox").hidden = !ed;
+    if (ed) {
+      document.getElementById("edName").textContent = "Edit " + ed.name;
+      document.getElementById("edIn").value = ed.since || "";
+    }
+    document.getElementById("log").innerHTML = state.log.map(function (l) {
+      return '<div class="logline"><time>' + l[0] + '</time><i style="background:' + l[2] + '"></i><span>' + l[1] + "</span></div>";
+    }).join("");
+    var approve = document.getElementById("approve");
+    approve.textContent = state.approved ? "Approved — sent to payroll" : "Approve & send to payroll";
+    approve.style.background = state.approved ? "#E3EFEA" : "#F0A15C";
+    approve.style.color = state.approved ? "#123B33" : "#2A1404";
+    var meWorking = state.me === "on" || state.me === "break";
+    document.getElementById("meStatus").textContent = state.me === "on" ? "On shift since " + state.meSince : state.me === "break" ? "On break" : "Not clocked in";
+    document.getElementById("meTime").textContent = state.me === "out" ? "—" : hoursSince(state.meSince).toFixed(1) + " h";
+    var clock = document.getElementById("meClock");
+    clock.textContent = meWorking ? "Clock out" : "Clock in";
+    clock.style.background = meWorking ? "#fff" : "#F0A15C";
+    clock.style.color = meWorking ? "#15221C" : "#2A1404";
+    var br = document.getElementById("meBreak");
+    br.textContent = state.me === "break" ? "End break" : "Start break";
+    br.disabled = !meWorking;
+    br.style.opacity = meWorking ? "1" : "0.4";
+    document.getElementById("myWeek").innerHTML = week.map(function (d) {
+      return '<div class="weekline"><span style="font-weight:600;width:64px">' + d[0] + '</span><span style="color:#56635C;flex:1">' + d[1] + "</span><b>" + d[2] + "</b></div>";
+    }).join("");
+  }
+  document.getElementById("asAdmin").onclick = function () { state.role = "admin"; paint(); };
+  document.getElementById("asStaff").onclick = function () { state.role = "staff"; paint(); };
+  document.getElementById("deptCards").onclick = function (e) {
+    var b = e.target.closest("[data-dept]");
+    if (!b) return;
+    var id = b.getAttribute("data-dept");
+    state.dept = state.dept === id ? "all" : id;
+    paint();
+  };
+  document.getElementById("statusFilters").onclick = function (e) {
+    var b = e.target.closest("[data-show]");
+    if (!b) return;
+    state.show = b.getAttribute("data-show");
+    paint();
+  };
+  document.getElementById("people").onclick = function (e) {
+    var t = e.target.closest("[data-toggle]");
+    var ed = e.target.closest("[data-edit]");
+    if (ed) { state.editId = ed.getAttribute("data-edit"); paint(); return; }
+    if (!t) return;
+    var id = t.getAttribute("data-toggle");
+    var p = state.people.find(function (x) { return x.id === id; });
+    var w = working(p);
+    state.people = state.people.map(function (x) {
+      if (x.id !== id) return x;
+      return w ? Object.assign({}, x, { st: "out" }) : Object.assign({}, x, { st: "on", since: "10:30" });
+    });
+    state.log = [["10:30", p.name + (w ? " clocked out by admin" : " clocked in by admin"), w ? "#9AA59F" : "#1E5A4F"]].concat(state.log).slice(0, 8);
+    paint();
+  };
+  document.getElementById("closeEdit").onclick = function () { state.editId = null; paint(); };
+  document.getElementById("saveEdit").onclick = function () {
+    var id = state.editId;
+    var value = document.getElementById("edIn").value;
+    var reason = document.getElementById("edReason").value.trim();
+    state.people = state.people.map(function (x) { return x.id === id ? Object.assign({}, x, { since: value, st: x.st === "late" || x.st === "off" ? "on" : x.st }) : x; });
+    var p = state.people.find(function (x) { return x.id === id; });
+    state.log = [["10:30", "Times edited for " + (p ? p.name : "staff") + (reason ? " · " + reason : ""), "#B4540A"]].concat(state.log).slice(0, 8);
+    state.editId = null;
+    document.getElementById("edReason").value = "";
+    paint();
+  };
+  document.getElementById("approve").onclick = function () { state.approved = !state.approved; paint(); };
+  document.getElementById("meClock").onclick = function () {
+    var meWorking = state.me === "on" || state.me === "break";
+    state.me = meWorking ? "out" : "on";
+    if (!meWorking) state.meSince = "10:30";
+    paint();
+  };
+  document.getElementById("meBreak").onclick = function () {
+    if (state.me !== "on" && state.me !== "break") return;
+    state.me = state.me === "break" ? "on" : "break";
+    paint();
+  };
+  paint();
+})();
+</script>
+</body>
+</html>

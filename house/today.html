@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parslia House — Today</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="house.css">
+</head>
+<body>
+<div class="app">
+  <nav class="nav" aria-label="Main">
+    <a class="brand" href="today.html">
+      <span class="mark" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F0A15C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-4-3-7-6-7-10a7 7 0 0 1 14 0c0 4-3 7-7 10z"></path><path d="M12 8v6M9 11h6"></path></svg></span>
+      <span><b>Parslia House</b><span>The Vedanta Way</span></span>
+    </a>
+    <div class="nav-list" id="nav"></div>
+    <div class="me"><div class="avatar">SP</div><div><b>Shyam Prasad</b><span>Head of Kitchen · Admin</span></div></div>
+  </nav>
+  <main class="main">
+    <header class="top">
+      <label class="search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#56635C" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+        <span class="sr">Search</span>
+        <input id="search" type="search" placeholder="Find a guest, room or group">
+      </label>
+      <div class="seg" role="group" aria-label="View">
+        <button type="button" id="goSimple" aria-pressed="false">Simple</button>
+        <button type="button" id="goFull" aria-pressed="true">Full view</button>
+      </div>
+    </header>
+
+    <section class="hero" aria-label="Today">
+      <div class="hero-copy">
+        <span class="hero-date">Saturday 3 October</span>
+        <h1>Good morning, Shyam.<br><em>One group leaves, one arrives.</em></h1>
+        <p>Hoffman Institute checks out by 13:00 and OmLife arrives from 15:00. Six rooms need cleaning and getting ready in between. Everything else is on track.</p>
+      </div>
+      <div class="nums">
+        <div><b>24</b><span>arriving</span></div>
+        <div><b>30</b><span>leaving</span></div>
+        <div><b id="dinnerCount">78</b><span>for dinner</span></div>
+      </div>
+    </section>
+
+    <section class="actions" aria-label="Quick actions" id="actions"></section>
+
+    <div class="split">
+      <section class="card" aria-label="My tasks">
+        <div class="row-between">
+          <h2>To do today</h2>
+          <span class="ok" id="doneLabel">1 of 7 done</span>
+        </div>
+        <div class="bar" aria-hidden="true"><i id="doneBar" style="width:14%"></i></div>
+        <div class="chips" role="tablist" aria-label="Department" id="depts"></div>
+        <div id="tasks" style="display:flex;flex-direction:column;gap:10px"></div>
+      </section>
+      <div class="stack">
+        <section class="ask" aria-label="Ask Parslia">
+          <div class="ask-head">
+            <span class="ask-ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"></path></svg></span>
+            <div><h2>Ask Parslia</h2><span>Your AI duty manager</span></div>
+          </div>
+          <div class="chips" id="questions"></div>
+          <div class="answer" id="answer"></div>
+          <form class="ask-form" id="askForm">
+            <label class="sr" for="askInput">Ask a question</label>
+            <input id="askInput" type="text" placeholder="Type a question…">
+            <button class="send" type="submit" aria-label="Send"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+          </form>
+        </section>
+        <section class="card" aria-label="Up next" style="gap:6px">
+          <h2 style="margin-bottom:10px">Up next</h2>
+          <div id="programme"></div>
+        </section>
+      </div>
+    </div>
+
+    <div id="full">
+      <div class="stack">
+        <h2 style="margin:8px 0 0;font-size:24px">House details</h2>
+        <div class="kpis" id="kpis"></div>
+        <div class="split">
+          <section class="card" aria-label="Auto-staffing">
+            <div><h3 style="font-size:20px">Who we need tonight</h3><span style="font-size:14px;color:#56635C">Worked out automatically: 3 kitchen staff per 35 guests</span></div>
+            <label>
+              <span style="display:flex;justify-content:space-between;font-size:16px"><span>Guests at dinner</span><b id="guestLabel">78</b></span>
+              <input class="range" id="guests" type="range" min="5" max="130" step="1" value="78">
+            </label>
+            <div class="staff-grid">
+              <div class="need mint"><span>Kitchen</span><b id="kitchenNeed">9</b><small id="kitchenMix">3 chef · 3 assistant · 3 porter</small></div>
+              <div class="need warm"><span>Restaurant</span><b id="restNeed">3–6</b><small>restaurant staff</small></div>
+            </div>
+            <button class="btn" type="button" id="addRota">Add to this week's rota</button>
+            <p id="rotaNote" hidden style="margin:0;font-size:14px;color:#1E5A4F;font-weight:600">Added to this week's rota.</p>
+          </section>
+          <section class="card" aria-label="Needs attention">
+            <h3 style="font-size:20px;margin-bottom:4px">Needs attention</h3>
+            <div id="alerts" style="display:flex;flex-direction:column;gap:12px"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+(function () {
+  var nav = [
+    { label: "Today", href: "today.html", dot: "#B4540A", current: true },
+    { label: "Rooms", href: "rooms.html", dot: "#1E5A4F", badge: "6" },
+    { label: "Booking website", href: "#", dot: "#1E5A4F" },
+    { label: "Guest app", href: "#", dot: "#1E5A4F" },
+    { label: "Kitchen", href: "kitchen.html", dot: "#1E5A4F", badge: "3" },
+    { label: "Team & time clock", href: "time-clock.html", dot: "#1E5A4F" },
+    { label: "Bookings & money", href: "#", dot: "#1E5A4F" },
+    { label: "Staff hub", href: "staff-app.html", dot: "#1E5A4F" },
+    { label: "Manager view", href: "#", dot: "#B4540A" },
+    { label: "Settings", href: "#", dot: "#9AA59F" }
+  ];
+  document.getElementById("nav").innerHTML = nav.map(function (n) {
+    return '<a href="' + n.href + '"' + (n.current ? ' aria-current="page"' : "") + '><span class="dot" style="background:' + n.dot + '"></span><span class="label">' + n.label + "</span>" + (n.badge ? '<span class="badge">' + n.badge + "</span>" : "") + "</a>";
+  }).join("");
+
+  var actions = [
+    { title: "Check in a guest", sub: "Find the booking, give out the key", tint: "#E3EFEA", ink: "#1E5A4F", icon: "M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM4 21c1-4 4-6 8-6s7 2 8 6", href: "rooms.html" },
+    { title: "New booking", sub: "For a group or one person", tint: "#FCEBDC", ink: "#9A4508", icon: "M12 5v14M5 12h14", href: "#" },
+    { title: "Report a problem", sub: "In a room, the kitchen or garden", tint: "#ECEDEA", ink: "#2B3832", icon: "M12 4l9 16H3zM12 10v4M12 17v.5", href: "rooms.html" },
+    { title: "Today’s rooms", sub: "See who is in each room", tint: "#E3EFEA", ink: "#1E5A4F", icon: "M3 21V8l9-5 9 5v13M9 21v-6h6v6", href: "rooms.html" }
+  ];
+  document.getElementById("actions").innerHTML = actions.map(function (a) {
+    return '<a class="action" href="' + a.href + '"><i style="background:' + a.tint + ";color:" + a.ink + '"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="' + a.icon + '"></path></svg></i><span><b>' + a.title + "</b><span>" + a.sub + "</span></span></a>";
+  }).join("");
+
+  var deptDefs = [["all", "Everyone"], ["foh", "Reception"], ["rest", "Restaurant"], ["kitchen", "Kitchen"], ["hk", "Housekeeping"], ["maint", "Maintenance"], ["grounds", "Garden"]];
+  var labelOf = {};
+  deptDefs.forEach(function (d) { labelOf[d[0]] = d[1]; });
+  var allTasks = [
+    { id: "t1", dept: "hk", title: "Get 6 rooms ready for OmLife", meta: "rooms 201–206", due: "by 14:45", urgent: true },
+    { id: "t4", dept: "rest", title: "Set Hall B for closing lunch", meta: "52 guests, buffet", due: "by 12:15", urgent: true },
+    { id: "t5", dept: "maint", title: "Fix shower in room 112", meta: "water won’t heat up", due: "by 11:00", urgent: true },
+    { id: "t2", dept: "kitchen", title: "Prepare dinner", meta: "", due: "17:30" },
+    { id: "t7", dept: "foh", title: "Take final payment from Hoffman", meta: "invoice is ready", due: "13:30" },
+    { id: "t6", dept: "grounds", title: "Clear the meditation garden path", meta: "walk at 16:30", due: "16:00" },
+    { id: "t3", dept: "foh", title: "Welcome email to OmLife", meta: "sent automatically", due: "Done" }
+  ];
+  var qs = [
+    { text: "Who arrives today?", a: "OmLife — 34 guests in 24 rooms, from 15:00.\n4 vegan and 2 gluten-free. 3 guests have stayed before." },
+    { text: "Any problems?", a: "Rooms 203 and 205 have late checkout until 13:00, so turnaround is tight.\nAdding 2 housekeepers 13:00–15:00 would cover it." },
+    { text: "Who owes money?", a: "Hoffman Institute pays its balance on departure today.\nOmLife is fully paid. Nothing overdue." }
+  ];
+  var prog = [
+    { time: "12:15", title: "Closing lunch", meta: "Hall B · Hoffman", dot: "#1E5A4F", now: true },
+    { time: "13:00", title: "Hoffman checks out", meta: "Coach at main entrance", dot: "#1E5A4F" },
+    { time: "15:00", title: "OmLife arrives", meta: "Reception · welcome tea", dot: "#B4540A" },
+    { time: "16:30", title: "Walking meditation", meta: "Garden · OmLife", dot: "#B4540A" },
+    { time: "19:00", title: "Dinner", meta: "", dot: "#9AA59F" }
+  ];
+  var alerts = [
+    { dot: "#B4540A", title: "6 rooms to get ready before 15:00", meta: "Between Hoffman and OmLife", action: "Assign", href: "rooms.html" },
+    { dot: "#15221C", title: "Room 112 out of order", meta: "Maintenance are fixing it", action: "View", href: "rooms.html" },
+    { dot: "#1E5A4F", title: "Food hygiene certificate expiring", meta: "1 kitchen team member · 9 days", action: "Remind", href: "kitchen.html" },
+    { dot: "#B4540A", title: "Hoffman bill due today", meta: "Invoice ready", action: "Send", href: "#" }
+  ];
+  var state = { full: true, dept: "all", guests: 78, q: 0, done: { t3: true }, query: "" };
+
+  function paint() {
+    var g = state.guests;
+    document.getElementById("goSimple").setAttribute("aria-pressed", state.full ? "false" : "true");
+    document.getElementById("goFull").setAttribute("aria-pressed", state.full ? "true" : "false");
+    document.getElementById("full").hidden = !state.full;
+    document.getElementById("dinnerCount").textContent = g;
+    document.getElementById("guestLabel").textContent = g;
+    document.getElementById("guests").value = g;
+    var units = Math.max(1, Math.ceil(g / 35));
+    document.getElementById("kitchenNeed").textContent = units * 3;
+    document.getElementById("kitchenMix").textContent = units + " chef · " + units + " assistant · " + units + " porter";
+    document.getElementById("restNeed").textContent = units + "–" + (units * 2);
+
+    document.getElementById("depts").innerHTML = deptDefs.map(function (d) {
+      var on = state.dept === d[0];
+      return '<button type="button" class="chip" role="tab" data-dept="' + d[0] + '" aria-selected="' + (on ? "true" : "false") + '">' + d[1] + "</button>";
+    }).join("");
+
+    var q = state.query.trim().toLowerCase();
+    var visible = allTasks.filter(function (t) {
+      if (state.dept !== "all" && t.dept !== state.dept) return false;
+      if (!q) return true;
+      return (t.title + " " + t.meta + " " + labelOf[t.dept]).toLowerCase().indexOf(q) !== -1;
+    });
+    document.getElementById("tasks").innerHTML = visible.map(function (t) {
+      var done = !!state.done[t.id];
+      var hot = t.urgent && !done;
+      var meta = (t.id === "t2" ? g + " guests, 6 special diets" : t.meta);
+      return '<label class="task' + (done ? " done" : "") + (hot ? " hot" : "") + '"><input type="checkbox" data-task="' + t.id + '"' + (done ? " checked" : "") + '><span class="body"><b>' + t.title + "</b><small>" + labelOf[t.dept] + " · " + meta + '</small></span><span class="due">' + t.due + "</span></label>";
+    }).join("") || '<p style="margin:0;color:#56635C">Nothing matches that search.</p>';
+
+    var doneCount = allTasks.filter(function (t) { return state.done[t.id]; }).length;
+    document.getElementById("doneLabel").textContent = doneCount + " of " + allTasks.length + " done";
+    document.getElementById("doneBar").style.width = Math.round(doneCount / allTasks.length * 100) + "%";
+
+    document.getElementById("questions").innerHTML = qs.map(function (item, i) {
+      return '<button type="button" class="chip" data-q="' + i + '" aria-pressed="' + (state.q === i ? "true" : "false") + '">' + item.text + "</button>";
+    }).join("");
+    document.getElementById("answer").textContent = qs[state.q].a;
+
+    document.getElementById("programme").innerHTML = prog.map(function (p) {
+      var meta = p.time === "19:00" ? "Restaurant · " + g + " guests" : p.meta;
+      if (q && (p.title + " " + meta).toLowerCase().indexOf(q) === -1) return "";
+      return '<div class="beat' + (p.now ? " next" : "") + '"><time>' + p.time + '</time><span class="rail" style="background:' + p.dot + '"></span><span style="flex:1;min-width:0"><b>' + p.title + "</b><small>" + meta + "</small></span>" + (p.now ? '<span class="pill">Next</span>' : "") + "</div>";
+    }).join("");
+
+    var kpis = [
+      { label: "Rooms in use", value: "34 of 41", pct: "83%", warm: false, note: "Room 104 is staff-only" },
+      { label: "Guests in house", value: "86", pct: "66%", warm: false, note: "+34 arriving, −52 leaving" },
+      { label: "Dinner seats used", value: g + " of 130", pct: Math.round(g / 130 * 100) + "%", warm: true, note: "150 seats in restaurant" },
+      { label: "Team on shift", value: "19 of 25", pct: "76%", warm: false, note: "All departments covered" }
+    ];
+    document.getElementById("kpis").innerHTML = kpis.map(function (k) {
+      return '<div class="kpi"><span>' + k.label + "</span><b>" + k.value + '</b><div class="bar"><i class="' + (k.warm ? "warm" : "") + '" style="width:' + k.pct + '"></i></div><small>' + k.note + "</small></div>";
+    }).join("");
+    document.getElementById("alerts").innerHTML = alerts.map(function (a) {
+      return '<div class="alert"><span class="pip" style="background:' + a.dot + '"></span><span style="flex:1;min-width:0"><b>' + a.title + "</b><small>" + a.meta + '</small></span><a class="btn line" href="' + a.href + '" style="flex:none;min-height:40px;padding:0 14px;display:inline-flex;align-items:center;text-decoration:none;font-size:14px">' + a.action + "</a></div>";
+    }).join("");
+  }
+
+  document.getElementById("goSimple").onclick = function () { state.full = false; paint(); };
+  document.getElementById("goFull").onclick = function () { state.full = true; paint(); };
+  document.getElementById("guests").oninput = function (e) { state.guests = Number(e.target.value); paint(); };
+  document.getElementById("search").oninput = function (e) { state.query = e.target.value; paint(); };
+  document.getElementById("depts").onclick = function (e) {
+    var b = e.target.closest("[data-dept]");
+    if (!b) return;
+    state.dept = b.getAttribute("data-dept");
+    paint();
+  };
+  document.getElementById("tasks").onchange = function (e) {
+    var id = e.target.getAttribute("data-task");
+    if (!id) return;
+    state.done[id] = e.target.checked;
+    paint();
+  };
+  document.getElementById("questions").onclick = function (e) {
+    var b = e.target.closest("[data-q]");
+    if (!b) return;
+    state.q = Number(b.getAttribute("data-q"));
+    paint();
+  };
+  document.getElementById("askForm").onsubmit = function (e) {
+    e.preventDefault();
+    var text = document.getElementById("askInput").value.trim();
+    if (!text) return;
+    document.getElementById("answer").textContent = "I’ll check that with the house book.\n\nYou asked: " + text;
+    document.getElementById("askInput").value = "";
+  };
+  document.getElementById("addRota").onclick = function () {
+    document.getElementById("rotaNote").hidden = false;
+  };
+  paint();
+})();
+</script>
+</body>
+</html>

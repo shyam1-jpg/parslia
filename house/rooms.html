@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parslia House — Room board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="house.css">
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <div>
+      <a class="back" href="today.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>Today</a>
+      <h1 class="page-title">Room board</h1>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <button class="ghost" type="button">Today · Sat 3 Oct</button>
+      <button class="ghost" type="button" id="weekBtn">Week view</button>
+      <button class="saffron" type="button" id="giveOm">Give OmLife their rooms</button>
+    </div>
+  </header>
+  <div class="filters" role="group" aria-label="Filter by status" id="filters"></div>
+  <p id="weekNote" hidden style="margin:0;color:#56635C">Week view uses the same board. Saturday is the busy turn day: Hoffman leaves, OmLife arrives.</p>
+  <div class="work">
+    <div class="floors" id="floors"></div>
+    <aside class="card detail" aria-label="Room details" id="detail"></aside>
+  </div>
+</div>
+<script>
+(function () {
+  var S = {
+    occ: { label: "Staying", code: "Staying", bg: "#1E5A4F", fg: "#FFFFFF", border: "#1E5A4F", bw: "1px", sw: "#1E5A4F", swb: "#1E5A4F" },
+    dep: { label: "Leaving today", code: "Leaving", bg: "#D8E6E2", fg: "#123B36", border: "#1E5A4F", bw: "2px", sw: "#D8E6E2", swb: "#1E5A4F" },
+    arr: { label: "Arriving today", code: "Arriving", bg: "#B4540A", fg: "#FFFFFF", border: "#B4540A", bw: "1px", sw: "#B4540A", swb: "#B4540A" },
+    dirty: { label: "To clean", code: "To clean", bg: "#FBE7D6", fg: "#6E3105", border: "#E3B48C", bw: "1px", sw: "#FBE7D6", swb: "#E3B48C" },
+    clean: { label: "Ready", code: "Ready", bg: "#FFFFFF", fg: "#15221C", border: "#C9CEC7", bw: "1px", sw: "#FFFFFF", swb: "#9AA59F" },
+    ooo: { label: "Out of use", code: "Closed", bg: "#15221C", fg: "#FFFFFF", border: "#15221C", bw: "1px", sw: "#15221C", swb: "#15221C" },
+    staff: { label: "Staff", code: "Staff", bg: "#ECEDEA", fg: "#3D4943", border: "#ECEDEA", bw: "1px", sw: "#ECEDEA", swb: "#9AA59F" }
+  };
+  var pattern = ["occ", "dep", "occ", "occ", "dirty", "arr", "occ", "dep", "clean", "occ", "arr", "ooo", "dep", "occ"];
+  var names = ["A. Patel", "J. Morgan", "S. Okafor", "L. Chen", "R. Iyer", "M. Novak", "H. Reid", "K. Shah", "T. Evans", "P. Rossi", "N. Ali", "E. Byrne", "D. Kaur", "C. Walsh"];
+  var rooms = [];
+  [1, 2, 3].forEach(function (floor) {
+    for (var i = 1; i <= 14; i++) {
+      var num = String(floor * 100 + i);
+      var st = pattern[(i + floor * 3) % pattern.length];
+      if (num === "104") st = "staff";
+      if (num === "112") st = "ooo";
+      if (num === "203" || num === "205") st = "dep";
+      if (st === "ooo" && num !== "112") st = "clean";
+      var name = names[(i + floor * 5) % names.length];
+      var group = st === "arr" ? "OmLife" : (st === "occ" || st === "dep") ? "Hoffman Institute" : "—";
+      var who = st === "staff" ? "Staff room" : st === "ooo" ? "Shower fault" : st === "clean" ? "Vacant" : st === "dirty" ? "Needs cleaning" : name;
+      rooms.push({ num: num, floor: floor, st: st, who: who, group: group, name: name });
+    }
+  });
+  var notes = {
+    dep: "Guest leaves by 13:00. The next guest (OmLife) arrives at 15:00, so there are 2 hours to clean.",
+    occ: "Guest is staying on. Daily tidy booked — housekeeping can see what they like.",
+    arr: "Welcome email sent. Room chosen automatically from the group’s wishes.",
+    dirty: "Waiting for housekeeping. It can be booked again once it is marked clean.",
+    clean: "Checked and ready for the next guest.",
+    ooo: "Maintenance are fixing it. It can’t be booked until it’s done.",
+    staff: "Staff-only room. Never offered to guests."
+  };
+  var state = { filter: "all", room: "203", week: false };
+  var order = ["all", "occ", "dep", "arr", "dirty", "clean", "ooo"];
+  function paint() {
+    document.getElementById("weekNote").hidden = !state.week;
+    document.getElementById("filters").innerHTML = order.map(function (id) {
+      var on = state.filter === id;
+      var count = id === "all" ? rooms.length : rooms.filter(function (r) { return r.st === id; }).length;
+      var def = S[id];
+      var sw = id === "all" ? "transparent" : def.sw;
+      var swb = id === "all" ? (on ? "#fff" : "#9AA59F") : def.swb;
+      return '<button type="button" class="chip" data-filter="' + id + '" aria-pressed="' + (on ? "true" : "false") + '" style="display:inline-flex;align-items:center;gap:8px"><span class="swatch" style="background:' + sw + ";border:1px solid " + swb + '"></span>' + (id === "all" ? "All rooms" : def.label) + " · " + count + "</button>";
+    }).join("");
+    document.getElementById("floors").innerHTML = [1, 2, 3].map(function (fl) {
+      var list = rooms.filter(function (r) { return r.floor === fl; });
+      var occ = list.filter(function (r) { return r.st === "occ" || r.st === "dep"; }).length;
+      var arriving = list.filter(function (r) { return r.st === "arr"; }).length;
+      return '<section class="floor"><div class="row-between"><h2>Floor ' + fl + '</h2><span style="font-size:14px;color:#56635C">' + occ + " in use · " + arriving + ' arriving</span></div><div class="grid">' + list.map(function (r) {
+        var d = S[r.st];
+        var sel = r.num === state.room;
+        var dim = state.filter === "all" || state.filter === r.st ? "1" : "0.25";
+        return '<button type="button" class="room" data-room="' + r.num + '" aria-label="Room ' + r.num + ", " + d.label + '" style="background:' + d.bg + ";color:" + d.fg + ";border:" + (sel ? "3px solid #B4540A" : d.bw + " solid " + d.border) + ";opacity:" + dim + '"><span class="n"><span>' + r.num + '</span><span class="code">' + d.code + '</span></span><span class="who">' + r.who + "</span></button>";
+      }).join("") + "</div></section>";
+    }).join("");
+    var r = rooms.find(function (x) { return x.num === state.room; }) || rooms[0];
+    var d = S[r.st];
+    var who = (r.st === "occ" || r.st === "dep" || r.st === "arr") ? r.name : "—";
+    var stay = r.st === "arr" ? "Sat 3 – Wed 7 Oct · afternoon arrival" : r.st === "dep" ? "Tue 29 Sep – Sat 3 Oct · leaves 13:00" : r.st === "occ" ? "Tue 29 Sep – Sun 4 Oct" : "—";
+    var hk = (r.st === "dirty" || r.st === "dep") ? "Full clean needed" : r.st === "clean" ? "Checked & ready" : r.st === "occ" ? "Daily tidy" : "—";
+    document.getElementById("detail").innerHTML = '<div class="row-between"><span class="num">' + r.num + '</span><span class="status" style="background:' + d.bg + ";color:" + d.fg + ";border:1px solid " + d.border + '">' + d.label + '</span></div><div class="meta"><div><span>Guest</span><b>' + who + "</b></div><div><span>Group</span><b>" + r.group + "</b></div><div><span>Stay</span><b>" + stay + "</b></div><div><span>Housekeeping</span><b>" + hk + '</b></div></div><div class="blurb">' + notes[r.st] + '</div><div class="pair"><button type="button" id="moveGuest">Move guest</button><button type="button" id="markClean">Mark clean</button><button type="button" id="report">Report a problem</button><button type="button" id="bill" style="border:0;background:#1E5A4F;color:#fff">Open bill</button></div><p id="roomMsg" style="margin:0;font-size:14px;color:#1E5A4F;font-weight:600" hidden></p>';
+  }
+  document.getElementById("filters").onclick = function (e) {
+    var b = e.target.closest("[data-filter]");
+    if (!b) return;
+    state.filter = b.getAttribute("data-filter");
+    paint();
+  };
+  document.getElementById("floors").onclick = function (e) {
+    var b = e.target.closest("[data-room]");
+    if (!b) return;
+    state.room = b.getAttribute("data-room");
+    paint();
+  };
+  document.getElementById("detail").onclick = function (e) {
+    var r = rooms.find(function (x) { return x.num === state.room; });
+    var msg = document.getElementById("roomMsg");
+    if (e.target.id === "markClean" && r && (r.st === "dirty" || r.st === "dep")) {
+      r.st = "clean";
+      r.who = "Vacant";
+      r.group = "—";
+      paint();
+      return;
+    }
+    if (e.target.id === "report" && r) {
+      r.st = "ooo";
+      r.who = "Shower fault";
+      paint();
+      return;
+    }
+    if (e.target.id === "moveGuest") { msg.hidden = false; msg.textContent = "Guest move is ready when reception confirms the new room."; }
+    if (e.target.id === "bill") { msg.hidden = false; msg.textContent = "Bill opens with reception. Hoffman’s balance is due on departure."; }
+  };
+  document.getElementById("giveOm").onclick = function () { state.filter = "arr"; paint(); };
+  document.getElementById("weekBtn").onclick = function () { state.week = !state.week; paint(); };
+  paint();
+})();
+</script>
+</body>
+</html>
