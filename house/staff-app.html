@@ -31,8 +31,7 @@
       <span style="font-size:13px;color:#56635C">Most urgent first</span>
     </div>
     <div id="rooms" style="display:flex;flex-direction:column;gap:12px"></div>
-    <button class="scan" type="button" id="scan"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h3v3h-3zM20 14v.5M14 20.5h.5M20 20h.5"></path></svg>Report a problem — scan the QR sticker</button>
-    <p id="scanMsg" hidden style="margin:0;font-size:14px;color:#1E5A4F;font-weight:600">Point the camera at the room sticker. Room 112 is already with maintenance.</p>
+    <a class="scan" href="staff-hub.html#report"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h3v3h-3zM20 14v.5M14 20.5h.5M20 20h.5"></path></svg>Report a problem — scan the QR sticker</a>
   </div>
   <nav class="tabbar" aria-label="App">
     <a href="staff-app.html" aria-current="page"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"></path><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"></path></svg>Tasks</a>
@@ -74,7 +73,6 @@
   };
   document.getElementById("clock").onclick = function () { state.clocked = !state.clocked; paint(); };
   document.getElementById("bell").onclick = function () { document.getElementById("notice").hidden = false; };
-  document.getElementById("scan").onclick = function () { document.getElementById("scanMsg").hidden = false; };
   paint();
 })();
 </script>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Parslia House — Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="house.css">
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <div>
+      <a class="back" href="today.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>Today</a>
+      <span class="kicker warn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4l9 16H3zM12 10v4M12 17v.5"></path></svg>Management side</span>
+      <h1 class="page-title">Dan, here's the house</h1>
+      <span class="subhead">General Manager · Saturday 3 October, 10:30</span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px">
+      <a class="btn line" href="#bookings" style="display:inline-flex;align-items:center;text-decoration:none">Bookings &amp; money</a>
+      <a class="btn line" href="time-clock.html" style="display:inline-flex;align-items:center;text-decoration:none">Team &amp; time clock</a>
+    </div>
+  </header>
+
+  <section class="gm-kpis" aria-label="House snapshot">
+    <div class="gm-kpi deep"><span class="k">Rooms in use tonight</span><b>35 / 41</b><small>85% full</small></div>
+    <div class="gm-kpi"><span class="k">Booked this week</span><b>£15,360</b><small id="newBookings">3 new bookings</small></div>
+    <div class="gm-kpi peach"><span class="k">Open problems</span><b id="openCount">4</b><small id="unassigned">2 not assigned</small></div>
+    <div class="gm-kpi"><span class="k">Staff on duty</span><b>19 / 25</b><small>2 late</small></div>
+    <div class="gm-kpi mint"><span class="k">Guest happiness</span><b>4.8</b><small>Last 30 days, out of 5</small></div>
+  </section>
+
+  <section aria-label="Problems reported by staff">
+    <div class="row-between">
+      <h2 style="margin:0;font-size:28px">Problems reported by staff</h2>
+      <span class="subhead">Tap a problem to assign it or mark it fixed</span>
+    </div>
+    <div class="board" id="board" style="margin-top:14px"></div>
+  </section>
+
+  <div class="split">
+    <section class="detail-job" id="job" aria-label="Selected problem"></section>
+    <section class="mail" aria-label="Messages from staff">
+      <div class="row-between">
+        <h2 style="margin:0;font-size:22px">Messages from staff</h2>
+        <span class="count-pill" id="unread">0 unread</span>
+      </div>
+      <div id="messages" style="display:flex;flex-direction:column;gap:10px"></div>
+    </section>
+  </div>
+
+  <div class="split">
+    <section class="card" id="bookings" aria-label="New bookings">
+      <h2>New bookings</h2>
+      <div id="bookingList" style="display:flex;flex-direction:column;gap:10px"></div>
+    </section>
+    <section class="card" aria-label="Who's on duty">
+      <div class="row-between">
+        <h2>Who's on duty</h2>
+        <a href="time-clock.html">See everyone</a>
+      </div>
+      <div id="duty" style="display:flex;flex-direction:column;gap:12px"></div>
+    </section>
+  </div>
+</div>
+<script>
+(function () {
+  var STORE = "parslia_house_reports_v1";
+  function loadReports() {
+    try { return JSON.parse(localStorage.getItem(STORE) || "[]"); }
+    catch (e) { return []; }
+  }
+  function saveReports(list) { localStorage.setItem(STORE, JSON.stringify(list)); }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  var problems = [
+    { id: "p1", col: "new", title: "Shower won't heat up", meta: "Room 112 · reported by Priya, 08:14", note: "Not assigned yet", tag: "Today", tone: "warm" },
+    { id: "p2", col: "new", title: "Hall A projector flickers", meta: "Hall A · reported by Hannah, 09:02", note: "Not assigned yet", tag: "This week", tone: "" },
+    { id: "p3", col: "fixing", title: "Walk-in fridge reading 6°C", meta: "Kitchen · reported by Ravi, 06:50", note: "With Callum", tag: "Right now", tone: "hot", assignee: "Callum (Maintenance)" },
+    { id: "p4", col: "fixing", title: "Loose paving by the garden gate", meta: "Grounds · reported by Ellie, Yesterday", note: "With Ellie", tag: "This week", tone: "", assignee: "Ellie (Garden)" },
+    { id: "p5", col: "fixed", title: "Wobbly bed frame", meta: "Room 208 · reported by Priya, Thu", note: "With Callum", tag: "Today", tone: "warm", assignee: "Callum (Maintenance)" }
+  ];
+  loadReports().forEach(function (r) {
+    var col = r.status === "Fixed" ? "fixed" : r.status === "Being fixed" ? "fixing" : "new";
+    problems.unshift({
+      id: r.id,
+      col: col,
+      title: r.title,
+      meta: (r.where || "House") + " · reported by " + (r.from || "Priya") + ", " + (r.when || "today"),
+      note: r.assignee ? "With " + r.assignee.split(" ")[0] : "Not assigned yet",
+      tag: r.urgency || "Today",
+      tone: r.urgency === "Right now" ? "hot" : "warm",
+      assignee: r.assignee || "",
+      blocked: !!r.blocked,
+      fromHub: true
+    });
+  });
+  var messages = [
+    { id: "m1", who: "Priya", role: "Housekeeping", time: "10:12", text: "Rooms 203 and 205 still occupied — guests are packing slowly. Might run past 14:45.", fresh: true, replies: [], chips: ["Send 2 more housekeepers", "I'll speak to them"] },
+    { id: "m2", who: "Shyam", role: "Kitchen", time: "09:40", text: "All OmLife diets are in. Nut allergy plate set up for room 205.", fresh: false, replies: ["Thanks — great work."], chips: [] },
+    { id: "m3", who: "Hannah", role: "Reception", time: "09:05", text: "OmLife organiser asked for an extra room — 207 is free, okay to give it?", fresh: true, replies: [], chips: ["Yes, go ahead", "Call me first"] },
+    { id: "m4", who: "Callum", role: "Maintenance", time: "08:50", text: "Fridge is back to 3°C. Keeping an eye on it today.", fresh: false, replies: [], chips: ["Thanks Callum"] }
+  ];
+  var bookings = [
+    { id: "bk1", name: "[Silent retreat] · 28 guests", meta: "13–16 Nov · deposit paid", amount: "£10,080", confirmed: false },
+    { id: "bk2", name: "OmLife · +1 guest", meta: "Today · room 207", amount: "£480", confirmed: false },
+    { id: "bk3", name: "[Corporate wellbeing day] · 40", meta: "20 Nov · quote requested", amount: "£4,800", confirmed: false }
+  ];
+  var duty = [
+    ["Reception", 2, 3],
+    ["Restaurant", 3, 4],
+    ["Kitchen", 5, 6],
+    ["Housekeeping", 4, 6],
+    ["Maintenance", 1, 2],
+    ["Garden", 1, 2]
+  ];
+  var assignees = ["Callum (Maintenance)", "Ellie (Garden)", "Outside contractor"];
+  var state = { selected: problems[0].id };
+
+  function syncHub(p) {
+    if (!p.fromHub) return;
+    var list = loadReports();
+    list.forEach(function (r) {
+      if (r.id !== p.id) return;
+      r.status = p.col === "fixed" ? "Fixed" : p.col === "fixing" ? "Being fixed" : "Sent to Dan";
+      r.assignee = p.assignee || "";
+      r.blocked = !!p.blocked;
+    });
+    saveReports(list);
+  }
+
+  function paint() {
+    var cols = [
+      ["new", "New", "#B4540A"],
+      ["fixing", "Being fixed", "#1E5A4F"],
+      ["fixed", "Fixed", "#9AA59F"]
+    ];
+    document.getElementById("board").innerHTML = cols.map(function (c) {
+      var items = problems.filter(function (p) { return p.col === c[0]; });
+      var cards = items.map(function (p) {
+        var on = state.selected === p.id;
+        return '<button type="button" class="prob" data-prob="' + p.id + '" aria-pressed="' + (on ? "true" : "false") + '"><b>' + esc(p.title) + '</b><small>' + esc(p.meta) + '</small><span class="foot"><span>' + esc(p.note) + '</span><span class="when ' + p.tone + '">' + esc(p.tag) + "</span></span></button>";
+      }).join("");
+      return '<div class="col"><h3><i class="dot" style="background:' + c[2] + '"></i>' + c[1] + '<span class="n">' + items.length + "</span></h3>" + cards + "</div>";
+    }).join("");
+
+    var open = problems.filter(function (p) { return p.col !== "fixed"; }).length;
+    var loose = problems.filter(function (p) { return p.col === "new" && !p.assignee; }).length;
+    document.getElementById("openCount").textContent = String(open);
+    document.getElementById("unassigned").textContent = loose + " not assigned";
+
+    var job = problems.filter(function (p) { return p.id === state.selected; })[0] || problems[0];
+    var give = assignees.map(function (name) {
+      var on = job.assignee === name;
+      return '<button type="button" data-assign="' + esc(name) + '" aria-pressed="' + (on ? "true" : "false") + '">' + esc(name) + "</button>";
+    }).join("");
+    var status = job.col === "fixed" ? "Fixed" : job.col === "fixing" ? "Being fixed" : "New";
+    document.getElementById("job").innerHTML = '<span class="when ' + (job.col === "new" ? "warm" : "") + '">' + status + "</span><div><h2>" + esc(job.title) + "</h2><p>" + esc(job.meta) + '</p></div><div><span style="font-size:14px;color:#B7C7BF">Give this job to</span><div class="give" style="margin-top:8px">' + give + '</div></div><div class="job-actions"><button type="button" class="fixbtn" id="markFixed"' + (job.col === "fixed" ? " disabled" : "") + ">" + (job.col === "fixed" ? "Fixed" : "Mark fixed") + '</button><button type="button" class="block" id="blockRoom" aria-pressed="' + (job.blocked ? "true" : "false") + '">' + (job.blocked ? "Room blocked from bookings ✓" : "Room blocked from bookings") + "</button></div>";
+
+    var unread = messages.filter(function (m) { return m.fresh; }).length;
+    document.getElementById("unread").textContent = unread + " unread";
+    document.getElementById("messages").innerHTML = messages.map(function (m) {
+      var chips = m.chips.map(function (c) {
+        return '<button type="button" class="chip" data-reply="' + m.id + '" data-text="' + esc(c) + '">' + esc(c) + "</button>";
+      }).join("");
+      var replied = m.replies.map(function (r) { return '<div class="replied">You replied: ' + esc(r) + "</div>"; }).join("");
+      return '<article class="mail-item' + (m.fresh ? " fresh" : "") + '"><header><b>' + esc(m.who) + " · " + esc(m.role) + "</b><span>" + m.time + "</span></header><p>" + esc(m.text) + "</p>" + (chips ? '<div class="chips">' + chips + "</div>" : "") + replied + "</article>";
+    }).join("");
+
+    var waiting = bookings.filter(function (b) { return !b.confirmed; }).length;
+    document.getElementById("newBookings").textContent = waiting ? waiting + " new bookings" : "All new bookings confirmed";
+    document.getElementById("bookingList").innerHTML = bookings.map(function (b) {
+      return '<div class="book-row"><span><b>' + esc(b.name) + "</b><small>" + esc(b.meta) + '</small></span><span class="amt">' + b.amount + '<br><button type="button" class="btn deep" data-book="' + b.id + '" style="min-height:36px;margin-top:6px;padding:0 14px"' + (b.confirmed ? " disabled" : "") + ">" + (b.confirmed ? "Confirmed" : "Confirm") + "</button></span></div>";
+    }).join("");
+    document.getElementById("duty").innerHTML = duty.map(function (d) {
+      var pct = Math.round(d[1] / d[2] * 100);
+      var short = d[1] / d[2] < 0.75;
+      return '<div class="duty"><span>' + d[0] + '</span><span class="track"><i class="' + (short ? "short" : "ok") + '" style="width:' + pct + '%"></i></span><b>' + d[1] + "/" + d[2] + "</b></div>";
+    }).join("");
+  }
+
+  document.getElementById("board").onclick = function (e) {
+    var b = e.target.closest("[data-prob]");
+    if (!b) return;
+    state.selected = b.getAttribute("data-prob");
+    paint();
+  };
+  document.getElementById("job").onclick = function (e) {
+    var job = problems.filter(function (p) { return p.id === state.selected; })[0];
+    if (!job) return;
+    var assign = e.target.closest("[data-assign]");
+    if (assign && job.col !== "fixed") {
+      job.assignee = assign.getAttribute("data-assign");
+      job.col = "fixing";
+      job.note = "With " + job.assignee.split(" ")[0];
+      syncHub(job);
+      paint();
+      return;
+    }
+    if (e.target.id === "markFixed" && job.col !== "fixed") {
+      job.col = "fixed";
+      job.note = job.assignee ? "With " + job.assignee.split(" ")[0] : "Fixed";
+      job.tag = "Today";
+      syncHub(job);
+      paint();
+      return;
+    }
+    if (e.target.id === "blockRoom") {
+      job.blocked = !job.blocked;
+      syncHub(job);
+      paint();
+    }
+  };
+  document.getElementById("messages").onclick = function (e) {
+    var b = e.target.closest("[data-reply]");
+    if (!b) return;
+    messages.forEach(function (m) {
+      if (m.id !== b.getAttribute("data-reply")) return;
+      m.replies.push(b.getAttribute("data-text"));
+      m.chips = [];
+      m.fresh = false;
+    });
+    paint();
+  };
+  document.getElementById("bookingList").onclick = function (e) {
+    var b = e.target.closest("[data-book]");
+    if (!b) return;
+    bookings.forEach(function (item) {
+      if (item.id === b.getAttribute("data-book")) item.confirmed = true;
+    });
+    paint();
+  };
+  paint();
+})();
+</script>
+</body>
+</html>
