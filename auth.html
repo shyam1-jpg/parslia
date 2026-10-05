@@ -454,14 +454,14 @@ label { display: block; margin: 0 0 6px; color: var(--brand-muted); font-size: 1
     </div>
 
     <div id="setupBanner" class="setup" hidden role="status">
-      Staff sign-in is not fully configured for this kitchen yet. You can still open the Command Centre —
-      <a href="pro-dashboard.html">back to pro-dashboard</a>.
+      Staff sign-in is not configured for this workspace yet.
+      <a href="support.html#access">Contact the workspace manager for access help</a>.
     </div>
 
     <div class="welcome">
       <h2>Staff portal</h2>
-      <div class="os">Kitchen OS · The Vedānta</div>
-      <p>Sign in to ops, SOPs, and your kitchen activity.</p>
+      <div class="os">Parslia Kitchen OS · The Vedānta Way</div>
+      <p>Sign in to access kitchen tasks, procedures and training.</p>
     </div>
 
     <div class="tabs" role="tablist" aria-label="Account mode">
@@ -535,7 +535,7 @@ label { display: block; margin: 0 0 6px; color: var(--brand-muted); font-size: 1
           <span class="hint" id="regConfirmHint"></span>
         </div>
         <div class="field">
-          <label for="regRole">Role</label>
+          <label for="regRole">Job role (profile information)</label>
           <select id="regRole" name="role" required>
             <option value="Staff">Staff</option>
             <option value="Chef">Chef</option>
@@ -553,7 +553,7 @@ label { display: block; margin: 0 0 6px; color: var(--brand-muted); font-size: 1
         <h3>Kitchen tips</h3>
         <ul>
           <li>Use your work email so managers can find you in activity.</li>
-          <li>After sign-in you’ll land on Command Centre (or your deep link).</li>
+          <li>After sign-in, open your kitchen dashboard or the page you requested.</li>
           <li>Forgot a password? Use the reset flow — never share logins.</li>
         </ul>
       </div>
@@ -563,9 +563,10 @@ label { display: block; margin: 0 0 6px; color: var(--brand-muted); font-size: 1
       <span id="footSwap">Don’t have an account? <a href="#" id="gotoRegister">Create account</a></span>
       <p class="ios-tip" id="iosTip" hidden>On iPhone: tap Share, then <strong>Add to Home Screen</strong> to install Parslia.</p>
       <div class="legal">
-        <button type="button" id="linkPrivacy">Privacy</button>
-        <button type="button" id="linkTerms">Terms</button>
-        <a href="pro-dashboard.html">Command Centre</a>
+        <a href="privacy.html">Privacy notice</a>
+        <a href="terms.html">Terms of use</a>
+        <a href="support.html">Help &amp; access</a>
+        <a href="pro-dashboard.html">Kitchen dashboard</a>
       </div>
     </div>
   </main>
@@ -580,8 +581,8 @@ label { display: block; margin: 0 0 6px; color: var(--brand-muted); font-size: 1
       <div class="tip-card">
         <h3>Smart staff tips</h3>
         <ul>
-          <li>Managers see activity by profile — keep your name accurate.</li>
-          <li>Chef role unlocks kitchen SOPs and production views.</li>
+          <li>Your profile and activity may be recorded; read the privacy notice.</li>
+          <li>Selecting a job role does not authorise equipment use. Ask your manager about access and competency.</li>
           <li>Prefer a strong passphrase over short passwords.</li>
         </ul>
       </div>
@@ -872,13 +873,6 @@ label { display: block; margin: 0 0 6px; color: var(--brand-muted); font-size: 1
     }).finally(function () {
       setLoading(regBtn, false, 'Create account');
     });
-  };
-
-  document.getElementById('linkPrivacy').onclick = function () {
-    setMsg('Privacy: staff credentials stay in your Firebase project; we do not sell personal data.', true);
-  };
-  document.getElementById('linkTerms').onclick = function () {
-    setMsg('Terms: Parslia Kitchen OS is for authorised Vedānta Way kitchen staff only.', true);
   };
 
   if (ready) {
