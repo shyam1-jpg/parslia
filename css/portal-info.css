@@ -1,0 +1,18 @@
+:root { color-scheme: light; --purple: #4f3066; --muted: #65576e; --paper: #fffdf9; }
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.65 system-ui, sans-serif; color: #2b1e3a; background: #f4eff7; }
+header { background: #352044; color: white; border-bottom: 3px solid #c6a66f; }
+header > div { max-width: 900px; margin: auto; padding: 22px; }
+header a { color: white; text-decoration: none; font-weight: 700; }
+header small { display: block; color: #eadcc3; }
+main { max-width: 900px; margin: 26px auto; background: var(--paper); padding: clamp(20px, 5vw, 46px); border: 1px solid #e0d6e8; border-radius: 20px; }
+h1, h2 { font-family: Georgia, serif; line-height: 1.2; color: var(--purple); }
+h1 { font-size: clamp(30px, 5vw, 46px); margin: 12px 0; }
+h2 { margin-top: 30px; font-size: 23px; }
+a { color: var(--purple); text-underline-offset: 3px; overflow-wrap: anywhere; }
+.meta { color: var(--muted); font-size: 13px; }
+.notice { padding: 15px 18px; background: #fff6e5; border-left: 4px solid #a97727; border-radius: 8px; }
+nav { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 26px; border-top: 1px solid #e0d6e8; padding-top: 20px; }
+li { margin-bottom: 8px; }
+:focus-visible { outline: 3px solid #a97727; outline-offset: 4px; }
+@media (max-width: 600px) { main { margin: 12px; } }
