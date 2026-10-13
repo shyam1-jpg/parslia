@@ -86,6 +86,11 @@ const spent = wallet.spend(state, 44, { name: 'Lighthouse Keeper', html: '<html>
 assert.strictEqual(spent.error, '');
 assert.strictEqual(wallet.balance(spent.state), 36);
 assert.strictEqual(spent.state.apps.length, 1);
+const discussed = wallet.spend(spent.state, 1, { name: 'Discuss' }, now);
+assert.strictEqual(discussed.error, '');
+assert.strictEqual(wallet.balance(discussed.state), 35);
+assert.strictEqual(discussed.state.apps.length, 1);
+assert.strictEqual(discussed.state.entries[discussed.state.entries.length - 1].type, 'discuss');
 
 assert.strictEqual(wallet.canBuild(spent.state, 20, now + 31 * wallet.DAY_MS).reason, 'subscribe');
 assert.strictEqual(wallet.topUp(wallet.freshState(), 'top-100', now).error, 'subscribe');

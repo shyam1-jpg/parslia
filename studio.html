@@ -25,27 +25,35 @@
 <div class="studio">
   <section class="composer">
     <div id="sub-panel"></div>
-    <p id="access-note" class="meta">Subscribe to build.</p>
-    <label class="field" for="prompt">Describe the app
-      <textarea id="prompt" placeholder="A clinic app with patients, appointments, and notes"></textarea>
-    </label>
-    <p id="cost-line" class="meta">Describe any app. Say what it should keep track of.</p>
-    <div id="revise-wrap" class="check" hidden>
-      <input id="revise" type="checkbox" checked>
-      <label for="revise">Update the open app (12 credits)</label>
-    </div>
-    <div class="row">
-      <button class="btn" id="build" type="button">Build app</button>
-      <button class="btn secondary" id="download" type="button">Download</button>
-      <button class="btn secondary" id="open-app" type="button">Open</button>
+    <div class="chat-head">
+      <p id="access-note" class="meta">Subscribe to build.</p>
+      <div class="modes" role="group" aria-label="Chat mode">
+        <button type="button" id="mode-build" class="on" aria-pressed="true">Build</button>
+        <button type="button" id="mode-plan" aria-pressed="false">Plan</button>
+        <button type="button" id="mode-discuss" aria-pressed="false">Discuss</button>
+      </div>
     </div>
     <div id="log" class="log" aria-live="polite"></div>
-    <div>
-      <h2 class="section-title" style="font-size:28px">Built here</h2>
-      <div id="history" class="history"></div>
-    </div>
+    <form id="composer">
+      <label class="field" for="prompt">Message
+        <textarea id="prompt" placeholder="Describe an app, or ask for a change"></textarea>
+      </label>
+      <p id="cost-line" class="meta">Build spends credits and updates the preview. Discuss costs 1 credit and leaves the app alone.</p>
+      <div class="row">
+        <button class="btn" id="build" type="submit">Build</button>
+        <button class="btn secondary" id="new-app" type="button">New app</button>
+        <button class="btn secondary" id="publish" type="button">Publish</button>
+        <button class="btn secondary" id="download" type="button">Download</button>
+      </div>
+      <p id="publish-link" class="meta"></p>
+    </form>
+    <div id="history" class="history"></div>
   </section>
   <section class="stage-wrap">
+    <div class="stage-bar">
+      <button type="button" id="device-desk" class="on">Desktop</button>
+      <button type="button" id="device-phone">Phone</button>
+    </div>
     <div id="stage">
       <div id="empty">Your app shows up here after a subscribed build.</div>
       <iframe id="preview" title="Built app preview" hidden></iframe>

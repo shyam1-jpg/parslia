@@ -90,14 +90,26 @@ input[type="email"], textarea, input[type="text"], input[type="search"] {
   width: 100%; padding: 12px 12px; border-radius: 12px; border: 1px solid var(--line); background: white; color: var(--ink);
 }
 textarea { min-height: 140px; resize: vertical; }
-.studio { display: grid; grid-template-columns: minmax(320px, 440px) 1fr; min-height: calc(100vh - 64px); }
+.studio { display: grid; grid-template-columns: minmax(320px, 440px) 1fr; height: calc(100vh - 64px); }
 .composer, .stage-wrap { min-height: 0; }
-.composer { padding: 18px; display: flex; flex-direction: column; gap: 12px; border-right: 1px solid var(--line); }
-.stage-wrap { padding: 18px; display: flex; }
+.composer { padding: 16px; display: flex; flex-direction: column; gap: 10px; border-right: 1px solid var(--line); overflow: hidden; }
+.chat-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+.modes { display: flex; background: white; border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+.modes button { border: 0; background: transparent; border-radius: 999px; padding: 6px 12px; cursor: pointer; font-weight: 700; }
+.modes button.on { background: var(--copper); color: white; }
+.stage-wrap { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+.stage-bar { display: flex; gap: 6px; }
+.stage-bar button { border: 1px solid var(--line); background: white; border-radius: 999px; padding: 6px 12px; cursor: pointer; font-weight: 700; }
+.stage-bar button.on { background: var(--deep); color: white; border-color: var(--deep); }
 #stage { flex: 1; background: white; border: 1px solid var(--line); border-radius: 18px; overflow: hidden; min-height: 70vh; position: relative; }
+#stage.phone { width: min(390px, 100%); flex: none; height: calc(100vh - 150px); margin: 0 auto; }
+.chat-plan { background: white; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: grid; gap: 8px; }
+.chat-plan p { margin: 0; }
 #stage iframe { width: 100%; height: 100%; border: 0; background: white; }
 #empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); padding: 24px; text-align: center; }
-.log { display: grid; gap: 8px; max-height: 220px; overflow: auto; }
+.log { display: grid; gap: 8px; align-content: start; flex: 1; overflow: auto; }
+#composer textarea { min-height: 88px; }
+#sub-panel { overflow: auto; max-height: 46vh; }
 .log p { margin: 0; padding: 10px 12px; border-radius: 12px; background: white; border: 1px solid var(--line); }
 .log .user { background: var(--deep); color: #f6f1e8; }
 .history { display: grid; gap: 6px; }

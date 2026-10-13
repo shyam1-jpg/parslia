@@ -94,22 +94,26 @@
     var gate = canBuild(state, cost, now);
     if (!gate.ok) return { state: state, error: gate.reason };
     var id = uid();
+    var keepsApp = !!(app && app.html);
+    var apps = keepsApp
+      ? state.apps.concat([{
+        id: id,
+        name: app.name,
+        prompt: app.prompt,
+        html: app.html,
+        cost: cost,
+        screens: app.screens || [],
+        at: now
+      }]).slice(-15)
+      : state.apps.slice();
     return {
       state: {
         email: state.email,
         subscription: state.subscription,
         entries: state.entries.concat([{
-          id: id, type: 'build', credits: -Math.abs(cost), at: now, name: app.name
+          id: id, type: keepsApp ? 'build' : 'discuss', credits: -Math.abs(cost), at: now, name: app.name
         }]),
-        apps: state.apps.concat([{
-          id: id,
-          name: app.name,
-          prompt: app.prompt,
-          html: app.html,
-          cost: cost,
-          screens: app.screens || [],
-          at: now
-        }]).slice(-15)
+        apps: apps
       },
       error: ''
     };
