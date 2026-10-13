@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio · Kiln</title>
+<meta name="description" content="Describe any app. Subscribers spend credits and Kiln builds it.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23b4532a'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-size='18' font-family='Georgia' fill='white'%3EK%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,650&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/kiln.css">
+</head>
+<body>
+<a class="skip" href="#prompt">Skip to the description</a>
+<header class="top">
+  <a class="logo" href="index.html"><span class="mark">K</span> Kiln</a>
+  <nav>
+    <a href="index.html">Overview</a>
+    <a href="pricing.html">Pricing</a>
+    <a href="studio.html" aria-current="page">Studio</a>
+  </nav>
+  <div id="account-pill"></div>
+</header>
+<div class="studio">
+  <section class="composer">
+    <div id="sub-panel"></div>
+    <p id="access-note" class="meta">Subscribe to build.</p>
+    <label class="field" for="prompt">Describe the app
+      <textarea id="prompt" placeholder="A clinic app with patients, appointments, and notes"></textarea>
+    </label>
+    <p id="cost-line" class="meta">Describe any app. Say what it should keep track of.</p>
+    <div id="revise-wrap" class="check" hidden>
+      <input id="revise" type="checkbox" checked>
+      <label for="revise">Update the open app (12 credits)</label>
+    </div>
+    <div class="row">
+      <button class="btn" id="build" type="button">Build app</button>
+      <button class="btn secondary" id="download" type="button">Download</button>
+      <button class="btn secondary" id="open-app" type="button">Open</button>
+    </div>
+    <div id="log" class="log" aria-live="polite"></div>
+    <div>
+      <h2 class="section-title" style="font-size:28px">Built here</h2>
+      <div id="history" class="history"></div>
+    </div>
+  </section>
+  <section class="stage-wrap">
+    <div id="stage">
+      <div id="empty">Your app shows up here after a subscribed build.</div>
+      <iframe id="preview" title="Built app preview" hidden></iframe>
+    </div>
+  </section>
+</div>
+<script src="js/payments.js"></script>
+<script src="js/wallet.js"></script>
+<script src="js/plans-ui.js"></script>
+<script src="js/generator.js"></script>
+<script src="js/studio.js"></script>
+</body>
+</html>
