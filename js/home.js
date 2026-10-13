@@ -7,7 +7,8 @@
     ['Work', 'Plumbing jobs', 'A client tracker for a plumbing company with jobs, quotes, and a contact form'],
     ['Tool', 'Bread timer', 'A countdown timer for bread baking'],
     ['Collection', 'Tram tickets', 'An app for cataloguing vintage tram tickets in Lisbon'],
-    ['Clinic', 'Patient book', 'A clinic app for appointments and patient notes']
+    ['Clinic', 'Patient book', 'A clinic app for appointments and patient notes'],
+    ['Members', 'Studio login', 'A yoga studio app with member login, classes, and payments']
   ];
 
   KilnWallet.mount(document.getElementById('account-pill'));

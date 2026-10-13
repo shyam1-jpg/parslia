@@ -3,6 +3,6 @@
   "private": true,
   "scripts": {
     "start": "node server.js",
-    "test": "node tests/kiln.test.cjs"
+    "test": "node tests/kiln.test.cjs && node tests/publish.test.cjs"
   }
 }

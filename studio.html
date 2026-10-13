@@ -19,6 +19,7 @@
     <a href="index.html">Overview</a>
     <a href="pricing.html">Pricing</a>
     <a href="studio.html" aria-current="page">Studio</a>
+    <a href="account.html">Account</a>
   </nav>
   <div id="account-pill"></div>
 </header>
@@ -45,18 +46,35 @@
         <button class="btn secondary" id="publish" type="button">Publish</button>
         <button class="btn secondary" id="download" type="button">Download</button>
       </div>
+      <div id="publish-box" class="note" hidden>
+        <label class="field" for="link-name">Public link name
+          <input id="link-name" type="text" maxlength="31" autocomplete="off">
+        </label>
+        <p class="meta">Publish saves this version. The live page stays on that version until you publish again. Unpublish takes the link offline and keeps the app here.</p>
+        <div class="row">
+          <button class="btn" id="publish-go" type="button">Publish this version</button>
+          <button class="btn secondary" id="unpublish" type="button">Unpublish</button>
+        </div>
+      </div>
       <p id="publish-link" class="meta"></p>
     </form>
+    <p class="meta">Your apps</p>
     <div id="history" class="history"></div>
   </section>
   <section class="stage-wrap">
     <div class="stage-bar">
+      <button type="button" id="tab-preview" class="on">Preview</button>
+      <button type="button" id="tab-code">Code</button>
+      <button type="button" id="tab-settings">Settings</button>
+      <span class="spacer"></span>
       <button type="button" id="device-desk" class="on">Desktop</button>
       <button type="button" id="device-phone">Phone</button>
     </div>
     <div id="stage">
       <div id="empty">Your app shows up here after a subscribed build.</div>
       <iframe id="preview" title="Built app preview" hidden></iframe>
+      <textarea id="code-view" hidden spellcheck="false" aria-label="App code"></textarea>
+      <div id="settings-panel" hidden></div>
     </div>
   </section>
 </div>

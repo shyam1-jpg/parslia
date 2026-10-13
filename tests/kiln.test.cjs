@@ -106,5 +106,40 @@ assert.strictEqual(wallet.completePending(wallet.freshState(), pending, { kind: 
 assert.strictEqual(wallet.balance(wallet.completePending(wallet.freshState(), pending, { kind: 'plan', id: 'works' }, now).state), 700);
 
 assert.strictEqual(gen.build('').spec.name, 'New app');
+const plain = gen.build('A todo app');
+assert.strictEqual(specFrom(plain.html).mark, 'Kiln app');
+const quiet = gen.build('A todo app', { whiteLabel: true });
+assert.strictEqual(specFrom(quiet.html).mark, '');
+const superPlan = wallet.subscribe(wallet.freshState(), 'super', now);
+assert.strictEqual(superPlan.state.subscription.plan, 'super');
+assert.strictEqual(wallet.balance(superPlan.state), 2000);
+assert.strictEqual(wallet.allows(superPlan.state, 'publish', now), true);
+assert.strictEqual(wallet.allows(superPlan.state, 'whiteLabel', now), true);
+
+const freePlan = wallet.subscribe(wallet.freshState(), 'free', now);
+assert.strictEqual(wallet.balance(freePlan.state), 25);
+assert.strictEqual(wallet.allows(freePlan.state, 'download', now), false);
+assert.strictEqual(wallet.allows(freePlan.state, 'publish', now), false);
+assert.strictEqual(wallet.allows(state, 'download', now), true);
+assert.strictEqual(wallet.allows(state, 'publish', now), false);
+
+const members = gen.parsePrompt('A todo app with member login');
+assert.strictEqual(members.auth, true);
+assert.ok(gen.screenList(members).includes('Sign in'));
+assert.strictEqual(gen.quote(members), 25);
+const memberApp = gen.build('A todo app with member login');
+assert.strictEqual(specFrom(memberApp.html).auth, true);
+assert.ok(memberApp.html.includes('Sign-in stays in this browser.'));
+
+const inbox = gen.parsePrompt('A studio inbox for client emails');
+assert.ok(names(inbox).includes('Enquiries'));
+const payments = gen.parsePrompt('A plumbing company app for job payments');
+assert.ok(names(payments).includes('Payments'));
+
+const look = gen.build('A todo app', { look: true, name: 'Harbour Tasks', accent: '#112233' });
+assert.strictEqual(look.cost, 2);
+assert.strictEqual(specFrom(look.html).name, 'Harbour Tasks');
+assert.strictEqual(specFrom(look.html).palette.accent, '#112233');
+assert.strictEqual(specFrom(look.html).slug, specFrom(plain.html).slug);
 
 console.log('kiln tests passed');

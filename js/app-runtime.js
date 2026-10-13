@@ -20,12 +20,14 @@
       parsed.cols = parsed.cols || {};
       parsed.products = parsed.products || [];
       parsed.questions = parsed.questions || [];
+      parsed.users = parsed.users || [];
       parsed.tally = parsed.tally || 0;
       return parsed;
     } catch (err) {
       return {
         cols: {},
         products: [],
+        users: [],
         questions: spec.quiz ? [{
           id: 'sample',
           q: 'Sample question about ' + spec.quiz.topic + '. Edit or delete it, then add your own.',
@@ -42,6 +44,31 @@
 
   function save() {
     try { localStorage.setItem(storageKey, JSON.stringify(state)); } catch (err) { /* private browsing */ }
+  }
+
+  var sessionKey = storageKey + ':who';
+  var sessionEmail = '';
+
+  function sessionUser() {
+    if (sessionEmail) return sessionEmail;
+    try { return sessionStorage.getItem(sessionKey) || ''; } catch (err) { return ''; }
+  }
+
+  function setSession(email) {
+    sessionEmail = email;
+    try { sessionStorage.setItem(sessionKey, email); } catch (err) { /* preview frames can block storage */ }
+  }
+
+  function signOut() {
+    sessionEmail = '';
+    try { sessionStorage.removeItem(sessionKey); } catch (err) { /* private browsing */ }
+    draw();
+  }
+
+  function sessionLabel() {
+    var email = sessionUser();
+    var user = (state.users || []).filter(function (item) { return item.email === email; })[0];
+    return email + (user && user.role ? ' · ' + user.role : '');
   }
 
   function uid() { return Math.random().toString(36).slice(2, 10); }
@@ -103,9 +130,13 @@
     root.textContent = '';
     root.appendChild(h('div', { class: 'shell' }, [
       h('aside', { class: 'side' }, [
-        h('div', {}, [h('div', { class: 'mark' }, ['Kiln app']), h('h1', {}, [spec.name])]),
+        h('div', {}, [spec.mark ? h('div', { class: 'mark' }, [spec.mark]) : null, h('h1', {}, [spec.name])]),
         h('nav', { class: 'nav' }, buttons),
-        h('p', { class: 'fine' }, ['Saves in this browser. Download the file from Kiln to keep a copy.'])
+        h('div', { class: 'fine' }, [
+          spec.auth && sessionUser() ? h('p', {}, [sessionLabel()]) : null,
+          h('p', {}, [spec.mark ? 'Saves in this browser. Download the file from Kiln to keep a copy.' : 'Saves in this browser.']),
+          spec.auth ? h('button', { class: 'ghost', type: 'button', onclick: function () { signOut(); } }, ['Sign out']) : null
+        ])
       ]),
       h('main', { class: 'main', id: 'main' })
     ]));
@@ -443,7 +474,67 @@
     return col ? collectionScreen(col) : homeScreen();
   }
 
+  function signScreen() {
+    var mode = state.users && state.users.length ? 'in' : 'up';
+    var notice = '';
+    function paint() {
+      root.textContent = '';
+      root.appendChild(h('div', { class: 'shell' }, [
+        h('aside', { class: 'side' }, [
+          spec.mark ? h('div', { class: 'mark' }, [spec.mark]) : null,
+          h('h1', {}, [spec.name]),
+          h('p', { class: 'fine' }, ['Sign-in stays in this browser.'])
+        ]),
+        h('main', { class: 'main' }, [
+          h('form', { onsubmit: function (event) {
+            event.preventDefault();
+            var data = new FormData(event.target);
+            var email = String(data.get('email') || '').trim().toLowerCase();
+            var password = String(data.get('password') || '');
+            if (!email || password.length < 4) {
+              notice = 'Use an email and a password of at least 4 characters.';
+              paint();
+              return;
+            }
+            state.users = state.users || [];
+            var found = state.users.filter(function (user) { return user.email === email; })[0];
+            if (mode === 'up') {
+              if (found) {
+                notice = 'That email already has an account. Sign in instead.';
+                paint();
+                return;
+              }
+              state.users.push({ email: email, password: password, role: state.users.length ? 'Staff' : 'Owner' });
+              save();
+            } else if (!found || found.password !== password) {
+              notice = 'That email and password do not match.';
+              paint();
+              return;
+            }
+            setSession(email);
+            draw();
+          } }, [
+            h('h2', {}, [mode === 'up' ? 'Create an account' : 'Sign in']),
+            h('p', { class: 'pitch' }, ['Accounts are saved in this browser with the app. The first account is the owner. Later accounts are staff. This is not a hosted login service.']),
+            notice ? h('p', { class: 'panel' }, [notice]) : null,
+            h('label', {}, ['Email', h('input', { name: 'email', type: 'email', required: 'required' })]),
+            h('label', {}, ['Password', h('input', { name: 'password', type: 'password', required: 'required', minlength: '4' })]),
+            h('div', { class: 'row' }, [
+              h('button', { class: 'primary', type: 'submit' }, [mode === 'up' ? 'Create account' : 'Sign in']),
+              h('button', { class: 'ghost', type: 'button', onclick: function () { mode = mode === 'up' ? 'in' : 'up'; notice = ''; paint(); } }, [mode === 'up' ? 'I already have an account' : 'Create an account'])
+            ])
+          ])
+        ])
+      ]));
+    }
+    paint();
+  }
+
   function draw() {
+    if (spec.auth && !sessionUser()) {
+      signScreen();
+      return;
+    }
     shell();
     document.getElementById('main').appendChild(screen());
   }

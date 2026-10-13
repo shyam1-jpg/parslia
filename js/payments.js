@@ -6,6 +6,7 @@
       starter: '',
       studio: '',
       works: '',
+      super: '',
       'top-100': '',
       'top-300': ''
     }

@@ -9,9 +9,11 @@
   var PENDING = 'kiln.pending';
 
   var PLANS = [
-    { id: 'starter', name: 'Starter', price: 19, credits: 80, blurb: 'For one person building their own apps.' },
-    { id: 'studio', name: 'Studio', price: 49, credits: 250, blurb: 'For a business that will build several apps.', popular: true },
-    { id: 'works', name: 'Works', price: 119, credits: 700, blurb: 'For someone building apps for clients.' }
+    { id: 'free', name: 'Free', price: 0, credits: 25, blurb: 'Try the studio on one small app.', features: ['Build, Plan and Discuss', 'Preview, code, and settings'] },
+    { id: 'starter', name: 'Starter', price: 19, credits: 80, download: true, blurb: 'For one person trying a first app.', features: ['Build, Plan and Discuss', 'Download the app file'] },
+    { id: 'studio', name: 'Studio', price: 49, credits: 250, download: true, blurb: 'For a business building a few apps.', features: ['Build, Plan and Discuss', 'Download the app file'] },
+    { id: 'works', name: 'Works', price: 119, credits: 700, download: true, blurb: 'For a busy month of client drafts.', features: ['Build, Plan and Discuss', 'Download the app file'] },
+    { id: 'super', name: 'Super Pro', price: 249, credits: 2000, download: true, publish: true, whiteLabel: true, super: true, blurb: 'For a studio shipping apps under its own name.', features: ['2,000 build credits', 'Publish a public link you name', 'Republish to replace the live version', 'Your name on the app, not Kiln', 'Download the app file'] }
   ];
 
   var TOPUPS = [
@@ -54,6 +56,12 @@
     if (!subscribed(state, now)) return { ok: false, reason: 'subscribe' };
     if (balance(state) < cost) return { ok: false, reason: 'credits' };
     return { ok: true, reason: '' };
+  }
+
+  function allows(state, flag, now) {
+    if (!subscribed(state, now)) return false;
+    var plan = state.subscription ? planById(state.subscription.plan) : null;
+    return !!(plan && plan[flag]);
   }
 
   function subscribe(state, planId, now) {
@@ -250,6 +258,7 @@
     daysLeft: daysLeft,
     subscribed: subscribed,
     canBuild: canBuild,
+    allows: allows,
     subscribe: subscribe,
     topUp: topUp,
     spend: spend,

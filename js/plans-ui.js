@@ -32,7 +32,13 @@
       grid.className = 'plans';
       KilnWallet.plans.forEach(function (plan) {
         var card = document.createElement('article');
-        card.className = 'plan' + (plan.popular ? ' popular' : '');
+        card.className = 'plan' + (plan.super ? ' super' : '');
+        if (plan.super) {
+          var badge = document.createElement('p');
+          badge.className = 'kicker';
+          badge.textContent = 'For client delivery';
+          card.appendChild(badge);
+        }
         var title = document.createElement('h3');
         title.textContent = plan.name;
         var price = document.createElement('div');
@@ -42,6 +48,12 @@
         unit.textContent = 'a month · ' + plan.credits + ' credits';
         var blurb = document.createElement('p');
         blurb.textContent = plan.blurb;
+        var features = document.createElement('ul');
+        (plan.features || []).forEach(function (feature) {
+          var item = document.createElement('li');
+          item.textContent = feature;
+          features.appendChild(item);
+        });
         var button = document.createElement('button');
         button.className = 'btn';
         button.type = 'button';
@@ -52,6 +64,7 @@
         card.appendChild(price);
         card.appendChild(unit);
         card.appendChild(blurb);
+        card.appendChild(features);
         card.appendChild(button);
         grid.appendChild(card);
       });

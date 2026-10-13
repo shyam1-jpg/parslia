@@ -252,6 +252,7 @@
   function parsePrompt(raw) {
     var text = String(raw || '').replace(/\s+/g, ' ').trim();
     var shop = /\b(shop|store|sell|selling|boutique|products?)\b/i.test(text);
+    var auth = /\b(log[\s-]?in|sign[\s-]?in|password|members?|roles?|accounts?|authentication|users)\b/i.test(text);
     var quiz = /\b(quiz|trivia|flash\s*cards?)\b/i.test(text);
     var calculator = /\b(calculator|costing|estimate)\b/i.test(text);
     var tools = [];
@@ -291,6 +292,12 @@
     if (shop && !collections.some(function (collection) { return collection.id === 'orders' || collection.name === 'Orders'; })) {
       collections.push(ordersCollection(used));
     }
+    if (/\b(e-?mails?|inbox)\b/i.test(text) && !collections.some(function (collection) { return collection.name === 'Enquiries'; })) {
+      collections.push(makeCollection('Enquiries', used));
+    }
+    if (/\b(payments?|checkout)\b/i.test(text) && !shop && !collections.some(function (collection) { return /payment|invoice/i.test(collection.name); })) {
+      collections.push(makeCollection('Payments', used));
+    }
 
     var name = named || ((collections[0] && collections[0].name !== 'Records') ? collections[0].name : 'New app');
     var pitch = text ? text.charAt(0).toUpperCase() + text.slice(1) : 'A new app.';
@@ -308,6 +315,7 @@
       quiz: quiz ? { topic: quizTopic(text, name) } : null,
       calculator: calculator ? { title: name + ' calculator' } : null,
       tools: tools,
+      auth: auth,
       source: text.slice(0, 2000)
     };
   }
@@ -320,11 +328,13 @@
     if (spec.quiz) cost += 10;
     if (spec.calculator) cost += 10;
     if (spec.tools && spec.tools.length) cost += 5;
+    if (spec.auth) cost += 5;
     return Math.min(60, cost);
   }
 
   function screenList(spec) {
     var names = ['Home'].concat(spec.collections.map(function (collection) { return collection.name; }));
+    if (spec.auth) names.splice(1, 0, 'Sign in');
     if (spec.shop) names.push('Shop');
     if (spec.quiz) names.push('Quiz');
     if (spec.calculator) names.push('Calculator');
@@ -360,6 +370,8 @@
       '.primary,.ghost{border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:700}',
       '.primary{background:var(--accent);color:#fff;border:0}',
       '.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}',
+      '.side .ghost{color:#f7f4ef;border-color:rgba(255,255,255,.35)}',
+      '.fine p{margin:0 0 8px}',
       '.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}',
       '.list{display:grid;gap:10px}',
       '.card{padding:14px 16px;display:grid;gap:8px}',
@@ -396,7 +408,15 @@
     opts = opts || {};
     var combined = opts.revision && opts.previous ? (opts.previous + '\n' + prompt) : String(prompt || '');
     var spec = parsePrompt(combined);
-    var cost = quote(spec, opts);
+    if (opts.name) {
+      var nextName = String(opts.name).replace(/\s+/g, ' ').trim().slice(0, 48);
+      if (nextName) spec.name = nextName;
+    }
+    if (opts.accent && /^#[0-9a-fA-F]{6}$/.test(opts.accent)) {
+      spec.palette = Object.assign({}, spec.palette, { accent: opts.accent });
+    }
+    spec.mark = opts.whiteLabel ? '' : 'Kiln app';
+    var cost = opts.look ? 2 : quote(spec, opts);
     function finish(runtime) {
       return { spec: spec, html: render(spec, runtime), cost: cost, screens: screenList(spec) };
     }
